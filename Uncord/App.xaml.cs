@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Unity.Windows;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,13 +15,14 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
 
 namespace Uncord
 {
     /// <summary>
     /// 既定の Application クラスを補完するアプリケーション固有の動作を提供します。
     /// </summary>
-    sealed partial class App : Application
+    sealed partial class App : PrismUnityApplication
     {
         /// <summary>
         /// 単一アプリケーション オブジェクトを初期化します。これは、実行される作成したコードの
@@ -29,48 +31,28 @@ namespace Uncord
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
         }
 
-        /// <summary>
-        /// アプリケーションがエンド ユーザーによって正常に起動されたときに呼び出されます。他のエントリ ポイントは、
-        /// アプリケーションが特定のファイルを開くために起動されたときなどに使用されます。
-        /// </summary>
-        /// <param name="e">起動の要求とプロセスの詳細を表示します。</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+
+        protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            return Task.CompletedTask;
+        }
 
-            // ウィンドウに既にコンテンツが表示されている場合は、アプリケーションの初期化を繰り返さずに、
-            // ウィンドウがアクティブであることだけを確認してください
-            if (rootFrame == null)
-            {
-                // ナビゲーション コンテキストとして動作するフレームを作成し、最初のページに移動します
-                rootFrame = new Frame();
+        protected override UIElement CreateShell(Frame rootFrame)
+        {
+            var appShell = new AppShell();
+            appShell.SetContent(rootFrame);
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+            return appShell;
+        }
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: 以前中断したアプリケーションから状態を読み込みます
-                }
 
-                // フレームを現在のウィンドウに配置します
-                Window.Current.Content = rootFrame;
-            }
+        protected override Task OnInitializeAsync(IActivatedEventArgs args)
+        {
+            NavigationService.Navigate(PageTokens.EmptyPageToken, null);
 
-            if (e.PrelaunchActivated == false)
-            {
-                if (rootFrame.Content == null)
-                {
-                    // ナビゲーション スタックが復元されない場合は、最初のページに移動します。
-                    // このとき、必要な情報をナビゲーション パラメーターとして渡して、新しいページを
-                    //構成します
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
-                // 現在のウィンドウがアクティブであることを確認します
-                Window.Current.Activate();
-            }
+            return base.OnInitializeAsync(args);
         }
 
         /// <summary>
@@ -82,19 +64,6 @@ namespace Uncord
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
-
-        /// <summary>
-        /// アプリケーションの実行が中断されたときに呼び出されます。
-        /// アプリケーションが終了されるか、メモリの内容がそのままで再開されるかに
-        /// かかわらず、アプリケーションの状態が保存されます。
-        /// </summary>
-        /// <param name="sender">中断要求の送信元。</param>
-        /// <param name="e">中断要求の詳細。</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: アプリケーションの状態を保存してバックグラウンドの動作があれば停止します
-            deferral.Complete();
-        }
+        
     }
 }
