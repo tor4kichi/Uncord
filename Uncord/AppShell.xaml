@@ -20,9 +20,24 @@
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ResponsiveSplitViewPane">
+
+                <VisualState x:Name="HideMenu">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind IsMenuHide}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="SplitView.DisplayMode" Value="Overlay" />
+                        <Setter Target="SplitView.IsPaneOpen" Value="False" />
+
+                        <Setter Target="MobilePaneOpener.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 大画面 -->
                 <VisualState x:Name="LargeMonitor">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1367" />
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
@@ -32,9 +47,11 @@
                         <Setter Target="MobilePaneOpener.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
+
+                <!-- 中画面 -->
                 <VisualState x:Name="MiddleMonitor">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1025" />
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
@@ -44,9 +61,11 @@
                         <Setter Target="MobilePaneOpener.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
+
+                <!-- 小画面 -->
                 <VisualState x:Name="SmallMonitor">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="721" />
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
@@ -57,6 +76,9 @@
 
                     </VisualState.Setters>
                 </VisualState>
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+                
             </VisualStateGroup>
 
 
@@ -111,6 +133,8 @@
                 </Border>
                 
                 <ContentControl x:Name="PageContent"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
                         />
 
             </toolkit:DockPanel>

@@ -9,6 +9,8 @@ namespace Uncord
     public sealed class PageTokens
     {
         public static string EmptyPageToken = ToPageToken(typeof(Views.EmptyPage));
+        public static string AccountLoginPageToken = ToPageToken(typeof(Views.AccountLoginPage));
+        public static string LoggedInProcessPageToken = ToPageToken(typeof(Views.LoggedInProcessPage));
 
 
         public static string ToPageToken(Type type)

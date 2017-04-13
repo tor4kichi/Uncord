@@ -24,6 +24,14 @@ namespace Uncord
     /// </summary>
     sealed partial class App : PrismUnityApplication
     {
+        AppShell _AppShell;
+
+        public bool IsHideMenu
+        {
+            get { return _AppShell.IsMenuHide; }
+            set { _AppShell.IsMenuHide = value; }
+        }
+
         /// <summary>
         /// 単一アプリケーション オブジェクトを初期化します。これは、実行される作成したコードの
         ///最初の行であるため、main() または WinMain() と論理的に等価です。
@@ -42,7 +50,21 @@ namespace Uncord
         protected override UIElement CreateShell(Frame rootFrame)
         {
             var appShell = new AppShell();
+            _AppShell = appShell;
             appShell.SetContent(rootFrame);
+
+
+            // 自動ログインチェック
+            bool isLoggedIn = false;
+            if (isLoggedIn)
+            {
+                NavigationService.Navigate(PageTokens.EmptyPageToken, null);
+            }
+            else
+            {
+                NavigationService.Navigate(PageTokens.AccountLoginPageToken, null);
+            }
+
 
             return appShell;
         }
@@ -50,10 +72,12 @@ namespace Uncord
 
         protected override Task OnInitializeAsync(IActivatedEventArgs args)
         {
-            NavigationService.Navigate(PageTokens.EmptyPageToken, null);
+            // 自動ログインを行う
 
             return base.OnInitializeAsync(args);
         }
+
+        
 
         /// <summary>
         /// 特定のページへの移動が失敗したときに呼び出されます

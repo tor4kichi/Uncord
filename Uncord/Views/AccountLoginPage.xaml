@@ -1,0 +1,202 @@
+﻿<Page
+    x:Class="Uncord.Views.AccountLoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Layout">
+
+                <!-- 大画面 -->
+                <VisualState x:Name="LargeMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="AppLabelLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.Column)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="LoginFormLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
+                        <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="2" />
+                    </VisualState.Setters>
+                </VisualState>
+                
+                <!-- 中画面 -->
+                <VisualState x:Name="MiddleMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="AppLabelLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.Column)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="LoginFormLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
+                        <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="3" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 小画面 -->
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="AppLabelLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.Column)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="LoginFormLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
+                        <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="3" />
+                    </VisualState.Setters>
+                </VisualState>
+                
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+                
+                
+            </VisualStateGroup>
+
+
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- タイトル表示 -->
+        <Border Grid.RowSpan="1"
+                    Grid.ColumnSpan="5"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                x:Name="AppLabelLayout"
+                >
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                    >
+                <TextBlock Text="Uncord"
+                       Style="{StaticResource HeaderTextBlockStyle}"
+                       />
+                <TextBlock Text="Discord client for windows10" />
+            </StackPanel>
+
+        </Border>
+
+        <Border Grid.RowSpan="3"
+                    Grid.ColumnSpan="5"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                x:Name="LoginFormLayout"
+                >
+            <StackPanel VerticalAlignment="Top"
+                        HorizontalAlignment="Center"
+                        MinWidth="240"
+                        >
+
+                <TextBox Style="{StaticResource AnimatedHeaderedTextBoxStyle}"
+                         Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         >
+                    <TextBox.Header>
+                        <Binding Source="Mail"
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                    </TextBox.Header>
+                    <i:Interaction.Behaviors>
+                        <mybehavior:MoveHeaderOnFocusBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Style="{StaticResource AnimatedHeaderedTextBoxStyle}"
+                         Text="{Binding Password.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        >
+                    <TextBox.Header>
+                        <Binding Source="Password"
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                    </TextBox.Header>
+                    <i:Interaction.Behaviors>
+                        <mybehavior:MoveHeaderOnFocusBehavior />
+                    </i:Interaction.Behaviors>
+
+                </TextBox>
+
+
+                <Button MinWidth="120"
+                        MinHeight="40"
+                        Margin="0 24 0 8"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding TryLoginCommand}"
+                        >
+                    <Button.Content>
+                        <Binding Source="LoginAccount" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                    </Button.Content>
+                </Button>
+
+                <HyperlinkButton NavigateUri="https://discordapp.com/register"
+                                 HorizontalAlignment="Right"
+                                 TabIndex="20"
+                                 Margin="0 16 0 0"
+                                 >
+                    <HyperlinkButton.Content>
+                        <Binding Source="RegisterAccount" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
+
+                <HyperlinkButton NavigateUri="https://discordapp.com/login"
+                                 HorizontalAlignment="Right"
+                                 TabIndex="20"
+                                 Margin="0 16 0 0"
+                                 >
+                    <HyperlinkButton.Content>
+                        <Binding Source="ForgetPassword" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
+
+            </StackPanel>
+        </Border>
+        
+    </Grid>
+</Page>

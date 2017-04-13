@@ -22,6 +22,20 @@ namespace Uncord
     /// </summary>
     public sealed partial class AppShell : Page
     {
+        public static readonly DependencyProperty IsMenuHideProperty =
+           DependencyProperty.Register(
+               nameof(IsMenuHide), // プロパティ名を指定
+               typeof(bool), // プロパティの型を指定
+               typeof(AppShell), // プロパティを所有する型を指定
+               new PropertyMetadata(false)); // メタデータを指定。ここではデフォルト値を設定してる
+
+
+        public bool IsMenuHide
+        {
+            get { return (bool)GetValue(IsMenuHideProperty); }
+            set { SetValue(IsMenuHideProperty, value); }
+        }
+
         public AppShell()
         {
             this.InitializeComponent();
