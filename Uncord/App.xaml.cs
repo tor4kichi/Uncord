@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
 
 namespace Uncord
 {
@@ -41,6 +42,12 @@ namespace Uncord
             this.InitializeComponent();
         }
 
+        protected override void ConfigureContainer()
+        {
+            Container.RegisterInstance(new Models.DiscordContext());
+
+            base.ConfigureContainer();
+        }
 
         protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
@@ -55,26 +62,27 @@ namespace Uncord
 
 
             // 自動ログインチェック
-            bool isLoggedIn = false;
-            if (isLoggedIn)
+            var discordContext = Container.Resolve<Models.DiscordContext>();
+            
+            if (discordContext.IsValidateToken)
             {
-                NavigationService.Navigate(PageTokens.EmptyPageToken, null);
+                NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
             }
             else
             {
                 NavigationService.Navigate(PageTokens.AccountLoginPageToken, null);
             }
-
-
+            
             return appShell;
         }
 
 
-        protected override Task OnInitializeAsync(IActivatedEventArgs args)
+        protected override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             // 自動ログインを行う
-
-            return base.OnInitializeAsync(args);
+            var discordContext = Container.Resolve<Models.DiscordContext>();
+            await discordContext.TryLoginWithRecordedCredential();
+            await base.OnInitializeAsync(args);
         }
 
         

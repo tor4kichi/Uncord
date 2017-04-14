@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using Prism.Windows.Navigation;
 using Reactive.Bindings;
 using System.Reactive.Linq;
+using Uncord.Models;
 
 namespace Uncord.ViewModels
 {
     public class AccountLoginPageViewModel : ViewModelBase
     {
+        DiscordContext _DiscordContext;
         INavigationService _NavigationService;
 
         public ReactiveProperty<string> Mail { get; private set; }
@@ -21,8 +23,9 @@ namespace Uncord.ViewModels
 
         public ReactiveProperty<bool> NowTryLogin { get; private set; }
 
-        public AccountLoginPageViewModel(INavigationService navService)
+        public AccountLoginPageViewModel(DiscordContext discordContext, INavigationService navService)
         {
+            _DiscordContext = discordContext;
             _NavigationService = navService;
 
             Mail = new ReactiveProperty<string>("");
@@ -47,10 +50,15 @@ namespace Uncord.ViewModels
             {
                 NowTryLogin.Value = true;
 
-
-                await Task.Delay(TimeSpan.FromSeconds(2));
-
-                _NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
+                var isLoginSuccess = await _DiscordContext.TryLogin(mail, password);
+                if (isLoginSuccess)
+                {
+                    _NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
+                }
+                else
+                {
+                    // ログイン失敗
+                }
             }
             finally
             {

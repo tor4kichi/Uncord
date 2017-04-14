@@ -133,6 +133,7 @@
 
                 <TextBox Style="{StaticResource AnimatedHeaderedTextBoxStyle}"
                          Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         InputScope="EmailSmtpAddress"
                          >
                     <TextBox.Header>
                         <Binding Source="Mail"
@@ -145,6 +146,7 @@
                 </TextBox>
                 <TextBox Style="{StaticResource AnimatedHeaderedTextBoxStyle}"
                          Text="{Binding Password.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         InputScope="Password"
                         >
                     <TextBox.Header>
                         <Binding Source="Password"

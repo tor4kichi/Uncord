@@ -103,8 +103,11 @@
     <Compile Include="AppShell.xaml.cs">
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DiscordContext.cs" />
     <Compile Include="PageTokens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\AppVersion.cs" />
+    <Compile Include="Util\DiscordApiHelper.cs" />
     <Compile Include="ViewModels\AccountLoginPageViewModel.cs" />
     <Compile Include="ViewModels\EmptyPageViewModel.cs" />
     <Compile Include="ViewModels\LoggedInProcessPageViewModel.cs" />
@@ -174,10 +177,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net">
+    <PackageReference Include="Discord.Net.Core">
       <Version>1.0.0-rc</Version>
     </PackageReference>
-    <PackageReference Include="Discord.Net.Rpc">
+    <PackageReference Include="Discord.Net.Rest">
       <Version>1.0.0-rc</Version>
     </PackageReference>
     <PackageReference Include="Discord.Net.Webhook">

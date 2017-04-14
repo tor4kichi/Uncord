@@ -16,5 +16,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock Text="LogginProcessPage" />
+
+        <TextBlock Text="{Binding Token}" Margin="0 32 0 0" />
     </Grid>
 </Page>
