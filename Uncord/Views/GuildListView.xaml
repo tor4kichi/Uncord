@@ -23,10 +23,28 @@
         <ItemsControl ItemsSource="{Binding Guilds}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding Name, Mode=OneWay}"
-                            Command="{Binding ElementName=GuildListViewRoot, Path=DataContext.OpenGuildCommand}"
-                            CommandParameter="{Binding}"
-                            />
+                    <Border Margin="0 8">
+                        <Button Command="{Binding ElementName=GuildListViewRoot, Path=DataContext.OpenGuildCommand}"
+                                CommandParameter="{Binding}"
+                                Background="Transparent"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                            >
+                            <StackPanel Orientation="Horizontal"
+                                        >
+                                <uwpcontrol:ImageEx Source="{Binding IconUrl}"
+                                                Height="32"
+                                                Width="32"
+                                                />
+
+                                <Border Width="8" />
+                                
+                                <TextBlock Text="{Binding Name}"
+                                           VerticalAlignment="Center"
+                                           />
+                            </StackPanel>
+                        </Button>
+                    </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

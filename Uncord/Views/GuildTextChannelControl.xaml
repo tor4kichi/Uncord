@@ -1,0 +1,121 @@
+﻿<UserControl
+    x:Class="Uncord.Views.GuildTextChannelControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    mc:Ignorable="d"
+    d:DesignHeight="800"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="MessageTemplate" >
+            <TextBlock Text="{Binding Content}" />
+        </DataTemplate>
+
+    </UserControl.Resources>
+    
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="ValidDataContext">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind IsValidDataContext, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="InvalidDataContext">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="True" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="InvalidLayout.Visibility" Value="Visible" />
+                        <Setter Target="ContentLayout.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid x:Name="InvalidLayout"
+              Visibility="Collapsed"
+              >
+            <TextBlock Text="Invalid Text Channel" />
+        </Grid>
+
+        <Grid x:Name="ContentLayout">
+
+
+            <toolkit:DockPanel>
+
+                <TextBlock Text="{Binding Name}"
+                           toolkit:DockPanel.Dock="Top"
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           Margin="16"
+                           />
+
+                <Border toolkit:DockPanel.Dock="Bottom">
+                    <toolkit:DockPanel x:Name="SendMessageLayout">
+
+                        <Border toolkit:DockPanel.Dock="Left"
+                                Margin="8"                                
+                                >
+                            <Button Command="{Binding PickAndSendFileCommand}"
+                                    Background="Transparent"
+                                    >
+                                <SymbolIcon Symbol="Upload" />
+                            </Button>
+                        </Border>
+                        
+                        <Border toolkit:DockPanel.Dock="Right"
+                                Margin="8"
+                                >
+                            <!-- TODO: Emotes (Flyout?) -->
+                            <Button Background="Transparent"
+                                    IsEnabled="False"
+                                >
+                                <SymbolIcon Symbol="Emoji2" />
+                            </Button>
+                        </Border>
+
+                        <TextBox Text="{Binding SendMessage.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 MinHeight="32"
+                                 TextWrapping="Wrap"
+                                 >
+
+                        </TextBox>
+
+                        <!-- 基本的にEnterで入力送信実行、ボタンは置かない？ -->
+
+                    </toolkit:DockPanel>
+
+                </Border>
+
+
+                <ItemsControl ItemsSource="{Binding Messages}"
+                    ItemTemplate="{StaticResource MessageTemplate}"
+                              >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel VerticalAlignment="Bottom"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                
+            </toolkit:DockPanel>
+            
+            
+            
+            
+        </Grid>
+    </Grid>
+</UserControl>

@@ -12,8 +12,38 @@
     d:DesignWidth="400">
 
     <StackPanel>
-        <TextBlock Text="Menu"/>
+
+        <!-- TODO: Friends を表示 -->
+        <!--
+        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                   Opacity="0.8"
+                   >
+            <TextBlock.Text>
+                <Binding Source="Friends"
+                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                         />
+            </TextBlock.Text>
+        </TextBlock>
+        
+        <Border BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}" 
+                BorderThickness="0 1 0 0"
+                />
+
+        -->
+        
+        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                   Opacity="0.8"
+                   >
+            <TextBlock.Text>
+                <Binding Source="Guilds"
+                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                         />
+            </TextBlock.Text>
+        </TextBlock>
 
         <local:GuildListView />
+
+        
+        
     </StackPanel>
 </UserControl>

@@ -112,6 +112,7 @@
     <Compile Include="ViewModels\EmptyPageViewModel.cs" />
     <Compile Include="ViewModels\GuildListViewModel.cs" />
     <Compile Include="ViewModels\GuildPageViewModel.cs" />
+    <Compile Include="ViewModels\GuildTextChannelViewModel.cs" />
     <Compile Include="ViewModels\LoggedInProcessPageViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="Views\AccountLoginPage.xaml.cs">
@@ -126,6 +127,9 @@
     </Compile>
     <Compile Include="Views\GuildPage.xaml.cs">
       <DependentUpon>GuildPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GuildTextChannelControl.xaml.cs">
+      <DependentUpon>GuildTextChannelControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoggedInProcessPage.xaml.cs">
       <DependentUpon>LoggedInProcessPage.xaml</DependentUpon>
@@ -175,6 +179,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GuildPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GuildTextChannelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -238,6 +246,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Controls\" />
+    <Folder Include="Views\TemplateSelector\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

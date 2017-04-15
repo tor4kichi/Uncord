@@ -15,11 +15,84 @@
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     >
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel>
-            <TextBlock Text="Guild Page" />
+    <Page.Resources>
+        <DataTemplate x:Key="VoiceChannelListItemTemplate">
             
-            <TextBlock Text="{Binding GuildName.Value}" />
-        </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TextChannelListItemTemplate">
+            <toolkit:DockPanel>
+                <Button HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        >
+                    <TextBlock>
+                        <Run Text="#" />
+                        <Run Text="{Binding Name}" />
+                    </TextBlock>
+                </Button>
+            </toolkit:DockPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <toolkit:DockPanel>
+
+            <toolkit:DockPanel toolkit:DockPanel.Dock="Left">
+                <toolkit:DockPanel toolkit:DockPanel.Dock="Top">
+
+                    <TextBlock Text="{Binding GuildName.Value}"
+                           Style="{StaticResource TitleTextBlockStyle}"
+                           toolkit:DockPanel.Dock="Left"
+                           Margin="16 8 0 8"
+                           />
+                </toolkit:DockPanel>
+
+                <!-- Channel List (Text + Voice) -->
+                <ScrollViewer>
+                    <StackPanel Margin="16 0 16 0">
+
+                        <TextBlock Text="Text Channel"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               />
+
+                        <ItemsControl ItemsSource="{Binding TextChannels}"
+                                  ItemTemplate="{StaticResource TextChannelListItemTemplate}"
+                                  >
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Margin" Value="0 4" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+
+                        <TextBlock Text="Voice Channel"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               />
+
+                        <ItemsControl ItemsSource="{Binding VoiceChannels}"
+                                  ItemTemplate="{StaticResource VoiceChannelListItemTemplate}"
+                                  >
+                        </ItemsControl>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+
+            </toolkit:DockPanel>
+
+            <ContentControl Content="{Binding CurrentTextChannelVM.Value, Mode=OneWay}"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                
+                                >
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <local:GuildTextChannelControl />
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+            
+            
+        </toolkit:DockPanel>
     </Grid>
 </Page>

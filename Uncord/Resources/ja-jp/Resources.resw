@@ -120,6 +120,12 @@
   <data name="ForgetPassword" xml:space="preserve">
     <value>パスワードを忘れた方はこちらへ</value>
   </data>
+  <data name="Friends" xml:space="preserve">
+    <value>フレンド</value>
+  </data>
+  <data name="Guilds" xml:space="preserve">
+    <value>サーバー</value>
+  </data>
   <data name="LoginAccount" xml:space="preserve">
     <value>ログイン</value>
   </data>

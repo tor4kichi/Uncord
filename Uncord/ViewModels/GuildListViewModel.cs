@@ -33,6 +33,7 @@ namespace Uncord.ViewModels
             {
                 _NavigationService.Navigate(PageTokens.GuildPageToken, guild.Id);
             });
+
         }
     }
 }
