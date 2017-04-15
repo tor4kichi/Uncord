@@ -22,7 +22,7 @@ namespace Uncord.ViewModels
             _NavigationService = navService;
             _DicordContext = dicordContext;
 
-            Token = _DicordContext.DicordAccessToken;
+            Token = _DicordContext.DiscordAccessToken;
         }
             
 
@@ -39,6 +39,8 @@ namespace Uncord.ViewModels
                     await Task.Delay(TimeSpan.FromSeconds(3));
 
                     _NavigationService.Navigate(PageTokens.EmptyPageToken, null);
+
+                    (App.Current as App).IsHideMenu = false;
                 })
                 .AsTask()
                 .ConfigureAwait(false);

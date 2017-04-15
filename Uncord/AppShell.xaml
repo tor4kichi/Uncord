@@ -23,7 +23,7 @@
 
                 <VisualState x:Name="HideMenu">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind IsMenuHide}" />
+                        <StateTrigger IsActive="{x:Bind IsMenuHide, Mode=OneWay}" />
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>

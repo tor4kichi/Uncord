@@ -15,6 +15,10 @@ namespace Uncord.Util
 
     public static class DiscordApiHelper
     {
+        public static string BaseDiscordApiUrl = "https://discordapp.com/api/";
+
+
+
         public static HttpClient GetClient()
         {
             var client = new HttpClient();
@@ -33,7 +37,7 @@ namespace Uncord.Util
             var json = JsonConvert.SerializeObject(discordCredencialVault);
             var content = new HttpStringContent(json, Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
 
-            var res = await GetClient().PostAsync(new Uri("https://discordapp.com/api/auth/login"), content);
+            var res = await GetClient().PostAsync(new Uri(BaseDiscordApiUrl + "auth/login"), content);
 
             if (res.IsSuccessStatusCode)
             {
@@ -53,9 +57,11 @@ namespace Uncord.Util
             var json = JsonConvert.SerializeObject(userLoginToken);
             var content = new HttpStringContent(json, Windows.Storage.Streams.UnicodeEncoding.Utf8, "application/json");
 
-            var res = await GetClient().PostAsync(new Uri("https://discordapp.com/api/auth/logout"), content);
+            var res = await GetClient().PostAsync(new Uri(BaseDiscordApiUrl + "auth/logout"), content);
 
             return res.IsSuccessStatusCode;
         }
+
+        
     }
 }

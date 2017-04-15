@@ -1,10 +1,12 @@
-﻿<Page
-    x:Class="Uncord.Views.LoggedInProcessPage"
+﻿<UserControl
+    x:Class="Uncord.Views.GuildListView"
+    x:Name="GuildListViewRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Uncord.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
     xmlns:toolkit="using:WinRTXamlToolkit.Controls"
     xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
@@ -12,14 +14,21 @@
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
-    mc:Ignorable="d">
+    >
+    
+    
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="LogginProcessPage" />
 
-        <TextBlock Text="{Binding CurrentLoadingState.Value, Converter={StaticResource ResourceNameToResourceStringConverter}}"
-                   Margin="0 32 0 0" 
-                   />
-
+        <ItemsControl ItemsSource="{Binding Guilds}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="{Binding Name, Mode=OneWay}"
+                            Command="{Binding ElementName=GuildListViewRoot, Path=DataContext.OpenGuildCommand}"
+                            CommandParameter="{Binding}"
+                            />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
-</Page>
+</UserControl>

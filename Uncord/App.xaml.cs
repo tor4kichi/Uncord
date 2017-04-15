@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
+using System.Diagnostics;
 
 namespace Uncord
 {
@@ -40,6 +41,17 @@ namespace Uncord
         public App()
         {
             this.InitializeComponent();
+
+            this.UnhandledException += App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Debug.WriteLine(e.ToString());
+            if (Debugger.IsAttached)
+            {
+                Debugger.Break();
+            }
         }
 
         protected override void ConfigureContainer()

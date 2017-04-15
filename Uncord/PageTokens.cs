@@ -11,7 +11,7 @@ namespace Uncord
         public static string EmptyPageToken = ToPageToken(typeof(Views.EmptyPage));
         public static string AccountLoginPageToken = ToPageToken(typeof(Views.AccountLoginPage));
         public static string LoggedInProcessPageToken = ToPageToken(typeof(Views.LoggedInProcessPage));
-
+        public static string GuildPageToken = ToPageToken(typeof(Views.GuildPage));
 
         public static string ToPageToken(Type type)
         {

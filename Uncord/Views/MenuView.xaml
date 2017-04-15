@@ -13,5 +13,7 @@
 
     <StackPanel>
         <TextBlock Text="Menu"/>
+
+        <local:GuildListView />
     </StackPanel>
 </UserControl>

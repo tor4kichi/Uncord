@@ -110,6 +110,8 @@
     <Compile Include="Util\DiscordApiHelper.cs" />
     <Compile Include="ViewModels\AccountLoginPageViewModel.cs" />
     <Compile Include="ViewModels\EmptyPageViewModel.cs" />
+    <Compile Include="ViewModels\GuildListViewModel.cs" />
+    <Compile Include="ViewModels\GuildPageViewModel.cs" />
     <Compile Include="ViewModels\LoggedInProcessPageViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="Views\AccountLoginPage.xaml.cs">
@@ -118,6 +120,12 @@
     <Compile Include="Views\Behaviors\MoveHeaderOnFocusBehavior.cs" />
     <Compile Include="Views\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GuildListView.xaml.cs">
+      <DependentUpon>GuildListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GuildPage.xaml.cs">
+      <DependentUpon>GuildPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoggedInProcessPage.xaml.cs">
       <DependentUpon>LoggedInProcessPage.xaml</DependentUpon>
@@ -162,6 +170,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GuildListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GuildPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LoggedInProcessPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,6 +193,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Discord.Net">
+      <Version>1.0.0-rc</Version>
+    </PackageReference>
     <PackageReference Include="Discord.Net.Core">
       <Version>1.0.0-rc</Version>
     </PackageReference>
