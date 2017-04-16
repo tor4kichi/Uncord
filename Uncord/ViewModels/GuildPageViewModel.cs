@@ -27,6 +27,8 @@ namespace Uncord.ViewModels
         ObservableCollection<SocketVoiceChannel> _VoiceChannels;
         public ReadOnlyReactiveCollection<SocketVoiceChannel> VoiceChannels { get; private set; }
 
+        public ReactiveProperty<SocketVoiceChannel> SelectedVoiceChannel { get; private set; }
+
         public ReactiveProperty<SocketGuildChannel> AfkChannel { get; private set; }
         public ReactiveProperty<bool> HasAfkChannel { get; private set; }
 
@@ -54,7 +56,7 @@ namespace Uncord.ViewModels
             HasAfkChannel = AfkChannel.Select(x => x != null)
                 .ToReactiveProperty();
 
-            
+            SelectedVoiceChannel = new ReactiveProperty<SocketVoiceChannel>();
             SelectedTextChannel = new ReactiveProperty<GuildTextChannelViewModel>();
 
             SelectedTextChannel

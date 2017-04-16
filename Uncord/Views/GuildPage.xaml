@@ -17,7 +17,25 @@
 
     <Page.Resources>
         <DataTemplate x:Key="VoiceChannelListItemTemplate">
-            
+            <toolkit:DockPanel>
+
+                <StackPanel Orientation="Horizontal"
+                            toolkit:DockPanel.Dock="Right"
+                            >
+                    <Button Command="{Binding ShowInvateLinkCommand}"
+                            Background="Transparent"
+                            >
+                        <SymbolIcon Symbol="Send" />
+                    </Button>
+
+                </StackPanel>
+
+                <Border >
+                    <TextBlock VerticalAlignment="Center">
+                        <Run Text="{Binding Name}" />
+                    </TextBlock>
+                </Border>
+            </toolkit:DockPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="TextChannelListItemTemplate">
@@ -42,6 +60,22 @@
                 </Border>
             </toolkit:DockPanel>
         </DataTemplate>
+
+
+        <Style TargetType="ListViewItem" x:Key="ChannelListItemStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <!--
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ListViewItemPresenter
+          SelectedBackground="{ThemeResource  SystemControlHighlightListAccentLowBrush}"
+                />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            -->
+        </Style>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -113,17 +147,12 @@
                             </StackPanel>
                         </HyperlinkButton>
                         
-                        
-
-                        <ItemsControl ItemsSource="{Binding TextChannels}"
+                        <ListView ItemsSource="{Binding TextChannels}"
+                                  SelectedItem="{Binding SelectedTextChannel.Value, Mode=TwoWay}"
                                   ItemTemplate="{StaticResource TextChannelListItemTemplate}"
+                                  ItemContainerStyle="{StaticResource ChannelListItemStyle}"
                                   >
-                            <ItemsControl.ItemContainerStyle>
-                                <Style TargetType="ContentPresenter">
-                                    <Setter Property="Margin" Value="0 4" />
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
+                        </ListView>
 
 
                         <Border Height="16" />
@@ -138,10 +167,12 @@
                             </StackPanel>
                         </HyperlinkButton>
                         
-                        <ItemsControl ItemsSource="{Binding VoiceChannels}"
+                        <ListView ItemsSource="{Binding VoiceChannels}"
+                                  SelectedItem="{Binding SelectedVoiceChannel.Value, Mode=TwoWay}"
                                   ItemTemplate="{StaticResource VoiceChannelListItemTemplate}"
+                                  ItemContainerStyle="{StaticResource ChannelListItemStyle}"
                                   >
-                        </ItemsControl>
+                        </ListView>
 
                     </StackPanel>
                 </ScrollViewer>
@@ -192,8 +223,13 @@
                             </core:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
 
-                        <TextBlock Text="Voice ch" 
+                        <StackPanel>
+                            <TextBlock Text="Voice ch" 
                                    VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding SelectedVoiceChannel.Value.Name, Mode=OneWay}" />
+
+                        </StackPanel>
 
                     </Button>
 
@@ -212,7 +248,15 @@
                             </core:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
 
-                        <TextBlock Text="Text ch" VerticalAlignment="Center" />
+                        <StackPanel>
+
+                            <TextBlock Text="Text ch" VerticalAlignment="Center" />
+
+                            <Border >
+                                <TextBlock Text="{Binding SelectedTextChannel.Value.Name, Mode=OneWay}" />
+                            </Border>
+
+                        </StackPanel>
                     </Button>
 
                 </Grid>
@@ -239,6 +283,7 @@
                         </HyperlinkButton>
 
                         <ListView ItemsSource="{Binding VoiceChannels}" 
+                                  SelectedItem="{Binding SelectedVoiceChannel.Value, Mode=TwoWay}"
                           DisplayMemberPath="Name"
                       
                           />
