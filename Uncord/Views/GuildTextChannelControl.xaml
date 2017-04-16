@@ -16,7 +16,7 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="MessageTemplate" >
-            <TextBlock Text="{Binding Content}" />
+            <uwpcontrol:MarkdownTextBlock Text="{Binding Content}" />
         </DataTemplate>
 
     </UserControl.Resources>
@@ -55,13 +55,16 @@
         <Grid x:Name="ContentLayout">
 
 
-            <toolkit:DockPanel>
+            <toolkit:DockPanel >
 
-                <TextBlock Text="{Binding Name}"
-                           toolkit:DockPanel.Dock="Top"
+                <Border Margin="{x:Bind HeaderMergin}" 
+                        toolkit:DockPanel.Dock="Top"
+                        >
+                    <TextBlock Text="{Binding Name}"
                            Style="{StaticResource SubheaderTextBlockStyle}"
-                           Margin="16"
+                           Margin="8"
                            />
+                </Border>
 
                 <Border toolkit:DockPanel.Dock="Bottom">
                     <toolkit:DockPanel x:Name="SendMessageLayout">

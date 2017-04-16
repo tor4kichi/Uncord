@@ -9,6 +9,7 @@ using Discord.WebSocket;
 using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
+using Prism.Commands;
 
 namespace Uncord.ViewModels
 {
@@ -20,8 +21,8 @@ namespace Uncord.ViewModels
 
         public ReactiveProperty<string> GuildName { get; private set; }
 
-        ObservableCollection<SocketTextChannel> _TextChannels;
-        public ReadOnlyReactiveCollection<SocketTextChannel> TextChannels { get; private set; }
+        ObservableCollection<GuildTextChannelViewModel> _TextChannels;
+        public ReadOnlyReactiveCollection<GuildTextChannelViewModel> TextChannels { get; private set; }
 
         ObservableCollection<SocketVoiceChannel> _VoiceChannels;
         public ReadOnlyReactiveCollection<SocketVoiceChannel> VoiceChannels { get; private set; }
@@ -29,17 +30,21 @@ namespace Uncord.ViewModels
         public ReactiveProperty<SocketGuildChannel> AfkChannel { get; private set; }
         public ReactiveProperty<bool> HasAfkChannel { get; private set; }
 
-        public ReactiveProperty<SocketTextChannel> SelectedTextChannel { get; private set; }
-        public ReadOnlyReactiveProperty<GuildTextChannelViewModel> CurrentTextChannelVM { get; private set; }
+        public ReactiveProperty<GuildTextChannelViewModel> SelectedTextChannel { get; private set; }
 
         public Dictionary<ulong, GuildTextChannelViewModel> _TextChannelVMCacheMap = new Dictionary<ulong, GuildTextChannelViewModel>();
+
+        public DelegateCommand UnselectTextChannelCommand { get; private set; }
+
+
+
 
         public GuildPageViewModel(Models.DiscordContext discordContext)
         {
             _DiscordContext = discordContext;
             GuildName = new ReactiveProperty<string>();
 
-            _TextChannels = new ObservableCollection<SocketTextChannel>();
+            _TextChannels = new ObservableCollection<GuildTextChannelViewModel>();
             TextChannels = _TextChannels.ToReadOnlyReactiveCollection();
 
             _VoiceChannels = new ObservableCollection<SocketVoiceChannel>();
@@ -50,13 +55,16 @@ namespace Uncord.ViewModels
                 .ToReactiveProperty();
 
             
-            SelectedTextChannel = new ReactiveProperty<SocketTextChannel>();
-            CurrentTextChannelVM = SelectedTextChannel.Select(GetTextChannelVM)
-                .ToReadOnlyReactiveProperty();
+            SelectedTextChannel = new ReactiveProperty<GuildTextChannelViewModel>();
 
-            CurrentTextChannelVM
+            SelectedTextChannel
                 .Where(x => x != null)
                 .Subscribe(async x => { await x.Load(); });
+
+            UnselectTextChannelCommand = new DelegateCommand(() => 
+            {
+                SelectedTextChannel.Value = null;
+            });
         }
 
         private GuildTextChannelViewModel GetTextChannelVM(SocketTextChannel textChannel)
@@ -98,7 +106,7 @@ namespace Uncord.ViewModels
             // Listup Text Channels
             foreach (var textChannel in _Guild.TextChannels.ToArray())
             {
-                _TextChannels.Add(textChannel);
+                _TextChannels.Add(new GuildTextChannelViewModel(textChannel));
             }
 
 
@@ -126,7 +134,7 @@ namespace Uncord.ViewModels
             }
 
 
-            SelectedTextChannel.Value = _TextChannels.SingleOrDefault(x => _Guild.DefaultChannel.Id == x.Id);
+            SelectedTextChannel.Value = _TextChannels.SingleOrDefault(x => _Guild.DefaultChannel.Id == x.TextChannel.Id);
 
             GuildName.Value = _Guild.Name;
 
@@ -172,7 +180,7 @@ namespace Uncord.ViewModels
                 {
                     if (newGuildChanneld is SocketTextChannel)
                     {
-                        _TextChannels.Add(newGuildChanneld as SocketTextChannel);
+                        _TextChannels.Add(new GuildTextChannelViewModel(newGuildChanneld as SocketTextChannel));
                     }
                     else if (newGuildChanneld is SocketVoiceChannel)
                     {
@@ -194,7 +202,8 @@ namespace Uncord.ViewModels
                 {
                     if (oldGuildChanneld is SocketTextChannel)
                     {
-                        _TextChannels.Remove(oldGuildChanneld as SocketTextChannel);
+                        var channelVM = _TextChannels.SingleOrDefault(x => oldChannel.Id == x.TextChannel.Id);
+                        _TextChannels.Remove(channelVM);
                     }
                     else if (oldGuildChanneld is SocketVoiceChannel)
                     {

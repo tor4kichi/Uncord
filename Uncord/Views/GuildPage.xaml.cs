@@ -25,6 +25,13 @@ namespace Uncord.Views
         public GuildPage()
         {
             this.InitializeComponent();
+
+            Loaded += GuildPage_Loaded;
+        }
+
+        private void GuildPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "HiddenVoiceChannel_Vertical", false);
         }
     }
 }

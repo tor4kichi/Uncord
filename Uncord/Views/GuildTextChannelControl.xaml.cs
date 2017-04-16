@@ -33,6 +33,21 @@ namespace Uncord.Views
             set { SetValue(IsValidDataContextProperty, value); }
         }
 
+
+        public static readonly DependencyProperty HeaderMerginProperty =
+           DependencyProperty.Register(
+               nameof(HeaderMergin), // プロパティ名を指定
+               typeof(Thickness), // プロパティの型を指定
+               typeof(GuildTextChannelControl), // プロパティを所有する型を指定
+               new PropertyMetadata(new Thickness(0,0,0,0))); // メタデータを指定。ここではデフォルト値を設定してる
+
+
+        public Thickness HeaderMergin
+        {
+            get { return (Thickness)GetValue(HeaderMerginProperty); }
+            set { SetValue(HeaderMerginProperty, value); }
+        }
+
         public GuildTextChannelControl()
         {
             this.InitializeComponent();

@@ -22,20 +22,72 @@
 
         <DataTemplate x:Key="TextChannelListItemTemplate">
             <toolkit:DockPanel>
-                <Button HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Left"
-                        >
-                    <TextBlock>
+
+                <StackPanel Orientation="Horizontal"
+                            toolkit:DockPanel.Dock="Right"
+                            >
+                    <Button Command="{Binding ShowInvateLinkCommand}"
+                            Background="Transparent"
+                            >
+                        <SymbolIcon Symbol="Send" />
+                    </Button>
+
+                </StackPanel>
+
+                <Border >
+                    <TextBlock VerticalAlignment="Center">
                         <Run Text="#" />
                         <Run Text="{Binding Name}" />
                     </TextBlock>
-                </Button>
+                </Border>
             </toolkit:DockPanel>
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <toolkit:DockPanel>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          x:Name="GuildPageLayoutRoot"
+          >
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ResponsiveSplitViewPane">
+
+                
+                <!-- 小画面 以上 -->
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <!-- 小画面以上のときに横レイアウトを有効化 -->
+                        <Setter Target="HorizontalLayout.Visibility" Value="Visible" />
+                        <Setter Target="VerticalLayout.Visibility" Value="Collapsed" />
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="VoiceChannelVerticalDisplayStateGroup">
+                <VisualState x:Name="DisplayVoiceChannel_Vertical">
+                    <VisualState.Setters>
+                        <Setter Target="NarrowTextChannelLayout.Visibility" Value="Collapsed" />
+                        <Setter Target="NarrowVoiceChannelLayout.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HiddenVoiceChannel_Vertical">
+                </VisualState>
+
+            </VisualStateGroup>
+            
+        </VisualStateManager.VisualStateGroups>
+        
+        
+        <toolkit:DockPanel x:Name="HorizontalLayout"
+                           Visibility="Collapsed"
+                           >
 
             <toolkit:DockPanel toolkit:DockPanel.Dock="Left">
                 <toolkit:DockPanel toolkit:DockPanel.Dock="Top">
@@ -51,9 +103,17 @@
                 <ScrollViewer>
                     <StackPanel Margin="16 0 16 0">
 
-                        <TextBlock Text="Text Channel"
-                               Style="{StaticResource SubtitleTextBlockStyle}"
-                               />
+                        <HyperlinkButton >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Text Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
+                                <Border Width="16" />
+                                <SymbolIcon Symbol="Add" />
+                            </StackPanel>
+                        </HyperlinkButton>
+                        
+                        
 
                         <ItemsControl ItemsSource="{Binding TextChannels}"
                                   ItemTemplate="{StaticResource TextChannelListItemTemplate}"
@@ -65,10 +125,19 @@
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
 
-                        <TextBlock Text="Voice Channel"
-                               Style="{StaticResource SubtitleTextBlockStyle}"
-                               />
 
+                        <Border Height="16" />
+
+                        <HyperlinkButton >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Voice Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
+                                <Border Width="16" />
+                                <SymbolIcon Symbol="Add" />
+                            </StackPanel>
+                        </HyperlinkButton>
+                        
                         <ItemsControl ItemsSource="{Binding VoiceChannels}"
                                   ItemTemplate="{StaticResource VoiceChannelListItemTemplate}"
                                   >
@@ -80,10 +149,9 @@
 
             </toolkit:DockPanel>
 
-            <ContentControl Content="{Binding CurrentTextChannelVM.Value, Mode=OneWay}"
+            <ContentControl Content="{Binding SelectedTextChannel.Value, Mode=OneWay}"
                                 HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Stretch"
-                                
                                 >
                 <ContentControl.ContentTemplate>
                     <DataTemplate>
@@ -93,6 +161,163 @@
             </ContentControl>
             
             
+        </toolkit:DockPanel>
+
+        <toolkit:DockPanel x:Name="VerticalLayout">
+
+            
+
+            <!-- Bottom Text/Voice Selector -->
+            <Grid toolkit:DockPanel.Dock="Bottom"
+                  MinHeight="48"
+                  >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                
+                <Grid Grid.Column="0" Background="WhiteSmoke">
+
+
+
+                    <Button x:Name="VoiceChannelShowCollider" IsHitTestVisible="True"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                        >
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <core:GoToStateAction StateName="DisplayVoiceChannel_Vertical" />
+                            </core:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+
+                        <TextBlock Text="Voice ch" 
+                                   VerticalAlignment="Center" />
+
+                    </Button>
+
+                </Grid>
+
+                <Grid Grid.Column="1" Background="WhiteSmoke">
+
+                    <Button x:Name="VoiceChannelHideCollider" IsHitTestVisible="True"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                        >
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <core:GoToStateAction StateName="HiddenVoiceChannel_Vertical" />
+                            </core:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+
+                        <TextBlock Text="Text ch" VerticalAlignment="Center" />
+                    </Button>
+
+                </Grid>
+            </Grid>
+
+            <!-- Channel Content -->
+            <Grid >
+
+
+                <Grid x:Name="NarrowVoiceChannelLayout" Visibility="Collapsed">
+
+                    <toolkit:DockPanel>
+
+                        <HyperlinkButton VerticalAlignment="Center"
+                                         toolkit:DockPanel.Dock="Top"
+                                             >
+                            <StackPanel Orientation="Horizontal" Margin="16 8">
+                                <TextBlock Text="Voice Channel"
+                                       Style="{StaticResource SubtitleTextBlockStyle}"
+                                       />
+                                <Border Width="16" />
+                                <SymbolIcon Symbol="Add" />
+                            </StackPanel>
+                        </HyperlinkButton>
+
+                        <ListView ItemsSource="{Binding VoiceChannels}" 
+                          DisplayMemberPath="Name"
+                      
+                          />
+
+                    </toolkit:DockPanel>
+
+                </Grid>
+
+
+                <Grid x:Name="NarrowTextChannelLayout">
+
+
+                    
+                    <Grid Visibility="{Binding SelectedTextChannel.Value, Converter={StaticResource NotNullToVisibility}}"
+                                       >
+
+                        <ContentControl Content="{Binding SelectedTextChannel.Value, Mode=OneWay}"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                    >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <local:GuildTextChannelControl HeaderMergin="48 0 0 0" />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+
+                        </ContentControl>
+
+                        <Button Background="Transparent" 
+                                    Command="{Binding UnselectTextChannelCommand}"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Height="48"
+                                Width="48"
+                                    >
+                            <SymbolIcon Symbol="Back" 
+                                            />
+                        </Button>
+                        
+                    </Grid>
+
+                    
+
+
+                    <toolkit:DockPanel Visibility="{Binding SelectedTextChannel.Value, Converter={StaticResource NullToVisibility}}">
+                        
+                        <!-- Header (show if selected text channel) -->
+                        <toolkit:DockPanel toolkit:DockPanel.Dock="Top">
+                            <!-- Back (unselect text channel) -->
+
+                            <HyperlinkButton toolkit:DockPanel.Dock="Top"
+                                             Margin="16 8"
+                                             >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Text Channel"
+                                           Style="{StaticResource SubtitleTextBlockStyle}"
+                                           />
+                                    <Border Width="16" />
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+
+                        </toolkit:DockPanel>
+                        
+                        <!-- Content -->
+                        <Grid>
+                            <!-- Text Channel Listing (show if not selected text chanel) -->
+                            <ListView ItemsSource="{Binding TextChannels}" 
+                                      SelectedItem="{Binding SelectedTextChannel.Value, Mode=TwoWay}"
+                                  DisplayMemberPath="Name"
+                      
+                                  />
+                        </Grid>
+                    </toolkit:DockPanel>
+                </Grid>
+                
+
+            </Grid>
+
         </toolkit:DockPanel>
     </Grid>
 </Page>

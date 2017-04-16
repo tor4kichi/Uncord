@@ -16,7 +16,22 @@
             <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
             <converter:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
-
+            <converter:EmptyObjectToObjectConverter x:Key="NullToVisibility">
+                <converter:EmptyObjectToObjectConverter.NotEmptyValue>
+                    <Visibility>Collapsed</Visibility>
+                </converter:EmptyObjectToObjectConverter.NotEmptyValue>
+                <converter:EmptyObjectToObjectConverter.EmptyValue>
+                    <Visibility>Visible</Visibility>
+                </converter:EmptyObjectToObjectConverter.EmptyValue>
+            </converter:EmptyObjectToObjectConverter>
+            <converter:EmptyObjectToObjectConverter x:Key="NotNullToVisibility">
+                <converter:EmptyObjectToObjectConverter.NotEmptyValue>
+                    <Visibility>Visible</Visibility>
+                </converter:EmptyObjectToObjectConverter.NotEmptyValue>
+                <converter:EmptyObjectToObjectConverter.EmptyValue>
+                    <Visibility>Collapsed</Visibility>
+                </converter:EmptyObjectToObjectConverter.EmptyValue>
+            </converter:EmptyObjectToObjectConverter>
 
             <x:Double x:Key="LargeMinWidth" >1366</x:Double>
             <x:Double x:Key="MidiumMinWidth" >1024</x:Double>

@@ -16,7 +16,7 @@ namespace Uncord.ViewModels
     {
         public string Name { get; private set; }
 
-        SocketTextChannel _TextChannel;
+        public SocketTextChannel TextChannel { get; private set; }
 
         ObservableCollection<Discord.IMessage> _Messages;
         public ReadOnlyReactiveCollection<Discord.IMessage> Messages { get; private set; }
@@ -27,20 +27,20 @@ namespace Uncord.ViewModels
 
         public GuildTextChannelViewModel(SocketTextChannel textChannel)
         {
-            _TextChannel = textChannel;
+            TextChannel = textChannel;
 
-            Name = _TextChannel.Name;
+            Name = TextChannel.Name;
             _Messages = new ObservableCollection<IMessage>();
             Messages = _Messages.ToReadOnlyReactiveCollection();
 
             SendMessage = new ReactiveProperty<string>("");
 
-            _TextChannel.Discord.MessageReceived += Discord_MessageReceived;
+            TextChannel.Discord.MessageReceived += Discord_MessageReceived;
         }
 
         private Task Discord_MessageReceived(SocketMessage newMessage)
         {
-            if (newMessage.Channel.Id == _TextChannel.Id)
+            if (newMessage.Channel.Id == TextChannel.Id)
             {
                 _Messages.Insert(0, newMessage);
             }
@@ -54,9 +54,9 @@ namespace Uncord.ViewModels
             {
                 if (_Messages.Count > 0) { return; }
 
-                if (_TextChannel == null) { throw new Exception(); }
+                if (TextChannel == null) { throw new Exception(); }
 
-                var rawMessages = await _TextChannel.GetMessagesAsync().Flatten();
+                var rawMessages = await TextChannel.GetMessagesAsync().Flatten();
 
                 foreach (var message in rawMessages)
                 {
@@ -67,9 +67,9 @@ namespace Uncord.ViewModels
 
         public void Dispose()
         {
-            if (_TextChannel != null)
+            if (TextChannel != null)
             {
-                _TextChannel.Discord.MessageReceived -= Discord_MessageReceived;
+                TextChannel.Discord.MessageReceived -= Discord_MessageReceived;
             }
         }
     }
