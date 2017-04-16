@@ -90,11 +90,15 @@
                             </Button>
                         </Border>
 
-                        <TextBox Text="{Binding SendMessage.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Text="{Binding SendMessageText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  MinHeight="32"
                                  TextWrapping="Wrap"
                                  >
-
+                            <i:Interaction.Behaviors>
+                                <mybehavior:KeyboardTrigger Key="Enter">
+                                    <core:InvokeCommandAction Command="{Binding SendMessageCommand}" />
+                                </mybehavior:KeyboardTrigger>
+                            </i:Interaction.Behaviors>
                         </TextBox>
 
                         <!-- 基本的にEnterで入力送信実行、ボタンは置かない？ -->

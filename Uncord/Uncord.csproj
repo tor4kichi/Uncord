@@ -118,6 +118,7 @@
     <Compile Include="Views\AccountLoginPage.xaml.cs">
       <DependentUpon>AccountLoginPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Behaviors\KeyboardTrigger.cs" />
     <Compile Include="Views\Behaviors\MoveHeaderOnFocusBehavior.cs" />
     <Compile Include="Views\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
