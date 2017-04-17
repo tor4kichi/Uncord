@@ -10,13 +10,19 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:messageControl="using:Uncord.Views.Controls.Message"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="400">
 
     <UserControl.Resources>
         <DataTemplate x:Key="MessageTemplate" >
-            <uwpcontrol:MarkdownTextBlock Text="{Binding Content}" />
+            <Border Padding="8 0 8 0" 
+                    BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                    BorderThickness="0 1 0 0"
+                    >
+                <messageControl:MessageControl />
+            </Border>
         </DataTemplate>
 
     </UserControl.Resources>
@@ -108,15 +114,17 @@
                 </Border>
 
 
-                <ItemsControl ItemsSource="{Binding Messages}"
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Messages}"
                     ItemTemplate="{StaticResource MessageTemplate}"
                               >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel VerticalAlignment="Bottom"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
                 
             </toolkit:DockPanel>
             
