@@ -120,8 +120,14 @@
     </Compile>
     <Compile Include="Views\Behaviors\KeyboardTrigger.cs" />
     <Compile Include="Views\Behaviors\MoveHeaderOnFocusBehavior.cs" />
-    <Compile Include="Views\Controls\DiscordMessageContent.xaml.cs">
+    <Compile Include="Views\Controls\Message\DiscordMessageAttachementControl.xaml.cs">
+      <DependentUpon>DiscordMessageAttachementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Message\DiscordMessageContent.xaml.cs">
       <DependentUpon>DiscordMessageContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Message\DiscordMessageEmbedControl.xaml.cs">
+      <DependentUpon>DiscordMessageEmbedControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Message\MessageControl.xaml.cs">
       <DependentUpon>MessageControl.xaml</DependentUpon>
@@ -177,7 +183,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Controls\DiscordMessageContent.xaml">
+    <Page Include="Views\Controls\Message\DiscordMessageAttachementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Message\DiscordMessageContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Message\DiscordMessageEmbedControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -18,13 +18,30 @@
     <UserControl.Resources>
         <DataTemplate x:Key="MessageItemTemplate">
             <StackPanel>
+                <mycontrols:DiscordMessageContent MessageContent="{Binding Content}" />
+                
                 <!-- TODO: Attachements -->
+                <ItemsControl ItemsSource="{Binding Attachments}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <mycontrols:DiscordMessageAttachementControl />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
                 <!-- TODO: Embeds -->
+                <ItemsControl ItemsSource="{Binding Embeds}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <mycontrols:DiscordMessageAttachementControl />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
                 <!-- TODO: IsPinned -->
                 <!-- TODO: Tags -->
                 <!-- TODO: Sender type -->
 
-                <mycontrols:DiscordMessageContent MessageContent="{Binding Content}" />
 
             </StackPanel>
         </DataTemplate>
