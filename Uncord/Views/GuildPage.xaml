@@ -117,69 +117,85 @@
             </VisualStateGroup>
             
         </VisualStateManager.VisualStateGroups>
+
         
-        
+
         <toolkit:DockPanel x:Name="HorizontalLayout"
                            Visibility="Collapsed"
                            >
 
-            <toolkit:DockPanel toolkit:DockPanel.Dock="Left">
-                <toolkit:DockPanel toolkit:DockPanel.Dock="Top">
+            <Grid toolkit:DockPanel.Dock="Left"
+                  Width="240"
+                  >
+                <Grid Background="{StaticResource ApplicationForegroundThemeBrush}"
+                      Opacity="0.025"
+                      />
+                
+                <toolkit:DockPanel 
+                               
+                               >
+                    <Border toolkit:DockPanel.Dock="Top" 
+                        Height="48"
+                        BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
+                        BorderThickness="0 0 0 1"
+                        >
 
-                    <TextBlock Text="{Binding GuildName.Value}"
+                        <TextBlock Text="{Binding GuildName.Value}"
                            Style="{StaticResource TitleTextBlockStyle}"
                            toolkit:DockPanel.Dock="Left"
                            Margin="16 8 0 8"
                            />
-                </toolkit:DockPanel>
+                    </Border>
 
-                <!-- Channel List (Text + Voice) -->
-                <ScrollViewer>
-                    <StackPanel Margin="16 0 16 0">
+                    <!-- Channel List (Text + Voice) -->
+                    <ScrollViewer>
+                        <StackPanel Margin="16 0 16 0">
 
-                        <HyperlinkButton >
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Text Channel"
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Text Channel"
                                    Style="{StaticResource SubtitleTextBlockStyle}"
                                    />
-                                <Border Width="16" />
-                                <SymbolIcon Symbol="Add" />
-                            </StackPanel>
-                        </HyperlinkButton>
-                        
-                        <ListView ItemsSource="{Binding TextChannels}"
+                                    <Border Width="16" />
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+
+                            <ListView ItemsSource="{Binding TextChannels}"
                                   SelectedItem="{Binding SelectedTextChannel.Value, Mode=TwoWay}"
                                   ItemTemplate="{StaticResource TextChannelListItemTemplate}"
                                   ItemContainerStyle="{StaticResource ChannelListItemStyle}"
                                   >
-                        </ListView>
+                            </ListView>
 
 
-                        <Border Height="16" />
+                            <Border Height="16" />
 
-                        <HyperlinkButton >
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Voice Channel"
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Voice Channel"
                                    Style="{StaticResource SubtitleTextBlockStyle}"
                                    />
-                                <Border Width="16" />
-                                <SymbolIcon Symbol="Add" />
-                            </StackPanel>
-                        </HyperlinkButton>
-                        
-                        <ListView ItemsSource="{Binding VoiceChannels}"
+                                    <Border Width="16" />
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+
+                            <ListView ItemsSource="{Binding VoiceChannels}"
                                   SelectedItem="{Binding SelectedVoiceChannel.Value, Mode=TwoWay}"
                                   ItemTemplate="{StaticResource VoiceChannelListItemTemplate}"
                                   ItemContainerStyle="{StaticResource ChannelListItemStyle}"
                                   >
-                        </ListView>
+                            </ListView>
 
-                    </StackPanel>
-                </ScrollViewer>
+                        </StackPanel>
+                    </ScrollViewer>
 
 
-            </toolkit:DockPanel>
+                </toolkit:DockPanel>
 
+            </Grid>
+            
             <ContentControl Content="{Binding SelectedTextChannel.Value, Mode=OneWay}"
                                 HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Stretch"

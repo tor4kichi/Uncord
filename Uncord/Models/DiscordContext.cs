@@ -51,6 +51,12 @@ namespace Uncord.Models
         {
             _Guilds = new ObservableCollection<SocketGuild>();
             Guilds = _Guilds.ToReadOnlyReactiveCollection();
+
+            // this is unkode(durty code).
+            // IMessage.Contentの内容をMarkdownに変換する際、
+            // ユーザーIDからユーザー名を引きたいためにこんなことをしてます
+            // Model上で解決すべき？
+            Views.Controls.DiscordMessageContent.UserIdToUserName = UserIdToUserName;
         }
 
         private async Task StartLoginProcess()
@@ -62,7 +68,18 @@ namespace Uncord.Models
             await DiscordRestClient.LoginAsync(Discord.TokenType.User, DiscordAccessToken);
         }
 
-
+        public string UserIdToUserName(string userId)
+        {
+            if (DiscordSocketClient != null)
+            {
+                var user =  DiscordSocketClient.GetUser(ulong.Parse(userId));
+                return user?.Username;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         private async Task DiscordRestClient_LoggedIn()
         {

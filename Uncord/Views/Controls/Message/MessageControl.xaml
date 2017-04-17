@@ -10,6 +10,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:mycontrols="using:Uncord.Views.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -23,13 +24,13 @@
                 <!-- TODO: Tags -->
                 <!-- TODO: Sender type -->
 
-                <uwpcontrol:MarkdownTextBlock Text="{Binding Content}" />
+                <mycontrols:DiscordMessageContent MessageContent="{Binding Content}" />
 
             </StackPanel>
         </DataTemplate>
 
         <Style TargetType="ContentPresenter" x:Key="MessageItemContainerStyle">
-            <Setter Property="Margin" Value="0 8" />
+            <Setter Property="Margin" Value="0 0 0 4" />
         </Style>
     </UserControl.Resources>
     

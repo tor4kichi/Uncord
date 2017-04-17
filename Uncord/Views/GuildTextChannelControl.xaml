@@ -17,9 +17,9 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="MessageTemplate" >
-            <Border Padding="8 0 8 0" 
-                    BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
-                    BorderThickness="0 1 0 0"
+            <Border Padding="8 8 8 8" 
+                    BorderBrush="{StaticResource TextBoxDisabledBorderThemeBrush}"
+                    BorderThickness="0 0 0 1"
                     >
                 <messageControl:MessageControl />
             </Border>
@@ -65,14 +65,25 @@
 
                 <Border Margin="{x:Bind HeaderMergin}" 
                         toolkit:DockPanel.Dock="Top"
+                        Height="48"
+                        BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
+                        BorderThickness="0 0 0 1"
                         >
-                    <TextBlock Text="{Binding Name}"
-                           Style="{StaticResource SubheaderTextBlockStyle}"
-                           Margin="8"
-                           />
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}"
+                           Margin="16 0 0 0"
+                               VerticalAlignment="Center"
+                           >
+                        <Run Text="#" />
+                        <Run Text="{Binding Name}" />
+                    </TextBlock>
                 </Border>
 
-                <Border toolkit:DockPanel.Dock="Bottom">
+                <Border toolkit:DockPanel.Dock="Bottom"
+                        BorderBrush="{StaticResource TextBoxDisabledBorderThemeBrush}"
+                        BorderThickness="0 1 0 0"
+                        Padding="0 16"
+                        Margin="16 0"
+                        >
                     <toolkit:DockPanel x:Name="SendMessageLayout">
 
                         <Border toolkit:DockPanel.Dock="Left"
@@ -97,7 +108,7 @@
                         </Border>
 
                         <TextBox Text="{Binding SendMessageText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 MinHeight="32"
+                                 MinHeight="16"
                                  TextWrapping="Wrap"
                                  >
                             <i:Interaction.Behaviors>
@@ -117,6 +128,7 @@
                 <ScrollViewer>
                     <ItemsControl ItemsSource="{Binding Messages}"
                     ItemTemplate="{StaticResource MessageTemplate}"
+                                  Margin="8 0 16 0"
                               >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
