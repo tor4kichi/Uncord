@@ -43,20 +43,31 @@
         <DataTemplate x:Key="MessageItemTemplate">
             <StackPanel>
                 <mycontrols:DiscordMessageContent MessageContent="{Binding Content}" />
-                
+
+                <Border Height="6" />
+
                 <!-- TODO: Attachements -->
-                <ItemsControl ItemsSource="{Binding Attachments}"
+                <Border Visibility="{Binding Attachments, Converter={StaticResource CollectionVisibilityConverter}}">
+                    <ItemsControl ItemsSource="{Binding Attachments}"
                               ItemTemplateSelector="{StaticResource MessageAttachmentTemplateSelector}"
+                              
                               >
-                </ItemsControl>
+                    </ItemsControl>
+                </Border>
                 
                 <!-- TODO: Embeds -->
-                <Border Padding="8 0 0 0"
+                <Border Visibility="{Binding Embeds, Converter={StaticResource CollectionVisibilityConverter}}"
                         BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
                         BorderThickness="4 0 0 0"
-                        Background="#2F000000"
+                        Background="#20000000"
+                        Padding="8"
+                        MaxWidth="480"
+                        MinWidth="480"
+                        HorizontalAlignment="Left"
                         >
-                    <ItemsControl ItemsSource="{Binding Embeds}">
+                    <ItemsControl ItemsSource="{Binding Embeds}"
+                                  HorizontalAlignment="Left"
+                                  >
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <mycontrols:DiscordMessageEmbedControl />

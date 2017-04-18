@@ -96,6 +96,7 @@ namespace Uncord.ViewModels
                     return false;
                 })
                 .Select(x => new MessageViewModel(x.NewItems[0] as IMessage))
+                .SubscribeOnUIDispatcher()
                 .ToReadOnlyReactiveCollection()
                 .AddTo(_CompositeDisposable);
 

@@ -44,6 +44,11 @@
             <local:MessageEmbedTypeTemplateSelector.Image>
                 <DataTemplate>
                     <Grid>
+                        <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
+                            MaxHeight="240"
+                            IsTapEnabled="False"
+                            />
+                        
                         <HyperlinkButton NavigateUri="{Binding Url}">
                             <SymbolIcon Symbol="OpenWith" />
                         </HyperlinkButton>
@@ -54,6 +59,11 @@
             <local:MessageEmbedTypeTemplateSelector.Video>
                 <DataTemplate>
                     <Grid>
+                        <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
+                            MaxHeight="240"
+                            IsTapEnabled="False"
+                            />
+                        
                         <ContentControl Content="{Binding}" 
                                     ContentTemplateSelector="{StaticResource VideoEmbedTemplateSelector}"
                                     HorizontalContentAlignment="Stretch"
@@ -62,34 +72,75 @@
                     </Grid>
                 </DataTemplate>
             </local:MessageEmbedTypeTemplateSelector.Video>
+
+            <local:MessageEmbedTypeTemplateSelector.Link>
+                <DataTemplate>
+                    <Grid>
+                        <toolkit:DockPanel>
+
+                            <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
+                                MaxHeight="48"
+                                IsTapEnabled="False"
+                                                toolkit:DockPanel.Dock="Right"
+                                                Margin="0"
+                                />
+                            
+                            <TextBlock Text="{Binding Description}"
+                                   TextWrapping="Wrap"
+                                   FontSize="14" 
+                                       Width="380"
+                                       Margin="0 0 16 0"
+                                   />
+                        </toolkit:DockPanel>
+                    </Grid>
+                </DataTemplate>
+            </local:MessageEmbedTypeTemplateSelector.Link>
         </local:MessageEmbedTypeTemplateSelector>
     </UserControl.Resources>
 
     <StackPanel>
 
-        <ContentControl Content="{Binding Provider}">
+        <ContentControl Content="{Binding Provider}"
+                        Visibility="{Binding Provider, Converter={StaticResource NotNullToVisibility}}"
+                        >
             <ContentControl.ContentTemplate>
                 <DataTemplate>
                     <HyperlinkButton Content="{Binding Name}"
                                      NavigateUri="{Binding Url}"
+                                     Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                     Padding="0 2"
+                                     FontSize="13"
                                      />
                 </DataTemplate>
             </ContentControl.ContentTemplate>
         </ContentControl>
 
-        <TextBlock Text="{Binding Title}" />
 
-        <Grid MaxHeight="240">
+        <ContentControl Content="{Binding Author}"
+                        Visibility="{Binding Author, Converter={StaticResource NotNullToVisibility}}"
+                        >
+            <ContentControl.ContentTemplate>
+                <DataTemplate>
+                    <HyperlinkButton Content="{Binding Name}"
+                                     NavigateUri="{Binding Url}"
+                                     Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                                     Padding="0 2"
+                                     />
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
 
+        <HyperlinkButton Content="{Binding Title}"
+                         NavigateUri="{Binding Url}"
+                         Padding="0 2"
+                         />
 
-            <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
-                            MaxHeight="240"
-                            IsTapEnabled="False"
-                            />
+        <Grid HorizontalAlignment="Left">
 
             <ContentControl Content="{Binding}"
                             ContentTemplateSelector="{StaticResource EmbedItemTemplateSelector}"
                             MaxHeight="240"
+                            HorizontalAlignment="Left"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
                             Margin="0 8"
