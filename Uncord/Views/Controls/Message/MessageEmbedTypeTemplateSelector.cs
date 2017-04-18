@@ -13,6 +13,7 @@ namespace Uncord.Views.Controls.Message
         public DataTemplate Image { get; set; }
         public DataTemplate Video { get; set; }
         public DataTemplate Link { get; set; }
+        public DataTemplate Tweet { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
@@ -27,6 +28,8 @@ namespace Uncord.Views.Controls.Message
                         return Video;
                     case "link":
                         return Link;
+                    case "tweet":
+                        return Tweet;
                     default:
                         throw new NotSupportedException();
                 }

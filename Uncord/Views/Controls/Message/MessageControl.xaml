@@ -46,8 +46,10 @@
 
                 <Border Height="6" />
 
-                <!-- TODO: Attachements -->
-                <Border Visibility="{Binding Attachments, Converter={StaticResource CollectionVisibilityConverter}}">
+                <!-- Attachments -->
+                <Border Visibility="{Binding Attachments, Converter={StaticResource CollectionVisibilityConverter}}"
+                        Margin="0 0 0 16"
+                        >
                     <ItemsControl ItemsSource="{Binding Attachments}"
                               ItemTemplateSelector="{StaticResource MessageAttachmentTemplateSelector}"
                               
@@ -55,7 +57,7 @@
                     </ItemsControl>
                 </Border>
                 
-                <!-- TODO: Embeds -->
+                <!-- Embeds -->
                 <Border Visibility="{Binding Embeds, Converter={StaticResource CollectionVisibilityConverter}}"
                         BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
                         BorderThickness="4 0 0 0"
@@ -64,6 +66,7 @@
                         MaxWidth="480"
                         MinWidth="480"
                         HorizontalAlignment="Left"
+                        Margin="0 0 0 16"
                         >
                     <ItemsControl ItemsSource="{Binding Embeds}"
                                   HorizontalAlignment="Left"
@@ -86,7 +89,7 @@
         </DataTemplate>
 
         <Style TargetType="ContentPresenter" x:Key="MessageItemContainerStyle">
-            <Setter Property="Margin" Value="0 0 0 4" />
+            <Setter Property="Margin" Value="0 0 0 0" />
         </Style>
     </UserControl.Resources>
     
@@ -104,12 +107,15 @@
 
                     <HyperlinkButton Content="{Binding Author.Username}"
                                      Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                                     FontWeight="SemiBold"
                                      />
 
+                    <Border Width="8" />
                     <TextBlock Text="{Binding MessageRecievedAt}"
-                           Style="{StaticResource CaptionTextBlockStyle}"
-                           Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
-                           VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                               VerticalAlignment="Center"
+                               Opacity="0.8"
                            />
 
                 </StackPanel>

@@ -33,9 +33,11 @@
 
             <local:VideoEmbedTemplateSelector.Other>
                 <DataTemplate>
+                    <!--
                     <HyperlinkButton NavigateUri="{Binding Url}">
                         <SymbolIcon Symbol="OpenWith" />
                     </HyperlinkButton>
+                    -->
                 </DataTemplate>
             </local:VideoEmbedTemplateSelector.Other>
         </local:VideoEmbedTemplateSelector>
@@ -43,107 +45,260 @@
         <local:MessageEmbedTypeTemplateSelector x:Key="EmbedItemTemplateSelector" >
             <local:MessageEmbedTypeTemplateSelector.Image>
                 <DataTemplate>
-                    <Grid>
-                        <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
-                            MaxHeight="240"
-                            IsTapEnabled="False"
-                            />
+                    <StackPanel>
+                        <ContentControl Content="{Binding Provider}"
+                                        Visibility="{Binding Provider, Converter={StaticResource NotNullToVisibility}}"
+                                        >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <HyperlinkButton Content="{Binding Name}"
+                                                     NavigateUri="{Binding Url}"
+                                                     Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                                     Padding="0 2"
+                                                     FontSize="13"
+                                                     />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+
+
+                        <ContentControl Content="{Binding Author}"
+                                        Visibility="{Binding Author, Converter={StaticResource NotNullToVisibility}}"
+                                        >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <HyperlinkButton Content="{Binding Name}"
+                                                     NavigateUri="{Binding Url}"
+                                                     Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                                                     Padding="0 2"
+                                                     />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+
+                        <HyperlinkButton Content="{Binding Title}"
+                                        NavigateUri="{Binding Url}"
+                                        Padding="0 2"
+                                        />
                         
-                        <HyperlinkButton NavigateUri="{Binding Url}">
-                            <SymbolIcon Symbol="OpenWith" />
-                        </HyperlinkButton>
-                    </Grid>
+                        <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
+                                            MaxHeight="240"
+                                            IsTapEnabled="False"
+                                            />
+                    </StackPanel>
                 </DataTemplate>
             </local:MessageEmbedTypeTemplateSelector.Image>
 
             <local:MessageEmbedTypeTemplateSelector.Video>
                 <DataTemplate>
-                    <Grid>
-                        <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
-                            MaxHeight="240"
-                            IsTapEnabled="False"
-                            />
-                        
-                        <ContentControl Content="{Binding}" 
-                                    ContentTemplateSelector="{StaticResource VideoEmbedTemplateSelector}"
-                                    HorizontalContentAlignment="Stretch"
-                                    VerticalContentAlignment="Stretch"                                    
-                                    />
-                    </Grid>
+                    <StackPanel>
+                        <ContentControl Content="{Binding Provider}"
+                                        Visibility="{Binding Provider, Converter={StaticResource NotNullToVisibility}}"
+                                        >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <HyperlinkButton Content="{Binding Name}"
+                                                     NavigateUri="{Binding Url}"
+                                                     Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                                     Padding="0 2"
+                                                     FontSize="13"
+                                                     />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+
+
+                        <ContentControl Content="{Binding Author}"
+                                        Visibility="{Binding Author, Converter={StaticResource NotNullToVisibility}}"
+                                        >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <HyperlinkButton Content="{Binding Name}"
+                                                     NavigateUri="{Binding Url}"
+                                                     Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                                                     Padding="0 2"                                                     
+                                                     />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+
+                        <HyperlinkButton Content="{Binding Title}"
+                                         NavigateUri="{Binding Url}"
+                                         Padding="0 2"
+                                         Margin="0 0 0 4"
+                                         />
+
+                        <Grid>
+                            <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
+                                            MaxHeight="240"
+                                            IsTapEnabled="False"
+                                            />
+                            
+                            <ContentControl Content="{Binding}" 
+                                        ContentTemplateSelector="{StaticResource VideoEmbedTemplateSelector}"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"                                    
+                                        />
+                            
+                            
+                            
+
+                        </Grid>
+                    </StackPanel>
                 </DataTemplate>
             </local:MessageEmbedTypeTemplateSelector.Video>
 
             <local:MessageEmbedTypeTemplateSelector.Link>
                 <DataTemplate>
-                    <Grid>
-                        <toolkit:DockPanel>
 
-                            <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
-                                MaxHeight="48"
-                                IsTapEnabled="False"
-                                                toolkit:DockPanel.Dock="Right"
-                                                Margin="0"
-                                />
-                            
+                    <toolkit:DockPanel>
+
+                        <ContentControl Content="{Binding Thumbnail}"
+                                            Visibility="{Binding Thumbnail, Converter={StaticResource NotNullToVisibility}}"
+                                            toolkit:DockPanel.Dock="Right"
+                                        Margin="16 0 0 0"
+                                            >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <uwpcontrol:ImageEx Source="{Binding Url}"
+                                                            MaxHeight="48"
+                                                            IsTapEnabled="False"
+                                                            toolkit:DockPanel.Dock="Right"
+                                            />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+
+
+                        <StackPanel >
+
+                            <ContentControl Content="{Binding Provider}"
+                                        Visibility="{Binding Provider, Converter={StaticResource NotNullToVisibility}}"
+                                        >
+                                <ContentControl.ContentTemplate>
+                                    <DataTemplate>
+                                        <HyperlinkButton Content="{Binding Name}"
+                                                     NavigateUri="{Binding Url}"
+                                                     Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                                     Padding="0 2"
+                                                     FontSize="13"
+                                                     />
+                                    </DataTemplate>
+                                </ContentControl.ContentTemplate>
+                            </ContentControl>
+
+
+                            <ContentControl Content="{Binding Author}"
+                                        Visibility="{Binding Author, Converter={StaticResource NotNullToVisibility}}"
+                                        >
+                                <ContentControl.ContentTemplate>
+                                    <DataTemplate>
+                                        <HyperlinkButton Content="{Binding Name}"
+                                     NavigateUri="{Binding Url}"
+                                     Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                                     Padding="0 2"
+                                     />
+                                    </DataTemplate>
+                                </ContentControl.ContentTemplate>
+                            </ContentControl>
+
+                            <HyperlinkButton
+                                         NavigateUri="{Binding Url}"
+                                         Padding="0 2"
+                                         Margin="0 0 0 4"
+                                         >
+                                <TextBlock Text="{Binding Title}"
+                                           TextWrapping="Wrap"
+                                           />
+                            </HyperlinkButton>
                             <TextBlock Text="{Binding Description}"
                                    TextWrapping="Wrap"
                                    FontSize="14" 
                                        Width="380"
-                                       Margin="0 0 16 0"
+                                       Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
                                    />
-                        </toolkit:DockPanel>
-                    </Grid>
+
+                        </StackPanel>
+
+
+
+
+
+                    </toolkit:DockPanel>
+
+
                 </DataTemplate>
             </local:MessageEmbedTypeTemplateSelector.Link>
+            <local:MessageEmbedTypeTemplateSelector.Tweet>
+                <DataTemplate>
+                    <StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <HyperlinkButton Content="{Binding Title}"
+                                             NavigateUri="{Binding Url}"
+                                             Padding="0 0 4 0"
+                                             />
+                            
+                            <ContentControl Content="{Binding Author}"
+                                Visibility="{Binding Author, Converter={StaticResource NotNullToVisibility}}"
+                                >
+                                <ContentControl.ContentTemplate>
+                                    <DataTemplate>
+                                        <HyperlinkButton Content="{Binding Name}"
+                                                         NavigateUri="{Binding Url}"
+                                                         Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                                                         FontWeight="SemiBold"
+                                                         Padding="0 0"
+                                                         />
+                                    </DataTemplate>
+                                </ContentControl.ContentTemplate>
+                            </ContentControl>
+                        </StackPanel>
+                                                
+
+                        
+                        <TextBlock Text="{Binding Description}"
+                                   Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                   TextWrapping="Wrap"
+                                   FontSize="14" 
+                                       Width="380"
+                                       Margin="0 4 0 8"
+                                   />
+
+                        <ContentControl Content="{Binding Thumbnail}"
+                                            Visibility="{Binding Thumbnail, Converter={StaticResource NotNullToVisibility}}"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                            >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <uwpcontrol:ImageEx Source="{Binding Url}"
+                                                        Height="260"
+                                                            IsTapEnabled="False"
+                                                            toolkit:DockPanel.Dock="Right"
+                                                        HorizontalAlignment="Left"
+                                            />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+                        </ContentControl>
+
+                    </StackPanel>
+                </DataTemplate>
+            </local:MessageEmbedTypeTemplateSelector.Tweet>
         </local:MessageEmbedTypeTemplateSelector>
     </UserControl.Resources>
 
     <StackPanel>
 
-        <ContentControl Content="{Binding Provider}"
-                        Visibility="{Binding Provider, Converter={StaticResource NotNullToVisibility}}"
-                        >
-            <ContentControl.ContentTemplate>
-                <DataTemplate>
-                    <HyperlinkButton Content="{Binding Name}"
-                                     NavigateUri="{Binding Url}"
-                                     Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
-                                     Padding="0 2"
-                                     FontSize="13"
-                                     />
-                </DataTemplate>
-            </ContentControl.ContentTemplate>
-        </ContentControl>
-
-
-        <ContentControl Content="{Binding Author}"
-                        Visibility="{Binding Author, Converter={StaticResource NotNullToVisibility}}"
-                        >
-            <ContentControl.ContentTemplate>
-                <DataTemplate>
-                    <HyperlinkButton Content="{Binding Name}"
-                                     NavigateUri="{Binding Url}"
-                                     Foreground="{StaticResource ApplicationForegroundThemeBrush}"
-                                     Padding="0 2"
-                                     />
-                </DataTemplate>
-            </ContentControl.ContentTemplate>
-        </ContentControl>
-
-        <HyperlinkButton Content="{Binding Title}"
-                         NavigateUri="{Binding Url}"
-                         Padding="0 2"
-                         />
-
         <Grid HorizontalAlignment="Left">
 
             <ContentControl Content="{Binding}"
                             ContentTemplateSelector="{StaticResource EmbedItemTemplateSelector}"
-                            MaxHeight="240"
                             HorizontalAlignment="Left"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
-                            Margin="0 8"
+                            Margin="0 0"
                         />
 
 
