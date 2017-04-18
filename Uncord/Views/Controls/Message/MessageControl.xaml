@@ -16,24 +16,45 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
+
+        <local:MessageAttachementTypeTemplateSelector x:Key="MessageAttachmentTemplateSelector">
+            <local:MessageAttachementTypeTemplateSelector.Image>
+                <DataTemplate>
+                    <StackPanel>
+                        <uwpcontrol:ImageEx Source="{Binding Url}" MaxHeight="240"
+                                            HorizontalAlignment="Left"
+                                            />
+
+                        <HyperlinkButton Content="オリジナル画像を表示"
+                                         NavigateUri="{Binding Url}"
+                                         />
+
+                    </StackPanel>
+                </DataTemplate>
+            </local:MessageAttachementTypeTemplateSelector.Image>
+
+            <local:MessageAttachementTypeTemplateSelector.Other>
+                <DataTemplate>
+                    <mycontrols:DiscordMessageAttachementControl />
+                </DataTemplate>
+            </local:MessageAttachementTypeTemplateSelector.Other>
+        </local:MessageAttachementTypeTemplateSelector>
+        
         <DataTemplate x:Key="MessageItemTemplate">
             <StackPanel>
                 <mycontrols:DiscordMessageContent MessageContent="{Binding Content}" />
                 
                 <!-- TODO: Attachements -->
-                <ItemsControl ItemsSource="{Binding Attachments}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <mycontrols:DiscordMessageAttachementControl />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                <ItemsControl ItemsSource="{Binding Attachments}"
+                              ItemTemplateSelector="{StaticResource MessageAttachmentTemplateSelector}"
+                              >
                 </ItemsControl>
                 
                 <!-- TODO: Embeds -->
                 <ItemsControl ItemsSource="{Binding Embeds}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <mycontrols:DiscordMessageAttachementControl />
+                            <mycontrols:DiscordMessageEmbedControl />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

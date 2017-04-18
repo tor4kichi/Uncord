@@ -1,0 +1,38 @@
+﻿<UserControl
+    x:Class="Uncord.Views.Controls.DiscordMessageEmbedControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views.Controls.Message"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <local:MessageEmbedTypeTemplateSelector x:Key="EmbedItemTemplateSelector" >
+            <local:MessageEmbedTypeTemplateSelector.Image>
+                <DataTemplate>
+                    
+                </DataTemplate>
+            </local:MessageEmbedTypeTemplateSelector.Image>
+
+            <local:MessageEmbedTypeTemplateSelector.Video>
+                <DataTemplate>
+                    
+                </DataTemplate>
+            </local:MessageEmbedTypeTemplateSelector.Video>
+        </local:MessageEmbedTypeTemplateSelector>
+    </UserControl.Resources>
+    <Grid>
+
+        <uwpcontrol:ImageEx Source="{Binding Thumbnail, TargetNullValue={x:Null}}" />
+
+
+    </Grid>
+</UserControl>

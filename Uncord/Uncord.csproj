@@ -129,9 +129,11 @@
     <Compile Include="Views\Controls\Message\DiscordMessageEmbedControl.xaml.cs">
       <DependentUpon>DiscordMessageEmbedControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Message\MessageAttachementTypeTemplateSelector.cs" />
     <Compile Include="Views\Controls\Message\MessageControl.xaml.cs">
       <DependentUpon>MessageControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Message\MessageEmbedTypeTemplateSelector.cs" />
     <Compile Include="Views\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>
