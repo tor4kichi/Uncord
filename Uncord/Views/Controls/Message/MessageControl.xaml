@@ -51,13 +51,20 @@
                 </ItemsControl>
                 
                 <!-- TODO: Embeds -->
-                <ItemsControl ItemsSource="{Binding Embeds}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <mycontrols:DiscordMessageEmbedControl />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <Border Padding="8 0 0 0"
+                        BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                        BorderThickness="4 0 0 0"
+                        Background="#2F000000"
+                        >
+                    <ItemsControl ItemsSource="{Binding Embeds}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <mycontrols:DiscordMessageEmbedControl />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </Border>
                 
                 <!-- TODO: IsPinned -->
                 <!-- TODO: Tags -->

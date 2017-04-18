@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Uncord"
     xmlns:converter="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:myconverter="using:Uncord.Views.Converter"
     RequestedTheme="Light">
 
     <prism:PrismUnityApplication.Resources>
@@ -37,7 +38,10 @@
             <x:Double x:Key="MidiumMinWidth" >1024</x:Double>
             <x:Double x:Key="SmallMinWidth" >720</x:Double>
             <!-- x-small is smaller 720px -->
-            
+
+
+            <myconverter:YoutubeUrlToEmbedHtmlStringConverter x:Key="youtubeUrlToEmbedHtmlStringConverter" />
+
         </ResourceDictionary>
     </prism:PrismUnityApplication.Resources>
 </prism:PrismUnityApplication>

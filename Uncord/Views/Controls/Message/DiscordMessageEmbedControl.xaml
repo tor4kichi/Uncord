@@ -15,24 +15,89 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
+
+        <local:VideoEmbedTemplateSelector x:Key="VideoEmbedTemplateSelector">
+            <local:VideoEmbedTemplateSelector.Youtube>
+                <DataTemplate>
+                    <StackPanel>
+                        <WebView Height="280" Width="400">
+                            <i:Interaction.Behaviors>
+                                <mybehavior:WebViewDisplayHtmlBehavior 
+                                Html="{Binding Url, Converter={StaticResource youtubeUrlToEmbedHtmlStringConverter}}"
+                                />
+                            </i:Interaction.Behaviors>
+                        </WebView>
+                    </StackPanel>
+                </DataTemplate>
+            </local:VideoEmbedTemplateSelector.Youtube>
+
+            <local:VideoEmbedTemplateSelector.Other>
+                <DataTemplate>
+                    <HyperlinkButton NavigateUri="{Binding Url}">
+                        <SymbolIcon Symbol="OpenWith" />
+                    </HyperlinkButton>
+                </DataTemplate>
+            </local:VideoEmbedTemplateSelector.Other>
+        </local:VideoEmbedTemplateSelector>
+        
         <local:MessageEmbedTypeTemplateSelector x:Key="EmbedItemTemplateSelector" >
             <local:MessageEmbedTypeTemplateSelector.Image>
                 <DataTemplate>
-                    
+                    <Grid>
+                        <HyperlinkButton NavigateUri="{Binding Url}">
+                            <SymbolIcon Symbol="OpenWith" />
+                        </HyperlinkButton>
+                    </Grid>
                 </DataTemplate>
             </local:MessageEmbedTypeTemplateSelector.Image>
 
             <local:MessageEmbedTypeTemplateSelector.Video>
                 <DataTemplate>
-                    
+                    <Grid>
+                        <ContentControl Content="{Binding}" 
+                                    ContentTemplateSelector="{StaticResource VideoEmbedTemplateSelector}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"                                    
+                                    />
+                    </Grid>
                 </DataTemplate>
             </local:MessageEmbedTypeTemplateSelector.Video>
         </local:MessageEmbedTypeTemplateSelector>
     </UserControl.Resources>
-    <Grid>
 
-        <uwpcontrol:ImageEx Source="{Binding Thumbnail, TargetNullValue={x:Null}}" />
+    <StackPanel>
+
+        <ContentControl Content="{Binding Provider}">
+            <ContentControl.ContentTemplate>
+                <DataTemplate>
+                    <HyperlinkButton Content="{Binding Name}"
+                                     NavigateUri="{Binding Url}"
+                                     />
+                </DataTemplate>
+            </ContentControl.ContentTemplate>
+        </ContentControl>
+
+        <TextBlock Text="{Binding Title}" />
+
+        <Grid MaxHeight="240">
 
 
-    </Grid>
+            <uwpcontrol:ImageEx Source="{Binding Thumbnail}"
+                            MaxHeight="240"
+                            IsTapEnabled="False"
+                            />
+
+            <ContentControl Content="{Binding}"
+                            ContentTemplateSelector="{StaticResource EmbedItemTemplateSelector}"
+                            MaxHeight="240"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Margin="0 8"
+                        />
+
+
+
+        </Grid>
+
+    </StackPanel>
 </UserControl>

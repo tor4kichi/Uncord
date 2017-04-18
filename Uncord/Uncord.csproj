@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="Views\Behaviors\KeyboardTrigger.cs" />
     <Compile Include="Views\Behaviors\MoveHeaderOnFocusBehavior.cs" />
+    <Compile Include="Views\Behaviors\WebViewDisplayHtmlBehavior.cs" />
     <Compile Include="Views\Controls\Message\DiscordMessageAttachementControl.xaml.cs">
       <DependentUpon>DiscordMessageAttachementControl.xaml</DependentUpon>
     </Compile>
@@ -134,6 +135,8 @@
       <DependentUpon>MessageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Message\MessageEmbedTypeTemplateSelector.cs" />
+    <Compile Include="Views\Controls\Message\VideoEmbedTemplateSelector.cs" />
+    <Compile Include="Views\Converter\YoutubeUrlToEmbedHtmlStringConverter.cs" />
     <Compile Include="Views\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>

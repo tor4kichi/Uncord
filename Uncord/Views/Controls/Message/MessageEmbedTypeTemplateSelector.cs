@@ -15,14 +15,15 @@ namespace Uncord.Views.Controls.Message
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (item is string)
+            if (item is Discord.IEmbed)
             {
-                switch(item as string)
+                var embed = item as Discord.IEmbed;
+                switch (embed.Type)
                 {
                     case "image":
-                        break;
+                        return Image;
                     case "video":
-                        break;
+                        return Video;
                     default:
                         throw new NotSupportedException();
                 }
