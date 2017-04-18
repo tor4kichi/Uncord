@@ -106,7 +106,9 @@ namespace Uncord.ViewModels
 
 
             // Listup Text Channels
-            foreach (var textChannel in _Guild.TextChannels.ToArray())
+            var channels = _Guild.TextChannels.ToList();
+            channels.Sort((x, y) => x.Position - y.Position);
+            foreach (var textChannel in channels)
             {
                 _TextChannels.Add(new GuildTextChannelViewModel(textChannel));
             }
@@ -114,25 +116,16 @@ namespace Uncord.ViewModels
 
             // Listup Voice Channels
             AfkChannel.Value = _Guild.AFKChannel;
-            if (HasAfkChannel.Value)
-            {
-                var afkChannelId = AfkChannel.Value.Id;
-                var channelsWithoutAfkChannel = 
+            var afkChannelId = AfkChannel.Value?.Id;
+            var voiceChannels =
                     _Guild.VoiceChannels
                     .Where(x => x.Id != afkChannelId)
-                    .ToArray();
+                    .ToList();
+            voiceChannels.Sort((x, y) => x.Position - y.Position);
 
-                foreach (var channel in channelsWithoutAfkChannel)
-                {
-                    _VoiceChannels.Add(channel);
-                }
-            }
-            else
+            foreach (var channel in voiceChannels)
             {
-                foreach (var channel in _Guild.VoiceChannels.ToArray())
-                {
-                    _VoiceChannels.Add(channel);
-                }
+                _VoiceChannels.Add(channel);
             }
 
 

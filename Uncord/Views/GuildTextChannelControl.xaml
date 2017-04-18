@@ -10,13 +10,19 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:messageControl="using:Uncord.Views.Controls.Message"
     mc:Ignorable="d"
     d:DesignHeight="800"
     d:DesignWidth="400">
 
     <UserControl.Resources>
         <DataTemplate x:Key="MessageTemplate" >
-            <uwpcontrol:MarkdownTextBlock Text="{Binding Content}" />
+            <Border Padding="8 8 8 8" 
+                    BorderBrush="{StaticResource TextBoxDisabledBorderThemeBrush}"
+                    BorderThickness="0 0 0 1"
+                    >
+                <messageControl:MessageControl />
+            </Border>
         </DataTemplate>
 
     </UserControl.Resources>
@@ -59,14 +65,25 @@
 
                 <Border Margin="{x:Bind HeaderMergin}" 
                         toolkit:DockPanel.Dock="Top"
+                        Height="48"
+                        BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
+                        BorderThickness="0 0 0 1"
                         >
-                    <TextBlock Text="{Binding Name}"
-                           Style="{StaticResource SubheaderTextBlockStyle}"
-                           Margin="8"
-                           />
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}"
+                           Margin="16 0 0 0"
+                               VerticalAlignment="Center"
+                           >
+                        <Run Text="#" />
+                        <Run Text="{Binding Name}" />
+                    </TextBlock>
                 </Border>
 
-                <Border toolkit:DockPanel.Dock="Bottom">
+                <Border toolkit:DockPanel.Dock="Bottom"
+                        BorderBrush="{StaticResource TextBoxDisabledBorderThemeBrush}"
+                        BorderThickness="0 1 0 0"
+                        Padding="0 16"
+                        Margin="16 0"
+                        >
                     <toolkit:DockPanel x:Name="SendMessageLayout">
 
                         <Border toolkit:DockPanel.Dock="Left"
@@ -91,7 +108,7 @@
                         </Border>
 
                         <TextBox Text="{Binding SendMessageText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 MinHeight="32"
+                                 MinHeight="16"
                                  TextWrapping="Wrap"
                                  >
                             <i:Interaction.Behaviors>
@@ -108,15 +125,18 @@
                 </Border>
 
 
-                <ItemsControl ItemsSource="{Binding Messages}"
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Messages}"
                     ItemTemplate="{StaticResource MessageTemplate}"
+                                  Margin="8 0 16 0"
                               >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel VerticalAlignment="Bottom"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
                 
             </toolkit:DockPanel>
             

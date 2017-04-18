@@ -36,7 +36,7 @@ namespace Uncord.ViewModels
                 .RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 async () => 
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    await Task.Delay(TimeSpan.FromSeconds(0.5));
 
                     _NavigationService.Navigate(PageTokens.EmptyPageToken, null);
 
