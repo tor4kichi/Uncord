@@ -113,6 +113,7 @@
     <Compile Include="ViewModels\GuildListViewModel.cs" />
     <Compile Include="ViewModels\GuildPageViewModel.cs" />
     <Compile Include="ViewModels\GuildTextChannelViewModel.cs" />
+    <Compile Include="ViewModels\GuildVoiceChannelViewModel.cs" />
     <Compile Include="ViewModels\LoggedInProcessPageViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="Views\AccountLoginPage.xaml.cs">

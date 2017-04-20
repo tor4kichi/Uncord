@@ -155,7 +155,7 @@ namespace Uncord.ViewModels
             }
         }
 
-        public async Task Load()
+        public async Task Enter()
         {
             using (var releaser = await _MessageUpdateLock.LockAsync())
             {
@@ -172,6 +172,11 @@ namespace Uncord.ViewModels
                     await Task.Delay(1);
                 }
             }
+        }
+
+        public Task Leave()
+        {
+            return Task.CompletedTask;
         }
 
         public void Dispose()
