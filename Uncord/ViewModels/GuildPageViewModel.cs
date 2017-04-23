@@ -84,8 +84,8 @@ namespace Uncord.ViewModels
                     if (_PrevSelectedVoiceChannel != null)
                     {
                         await _PrevSelectedVoiceChannel.Leave();
-
                     }
+
                     if (x != null)
                     {
                         await x.Enter();
@@ -116,7 +116,7 @@ namespace Uncord.ViewModels
             }
             else
             {
-                vm = new GuildTextChannelViewModel(textChannel);
+                vm = new GuildTextChannelViewModel(_DiscordContext.DiscordSocketClient, textChannel);
                 _TextChannelVMCacheMap.Add(textChannel.Id, vm);
             }
 
@@ -136,9 +136,9 @@ namespace Uncord.ViewModels
                 return;
             }
 
-            _Guild.Discord.ChannelCreated += Discord_ChannelCreated;
-            _Guild.Discord.ChannelDestroyed += Discord_ChannelDestroyed;
-            _Guild.Discord.ChannelUpdated += Discord_ChannelUpdated;
+            _DiscordContext.DiscordSocketClient.ChannelCreated += Discord_ChannelCreated;
+            _DiscordContext.DiscordSocketClient.ChannelDestroyed += Discord_ChannelDestroyed;
+            _DiscordContext.DiscordSocketClient.ChannelUpdated += Discord_ChannelUpdated;
 
 
             // Listup Text Channels
@@ -146,7 +146,7 @@ namespace Uncord.ViewModels
             channels.Sort((x, y) => x.Position - y.Position);
             foreach (var textChannel in channels)
             {
-                _TextChannels.Add(new GuildTextChannelViewModel(textChannel));
+                _TextChannels.Add(new GuildTextChannelViewModel(_DiscordContext.DiscordSocketClient, textChannel));
             }
 
 
@@ -181,9 +181,9 @@ namespace Uncord.ViewModels
         {
             if (_Guild == null) { return; }
 
-            _Guild.Discord.ChannelCreated -= Discord_ChannelCreated;
-            _Guild.Discord.ChannelDestroyed -= Discord_ChannelDestroyed;
-            _Guild.Discord.ChannelUpdated -= Discord_ChannelUpdated;
+            _DiscordContext.DiscordSocketClient.ChannelCreated -= Discord_ChannelCreated;
+            _DiscordContext.DiscordSocketClient.ChannelDestroyed -= Discord_ChannelDestroyed;
+            _DiscordContext.DiscordSocketClient.ChannelUpdated -= Discord_ChannelUpdated;
 
             _TextChannels.Clear();
             _VoiceChannels.Clear();
@@ -215,7 +215,7 @@ namespace Uncord.ViewModels
                 {
                     if (newGuildChanneld is SocketTextChannel)
                     {
-                        _TextChannels.Add(new GuildTextChannelViewModel(newGuildChanneld as SocketTextChannel));
+                        _TextChannels.Add(new GuildTextChannelViewModel(_DiscordContext.DiscordSocketClient, newGuildChanneld as SocketTextChannel));
                     }
                     else if (newGuildChanneld is SocketVoiceChannel)
                     {

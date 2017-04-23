@@ -18,6 +18,9 @@ using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using System.Diagnostics;
+using Discord.Audio;
+using Windows.Media.Audio;
+using Windows.Media.Render;
 
 namespace Uncord
 {
@@ -57,7 +60,7 @@ namespace Uncord
         protected override void ConfigureContainer()
         {
             Container.RegisterInstance(new Models.DiscordContext());
-
+            Container.RegisterInstance(new Models.AudioPlaybackManager());
             base.ConfigureContainer();
         }
 
@@ -88,9 +91,19 @@ namespace Uncord
             return appShell;
         }
 
-
+        
         protected override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
+            var audioPlaybackManager = Container.Resolve<Models.AudioPlaybackManager>();
+            await audioPlaybackManager.Initialize();
+
+            Discord.Audio.Streams.OpusDecodeStream.OpusDecoderFactory = () => new Models.OpusDecoderImpl();
+            Discord.Audio.Streams.OpusEncodeStream.OpusEncodeFactory = (bitrate, app, signal) => new Models.OpusEncoderImpl(bitrate, app, signal);
+
+
+            Discord.Audio.Streams.SodiumDecryptStream.StreamCipher = Models.SodiumImpl.Instance;
+            Discord.Audio.Streams.SodiumEncryptStream.StreamCipher = Models.SodiumImpl.Instance;
+
             // 自動ログインを行う
             var discordContext = Container.Resolve<Models.DiscordContext>();
             await discordContext.TryLoginWithRecordedCredential();

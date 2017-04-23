@@ -20,6 +20,7 @@ namespace Uncord.ViewModels
     {
         private CompositeDisposable _CompositeDisposable = new CompositeDisposable();
 
+        public DiscordSocketClient SocketClient { get; }
         public SocketTextChannel TextChannel { get; private set; }
 
 
@@ -40,8 +41,9 @@ namespace Uncord.ViewModels
 
 
 
-        public GuildTextChannelViewModel(SocketTextChannel textChannel)
+        public GuildTextChannelViewModel(DiscordSocketClient client, SocketTextChannel textChannel)
         {
+            SocketClient = client;
             TextChannel = textChannel;
 
             Name = TextChannel.Name;
@@ -114,7 +116,7 @@ namespace Uncord.ViewModels
             SendMessageCommand.Subscribe(async x => await SendMessage(SendMessageText.Value))
                 .AddTo(_CompositeDisposable);
 
-            TextChannel.Discord.MessageReceived += Discord_MessageReceived;
+            SocketClient.MessageReceived += Discord_MessageReceived;
         }
 
         private async Task SendMessage(string message)
@@ -183,7 +185,7 @@ namespace Uncord.ViewModels
         {
             if (TextChannel != null)
             {
-                TextChannel.Discord.MessageReceived -= Discord_MessageReceived;
+                SocketClient.MessageReceived -= Discord_MessageReceived;
             }
 
             _CompositeDisposable.Dispose();

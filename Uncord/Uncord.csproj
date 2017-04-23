@@ -34,6 +34,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -46,6 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -103,7 +105,12 @@
     <Compile Include="AppShell.xaml.cs">
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\AudioPlaybackManager.cs" />
     <Compile Include="Models\DiscordContext.cs" />
+    <Compile Include="Models\OpusConvertConstants.cs" />
+    <Compile Include="Models\OpusDecoderImpl.cs" />
+    <Compile Include="Models\OpusEncoderImpl.cs" />
+    <Compile Include="Models\SodiumImpl.cs" />
     <Compile Include="PageTokens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\AppVersion.cs" />
@@ -236,20 +243,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net">
-      <Version>1.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="Discord.Net.Core">
-      <Version>1.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="Discord.Net.Rest">
-      <Version>1.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="Discord.Net.Webhook">
-      <Version>1.0.0-rc</Version>
-    </PackageReference>
     <PackageReference Include="Discord.Net.WebSocket">
-      <Version>1.0.0-rc</Version>
+      <Version>1.0.0-rc2-dev</Version>
+    </PackageReference>
+    <PackageReference Include="libopusUWP">
+      <Version>1.0.18</Version>
+    </PackageReference>
+    <PackageReference Include="libsodium-uwp">
+      <Version>1.0.12</Version>
     </PackageReference>
     <PackageReference Include="LiteDB">
       <Version>3.1.0</Version>
