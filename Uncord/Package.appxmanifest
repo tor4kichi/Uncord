@@ -30,7 +30,7 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <uap3:Capability Name="backgroundMediaPlayback" />
+    <uap:Capability Name="musicLibrary" />
     <DeviceCapability Name="microphone" />
   </Capabilities>
   <Extensions>

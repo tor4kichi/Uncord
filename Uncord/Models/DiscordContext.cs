@@ -57,6 +57,8 @@ namespace Uncord.Models
             // ユーザーIDからユーザー名を引きたいためにこんなことをしてます
             // Model上で解決すべき？
             Views.Controls.DiscordMessageContent.UserIdToUserName = UserIdToUserName;
+
+            
         }
 
         private async Task StartLoginProcess()
@@ -92,7 +94,6 @@ namespace Uncord.Models
             DiscordSocketClient.LoggedOut += DiscordSocketClient_LoggedOut;
             
             await DiscordSocketClient.LoginAsync(TokenType.User, DiscordAccessToken);
-
         }
 
 
@@ -112,7 +113,7 @@ namespace Uncord.Models
         {
             DiscordSocketClient.Connected += DiscordSocketClient_Connected;
             DiscordSocketClient.Disconnected += DiscordSocketClient_Disconnected;
-
+            
             await DiscordSocketClient.StartAsync();
         }
 
