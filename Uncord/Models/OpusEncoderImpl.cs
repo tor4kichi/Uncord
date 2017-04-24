@@ -39,28 +39,19 @@ namespace Uncord.Models
 
         public int EncodeFrame(byte[] input, int inputOffset, byte[] output, int outputOffset)
         {
-            if (outputOffset != 0)
-            {
-                var result = Encoder.Encode(
-                    input.Skip(inputOffset).ToArray(),
-                    OpusConvertConstants.FrameSamplesPerChannel,
-                    _buffer,
-                    output.Length - outputOffset
-                    );
+            var result = Encoder.Encode(
+                input.Skip(inputOffset).ToArray(),
+                OpusConvertConstants.FrameSamplesPerChannel,
+                _buffer,
+                output.Length - outputOffset
+                );
 
-                _buffer.CopyTo(output, outputOffset);
 
-                return result;
-            }
-            else
-            {
-                return Encoder.Encode(
-                    input.Skip(inputOffset).ToArray(), 
-                    OpusConvertConstants.FrameSamplesPerChannel, 
-                    output, 
-                    output.Length
-                    );
-            }
+            _buffer.CopyTo(output, outputOffset);
+
+            Array.Clear(_buffer, 0, result);
+
+            return result;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Uncord.Models
             var realInputBytes = input.Skip(inputOffset).Take(inputLength).ToArray();
             var result = Sodium.SecretBox.Create(realInputBytes, nonce, secret);
             result.CopyTo(output, outputOffset);
-            return inputLength + 16;
+            return result.Length;
         }
 
         public int Decrypt(byte[] input, int inputOffset, int inputLength, byte[] output, int outputOffset, byte[] nonce, byte[] secret)

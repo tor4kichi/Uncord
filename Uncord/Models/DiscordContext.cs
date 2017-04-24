@@ -57,6 +57,8 @@ namespace Uncord.Models
             // ユーザーIDからユーザー名を引きたいためにこんなことをしてます
             // Model上で解決すべき？
             Views.Controls.DiscordMessageContent.UserIdToUserName = UserIdToUserName;
+
+            
         }
 
         private async Task StartLoginProcess()
@@ -92,7 +94,6 @@ namespace Uncord.Models
             DiscordSocketClient.LoggedOut += DiscordSocketClient_LoggedOut;
             
             await DiscordSocketClient.LoginAsync(TokenType.User, DiscordAccessToken);
-
         }
 
 
@@ -113,6 +114,10 @@ namespace Uncord.Models
             DiscordSocketClient.Connected += DiscordSocketClient_Connected;
             DiscordSocketClient.Disconnected += DiscordSocketClient_Disconnected;
 
+            DiscordSocketClient.JoinedGuild += DiscordSocketClient_JoinedGuild;
+            DiscordSocketClient.LeftGuild += DiscordSocketClient_LeftGuild;
+            DiscordSocketClient.GuildUpdated += DiscordSocketClient_GuildUpdated;
+
             await DiscordSocketClient.StartAsync();
         }
 
@@ -120,6 +125,10 @@ namespace Uncord.Models
         private async Task DiscordSocketClient_LoggedOut()
         {
             await DiscordSocketClient.StopAsync();
+
+            DiscordSocketClient.JoinedGuild -= DiscordSocketClient_JoinedGuild;
+            DiscordSocketClient.LeftGuild -= DiscordSocketClient_LeftGuild;
+            DiscordSocketClient.GuildUpdated -= DiscordSocketClient_GuildUpdated;
 
             DiscordSocketClient.Connected -= DiscordSocketClient_Connected;
             DiscordSocketClient.Disconnected -= DiscordSocketClient_Disconnected;
@@ -131,9 +140,6 @@ namespace Uncord.Models
         {
             Debug.WriteLine("listup guild.");
             
-            DiscordSocketClient.JoinedGuild += DiscordSocketClient_JoinedGuild;
-            DiscordSocketClient.LeftGuild += DiscordSocketClient_LeftGuild;
-            DiscordSocketClient.GuildUpdated += DiscordSocketClient_GuildUpdated;
 
 
             //            var groupChannels = await DiscordSocketClient.GetGroupChannelsAsync();
@@ -147,9 +153,6 @@ namespace Uncord.Models
 
         private Task DiscordSocketClient_Disconnected(Exception arg)
         {
-            DiscordSocketClient.JoinedGuild -= DiscordSocketClient_JoinedGuild;
-            DiscordSocketClient.LeftGuild -= DiscordSocketClient_LeftGuild;
-            DiscordSocketClient.GuildUpdated -= DiscordSocketClient_GuildUpdated;
 
 
             return Task.CompletedTask;
