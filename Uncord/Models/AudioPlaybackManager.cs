@@ -1,6 +1,7 @@
 ﻿using Discord.Audio;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -45,9 +46,32 @@ namespace Uncord.Models
         public AsyncLock InitializeLock { get; } = new AsyncLock();
 
 
+
         private AudioInputManager Input;
 
+        public readonly static double DefaultMicSilentThreshold = 10.0;
+
+        // マイク入力の無音設定
+        // 発話中は20～40程度を示します
+        // 無音判定として利用するのは 4~10 程度が良さそうです
+        // 12あたりを越えると発話の閉じ部分が無音判定になってしまい
+        // ブチッと音声が途切れたようになってしまうので注意してください
+        /// <summary>
+        /// マイク入力の無音設定 (4 ~ 10)
+        /// </summary>
+        public double MicSilentThreshold
+        {
+            get { return Input.SilentThreshold; }
+            set { Input.SilentThreshold = value; }
+        }
+
+
+
+
         private AudioOutputManager Output;
+
+        
+
 
         public AudioPlaybackManager()
         {
@@ -138,6 +162,9 @@ namespace Uncord.Models
         private AudioGraph _AudioGraph;
 
         public InputDeviceState InputDeviceState { get; private set; }
+
+
+        public double SilentThreshold { get; set; } = AudioPlaybackManager.DefaultMicSilentThreshold;
 
 
         private AudioOutStream _AudioOutStream;
@@ -253,6 +280,7 @@ namespace Uncord.Models
             }
         }
 
+
         
         private async void AudioGraph_QuantumStarted(AudioGraph sender, object args)
         {
@@ -270,9 +298,22 @@ namespace Uncord.Models
 
                 using (var audioFrame = _FrameOutputNode.GetFrame())
                 {
-                    var audioBytes = GetAudioDataFromAudioFrame(audioFrame);
+                    var audioBytes = GetAudioDataFromAudioFrame(
+                        audioFrame,
+                        out var soundLevel
+                        );
 
-                    System.Diagnostics.Debug.WriteLine($"send audio: {audioBytes.Length} bytes");
+                    if (soundLevel == double.NaN)
+                    {
+                        return;
+                    }
+
+                    var isSilent = soundLevel < SilentThreshold;
+                    if (isSilent)
+                    {
+                        return;
+                    }
+
                     try
                     {
                         await _AudioOutStream.WriteAsync(audioBytes, 0, audioBytes.Length);
@@ -284,8 +325,12 @@ namespace Uncord.Models
         }
 
 
-        private byte[] GetAudioDataFromAudioFrame(AudioFrame frame)
+        
+
+
+        private byte[] GetAudioDataFromAudioFrame(AudioFrame frame, out double outSoundLevel)
         {
+            double sum = 0.0;
             using (var audioBuffer = frame.LockBuffer(AudioBufferAccessMode.Read))
             {
                 var buffer = Windows.Storage.Streams.Buffer.CreateCopyFromMemoryBuffer(audioBuffer);
@@ -304,20 +349,29 @@ namespace Uncord.Models
 
                         var singleTmp = dataReader.ReadSingle();
                         var int16Tmp = (Int16)(singleTmp * Int16.MaxValue);
+
+                        sum += Math.Abs(singleTmp);
+
                         byte[] chunkBytes = BitConverter.GetBytes(int16Tmp);
                         byteData[pos++] = chunkBytes[0];
                         byteData[pos++] = chunkBytes[1];
 
                         // Note: マイク入力を1チャンネルで取っている場合に、
                         // ステレオとして送るため1チャンネル分追加で
-                        
                         byteData[pos++] = chunkBytes[0];
                         byteData[pos++] = chunkBytes[1];
-
-                        
-
-
                     }
+
+                    // 1サンプルあたり4byte使っているため4で割ってサンプル数を算出
+                    var sampleCount = buffer.Length / 4;
+
+                    // outSoundLevelは無音時で5.0~8.0, 発話中で20.0以上程度を示す
+                    // 1000掛けているのは扱いやすくするため
+                    outSoundLevel = (sum / sampleCount) * 1000; 
+
+#if DEBUG
+                    Debug.WriteLine($"{sum} | {buffer.Length} | {sum / sampleCount * 1000}");
+#endif                    
 
                     return byteData;
                 }

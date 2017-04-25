@@ -13,6 +13,7 @@ using Microsoft.Practices.Unity;
 using Uncord.Models;
 using Windows.Media.Audio;
 using WinRTXamlToolkit.Async;
+using System.Diagnostics;
 
 namespace Uncord.ViewModels
 {
@@ -68,7 +69,6 @@ namespace Uncord.ViewModels
                 client.StreamCreated += VoiceChannelAudioStreamCreated;
                 client.StreamDestroyed += VoiceChannelAudioStreamDestroyed;
             });
-            
         }
 
         public async Task Leave()
@@ -122,11 +122,17 @@ namespace Uncord.ViewModels
 
         private Task VoiceChannelSpeakingUpdated(ulong arg1, bool arg2)
         {
+#if DEBUG
+            Debug.WriteLine($"speaking: {arg1} is {arg2}");
+#endif
             return Task.CompletedTask;
         }
 
         private Task VoiceChannelLatencyUpdated(int arg1, int arg2)
         {
+#if DEBUG
+            Debug.WriteLine($"Latency: {arg1} : {arg2}");
+#endif
             return Task.CompletedTask;
         }
 
