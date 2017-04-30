@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Audio;
 using Discord.Rest;
 using Discord.WebSocket;
 using Prism.Mvvm;
@@ -18,6 +19,7 @@ namespace Uncord.Models
     // Discordへのログイン状態の保持
     // メール・パスワードの資格情報
 
+  
     
     public class DiscordContext : BindableBase
     {
@@ -25,17 +27,11 @@ namespace Uncord.Models
 
         public bool IsValidateToken => !string.IsNullOrEmpty(DiscordAccessToken);
 
-        private RestSelfUser _CurrentUser;
-        public RestSelfUser CurrentUser
-        {
-            get { return _CurrentUser; }
-            set { SetProperty(ref _CurrentUser, value); }
-        }
+        private AudioPlaybackManager AudioManager;
 
-        private ObservableCollection<SocketGuild> _Guilds;
-        public ReadOnlyReactiveCollection<SocketGuild> Guilds { get; private set; }
+        IAudioClient _CurrentVoiceAudioClient;
 
-        private AsyncLock _LoginLock = new AsyncLock();
+
 
         private string _LoginProcessStateResourceId;
         public string LoginProcessStateResourceId
@@ -47,10 +43,148 @@ namespace Uncord.Models
         public DiscordSocketClient DiscordSocketClient { get; private set; }
         public DiscordRestClient DiscordRestClient { get; private set; }
 
-        public DiscordContext()
+        private AsyncLock _LoginLock = new AsyncLock();
+
+
+
+
+        private RestSelfUser _CurrentUser;
+        public RestSelfUser CurrentUser
         {
+            get { return _CurrentUser; }
+            set { SetProperty(ref _CurrentUser, value); }
+        }
+
+
+
+
+        private ObservableCollection<SocketGuild> _Guilds;
+        public ReadOnlyReactiveCollection<SocketGuild> Guilds { get; private set; }
+
+
+        private SocketGuild _CurrentGuild;
+        public SocketGuild CurrentGuild
+        {
+            get { return _CurrentGuild; }
+            private set { SetProperty(ref _CurrentGuild, value); }
+        }
+
+        private AsyncLock _GuildSelectionChangingLock = new AsyncLock();
+
+        public async Task SetCurrentGuildAsync(SocketGuild guild)
+        {
+            using (var releaser = await _GuildSelectionChangingLock.LockAsync())
+            {
+                CurrentTextChannel = null;
+                CurrentVoiceChannel = null;
+                CurrentGuildAfkVoiceChannel = null;
+                _CurrentGuildTextChannels.Clear();
+                _CurrentGuildVoiceChannels.Clear();
+
+                CurrentGuild = guild;
+
+                if (CurrentGuild != null)
+                {
+                    foreach (var textChannel in CurrentGuild.TextChannels.ToArray())
+                    {
+                        _CurrentGuildTextChannels.Add(textChannel);
+                    }
+                    foreach (var voiceChannel in CurrentGuild.VoiceChannels)
+                    {
+                        _CurrentGuildVoiceChannels.Add(voiceChannel);
+                    }
+
+                    CurrentGuildAfkVoiceChannel = CurrentGuild.AFKChannel;
+                }
+            }
+        }
+
+
+
+        private ObservableCollection<SocketTextChannel> _CurrentGuildTextChannels;
+        public ReadOnlyObservableCollection<SocketTextChannel> CurrentGuildTextChannels { get; }
+
+
+        private ObservableCollection<SocketVoiceChannel> _CurrentGuildVoiceChannels;
+        public ReadOnlyObservableCollection<SocketVoiceChannel> CurrentGuildVoiceChannels { get; }
+
+        private SocketVoiceChannel _CurrentGuildAfkVoiceChannel;
+        public SocketVoiceChannel CurrentGuildAfkVoiceChannel
+        {
+            get { return _CurrentGuildAfkVoiceChannel; }
+            private set { SetProperty(ref _CurrentGuildAfkVoiceChannel, value); }
+        }
+
+
+        private SocketTextChannel _CurrentTextChannel;
+        public SocketTextChannel CurrentTextChannel
+        {
+            get { return _CurrentTextChannel; }
+            set { SetProperty(ref _CurrentTextChannel, value); }
+        }
+
+        private SocketVoiceChannel _CurrentVoiceChannel;
+        public SocketVoiceChannel CurrentVoiceChannel
+        {
+            get { return _CurrentVoiceChannel; }
+            private set { SetProperty(ref _CurrentVoiceChannel, value); }
+        }
+
+        private bool _IsConnectedVoiceChannel;
+        public bool IsConnectedVoiceChannel
+        {
+            get { return _IsConnectedVoiceChannel; }
+            private set { SetProperty(ref _IsConnectedVoiceChannel, value); }
+        }
+
+        private bool _IsDisconnectedVoiceChannel;
+        public bool IsDisconnectedVoiceChannel
+        {
+            get { return _IsDisconnectedVoiceChannel; }
+            private set { SetProperty(ref _IsDisconnectedVoiceChannel, value); }
+        }
+
+        private bool _IsNotConnectVoiceChannel;
+        public bool IsNotConnectVoiceChannel
+        {
+            get { return _IsNotConnectVoiceChannel; }
+            private set { SetProperty(ref _IsNotConnectVoiceChannel, value); }
+        }
+
+        private UncordChannelConnectState _ConnectState;
+        public UncordChannelConnectState ConnectState
+        {
+            get { return _ConnectState; }
+            private set
+            {
+                if (SetProperty(ref _ConnectState, value))
+                {
+                    IsNotConnectVoiceChannel = _ConnectState == UncordChannelConnectState.NotConnect;
+                    IsConnectedVoiceChannel = _ConnectState == UncordChannelConnectState.Connected;
+                    IsDisconnectedVoiceChannel = _ConnectState == UncordChannelConnectState.Disconnected;
+                }
+            }
+        }
+
+        private AsyncLock _VoiceChannelLock = new AsyncLock();
+
+       
+        public DiscordContext(AudioPlaybackManager audioManager)
+        {
+            AudioManager = audioManager;
+
             _Guilds = new ObservableCollection<SocketGuild>();
             Guilds = _Guilds.ToReadOnlyReactiveCollection();
+
+            _CurrentGuildTextChannels = new ObservableCollection<SocketTextChannel>();
+            CurrentGuildTextChannels = new ReadOnlyObservableCollection<SocketTextChannel>(_CurrentGuildTextChannels);
+
+            _CurrentGuildVoiceChannels = new ObservableCollection<SocketVoiceChannel>();
+            CurrentGuildVoiceChannels = new ReadOnlyObservableCollection<SocketVoiceChannel>(_CurrentGuildVoiceChannels);
+
+
+
+
 
             // this is unkode(durty code).
             // IMessage.Contentの内容をMarkdownに変換する際、
@@ -92,7 +226,6 @@ namespace Uncord.Models
             DiscordSocketClient.LoggedOut += DiscordSocketClient_LoggedOut;
             
             await DiscordSocketClient.LoginAsync(TokenType.User, DiscordAccessToken);
-
         }
 
 
@@ -102,6 +235,10 @@ namespace Uncord.Models
             await DiscordSocketClient.LogoutAsync();
             DiscordSocketClient.Dispose();
             DiscordSocketClient = null;
+
+            CurrentVoiceChannel = null;
+            CurrentTextChannel = null;
+            CurrentGuild = null;
         }
 
 
@@ -113,6 +250,10 @@ namespace Uncord.Models
             DiscordSocketClient.Connected += DiscordSocketClient_Connected;
             DiscordSocketClient.Disconnected += DiscordSocketClient_Disconnected;
 
+            DiscordSocketClient.JoinedGuild += DiscordSocketClient_JoinedGuild;
+            DiscordSocketClient.LeftGuild += DiscordSocketClient_LeftGuild;
+            DiscordSocketClient.GuildUpdated += DiscordSocketClient_GuildUpdated;
+
             await DiscordSocketClient.StartAsync();
         }
 
@@ -120,6 +261,10 @@ namespace Uncord.Models
         private async Task DiscordSocketClient_LoggedOut()
         {
             await DiscordSocketClient.StopAsync();
+
+            DiscordSocketClient.JoinedGuild -= DiscordSocketClient_JoinedGuild;
+            DiscordSocketClient.LeftGuild -= DiscordSocketClient_LeftGuild;
+            DiscordSocketClient.GuildUpdated -= DiscordSocketClient_GuildUpdated;
 
             DiscordSocketClient.Connected -= DiscordSocketClient_Connected;
             DiscordSocketClient.Disconnected -= DiscordSocketClient_Disconnected;
@@ -131,9 +276,6 @@ namespace Uncord.Models
         {
             Debug.WriteLine("listup guild.");
             
-            DiscordSocketClient.JoinedGuild += DiscordSocketClient_JoinedGuild;
-            DiscordSocketClient.LeftGuild += DiscordSocketClient_LeftGuild;
-            DiscordSocketClient.GuildUpdated += DiscordSocketClient_GuildUpdated;
 
 
             //            var groupChannels = await DiscordSocketClient.GetGroupChannelsAsync();
@@ -147,9 +289,6 @@ namespace Uncord.Models
 
         private Task DiscordSocketClient_Disconnected(Exception arg)
         {
-            DiscordSocketClient.JoinedGuild -= DiscordSocketClient_JoinedGuild;
-            DiscordSocketClient.LeftGuild -= DiscordSocketClient_LeftGuild;
-            DiscordSocketClient.GuildUpdated -= DiscordSocketClient_GuildUpdated;
 
 
             return Task.CompletedTask;
@@ -358,6 +497,162 @@ namespace Uncord.Models
             return Guilds.SingleOrDefault(x => x.Id == guildId);
         }
 
+
+
+
         #endregion
+
+
+        #region Voice
+
+        public async Task<bool> ConnectVoiceChannel(SocketVoiceChannel voiceChannel)
+        {
+            await DisconnectCurrentVoiceChannel();
+
+            if (voiceChannel == null)
+            {
+                throw new ArgumentNullException("VoiceChannel is null");
+            }
+
+            // ボイスチャンネルへの接続を開始
+            // 音声の送信はConnectedイベント後
+            // 受信はStreamCreatedイベント後に行われます
+            using (var releaser = await _VoiceChannelLock.LockAsync())
+            {
+                await voiceChannel.ConnectAsync((client) =>
+                {
+                    _CurrentVoiceAudioClient = client;
+                    client.Connected += VoiceChannelConnected;
+                    client.Disconnected += VoiceChannelDisconnected;
+                    client.LatencyUpdated += VoiceChannelLatencyUpdated;
+                    client.SpeakingUpdated += VoiceChannelSpeakingUpdated;
+                    client.StreamCreated += VoiceChannelAudioStreamCreated;
+                    client.StreamDestroyed += VoiceChannelAudioStreamDestroyed;
+                });
+
+                CurrentVoiceChannel = voiceChannel;
+                ConnectState = UncordChannelConnectState.Connected;
+            }
+
+            return true;
+        }
+
+        public Task<bool> ConnectVoiceChannel(ulong voiceChannelId)
+        {
+            return ConnectVoiceChannel(DiscordSocketClient.GetChannel(voiceChannelId) as SocketVoiceChannel);
+        }
+
+
+
+        public async Task DisconnectCurrentVoiceChannel()
+        {
+            using (var releaser = await _VoiceChannelLock.LockAsync())
+            {
+                if (_CurrentVoiceAudioClient != null)
+                {
+                    _CurrentVoiceAudioClient.Dispose();
+                    _CurrentVoiceAudioClient = null;
+                }
+
+                CurrentVoiceChannel = null;
+                ConnectState = UncordChannelConnectState.NotConnect;
+            }
+        }
+
+
+        private async Task VoiceChannelConnected()
+        {
+            await StartAudioCapture();
+        }
+
+        private async Task VoiceChannelDisconnected(Exception arg)
+        {
+            await StopAudioCapture();
+        }
+
+
+
+
+
+        private async Task VoiceChannelAudioStreamCreated(ulong arg1, AudioInStream stream)
+        {
+            AudioManager.StartAudioOutput(stream);
+
+            await Task.Delay(0);
+        }
+
+        private async Task VoiceChannelAudioStreamDestroyed(ulong arg)
+        {
+            AudioManager.StopAudioOutput();
+
+            using (var releaser = await _VoiceChannelLock.LockAsync())
+            {
+                if (IsConnectedVoiceChannel)
+                {
+                    // TODO: 意図しない切断の場合 ボイスチャンネルに再接続する
+                    ConnectState = UncordChannelConnectState.Disconnected;
+                }
+            }
+
+
+            await Task.Delay(0);
+        }
+
+
+        private Task VoiceChannelSpeakingUpdated(ulong arg1, bool arg2)
+        {
+#if DEBUG
+            Debug.WriteLine($"speaking: {arg1} is {arg2}");
+#endif
+            return Task.CompletedTask;
+        }
+
+        private Task VoiceChannelLatencyUpdated(int arg1, int arg2)
+        {
+#if DEBUG
+            Debug.WriteLine($"Latency: {arg1} : {arg2}");
+#endif
+            return Task.CompletedTask;
+        }
+
+
+
+        #region AudioCapture
+
+
+        private async Task StartAudioCapture()
+        {
+            if (_CurrentVoiceAudioClient == null)
+            {
+                return;
+            }
+
+            AudioManager.StartAudioInput(_CurrentVoiceAudioClient);
+
+            await Task.Delay(0);
+        }
+
+
+
+        private async Task StopAudioCapture()
+        {
+            AudioManager.StopAudioInput();
+
+            await Task.Delay(0);
+        }
+
+
+        #endregion
+
+        #endregion
+
+    }
+
+
+    public enum UncordChannelConnectState
+    {
+        NotConnect,
+        Connected,
+        Disconnected,
     }
 }

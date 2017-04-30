@@ -20,9 +20,9 @@ namespace Uncord.Views
     /// <summary>
     /// それ自体で使用できる空白ページまたはフレーム内に移動できる空白ページ。
     /// </summary>
-    public sealed partial class EmptyPage : Page
+    public sealed partial class FriendsPage : Page
     {
-        public EmptyPage()
+        public FriendsPage()
         {
             this.InitializeComponent();
         }

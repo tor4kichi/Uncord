@@ -18,6 +18,9 @@ using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using System.Diagnostics;
+using Discord.Audio;
+using Windows.Media.Audio;
+using Windows.Media.Render;
 
 namespace Uncord
 {
@@ -54,12 +57,9 @@ namespace Uncord
             }
         }
 
-        protected override void ConfigureContainer()
-        {
-            Container.RegisterInstance(new Models.DiscordContext());
 
-            base.ConfigureContainer();
-        }
+        
+        
 
         protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
@@ -88,9 +88,26 @@ namespace Uncord
             return appShell;
         }
 
-
+        
         protected override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
+            // Models
+            var audioManager = new Models.AudioPlaybackManager();
+            await audioManager.Initialize();
+
+            Container.RegisterInstance(audioManager);
+            Container.RegisterInstance(new Models.DiscordContext(audioManager));
+
+            // ViewModels
+            Container.RegisterInstance(Container.Resolve<ViewModels.MenuViewModel>());
+
+
+            // Setup discord voice processing.
+            Discord.Audio.Streams.OpusDecodeStream.OpusDecoderFactory = () => new Models.OpusDecoderImpl();
+            Discord.Audio.Streams.OpusEncodeStream.OpusEncodeFactory = (bitrate, app, signal) => new Models.OpusEncoderImpl(bitrate, app, signal);
+            Discord.Audio.Streams.SodiumDecryptStream.StreamCipher = Models.SodiumImpl.Instance;
+            Discord.Audio.Streams.SodiumEncryptStream.StreamCipher = Models.SodiumImpl.Instance;
+
             // 自動ログインを行う
             var discordContext = Container.Resolve<Models.DiscordContext>();
             await discordContext.TryLoginWithRecordedCredential();

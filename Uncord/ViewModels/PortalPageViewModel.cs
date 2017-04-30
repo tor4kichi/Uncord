@@ -1,6 +1,6 @@
 ﻿using Discord.WebSocket;
 using Prism.Commands;
-using Prism.Mvvm;
+using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
 using Reactive.Bindings;
 using System;
@@ -12,28 +12,20 @@ using Uncord.Models;
 
 namespace Uncord.ViewModels
 {
-    public class GuildListViewModel : BindableBase
+    public class PortalPageViewModel : UncordPageViewModelBase
     {
         INavigationService _NavigationService;
         DiscordContext _DiscordContext;
 
         public ReadOnlyReactiveCollection<SocketGuild> Guilds { get; private set; }
 
-        public DelegateCommand<SocketGuild> OpenGuildCommand { get; private set; }
 
-
-        public GuildListViewModel(Models.DiscordContext discordContext, INavigationService navService)
+        public PortalPageViewModel(Models.DiscordContext discordContext, INavigationService navService)
         {
             _DiscordContext = discordContext;
             _NavigationService = navService;
 
             Guilds = _DiscordContext.Guilds;
-
-            OpenGuildCommand = new DelegateCommand<SocketGuild>((guild) => 
-            {
-                _NavigationService.Navigate(PageTokens.GuildPageToken, guild.Id);
-            });
-
         }
     }
 }

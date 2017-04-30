@@ -16,66 +16,7 @@
     >
 
     <Page.Resources>
-        <DataTemplate x:Key="VoiceChannelListItemTemplate">
-            <toolkit:DockPanel>
-
-                <StackPanel Orientation="Horizontal"
-                            toolkit:DockPanel.Dock="Right"
-                            >
-                    <Button Command="{Binding ShowInvateLinkCommand}"
-                            Background="Transparent"
-                            >
-                        <SymbolIcon Symbol="Send" />
-                    </Button>
-
-                </StackPanel>
-
-                <Border >
-                    <TextBlock VerticalAlignment="Center">
-                        <Run Text="{Binding Name}" />
-                    </TextBlock>
-                </Border>
-            </toolkit:DockPanel>
-        </DataTemplate>
-
-        <DataTemplate x:Key="TextChannelListItemTemplate">
-            <toolkit:DockPanel>
-
-                <StackPanel Orientation="Horizontal"
-                            toolkit:DockPanel.Dock="Right"
-                            >
-                    <Button Command="{Binding ShowInvateLinkCommand}"
-                            Background="Transparent"
-                            >
-                        <SymbolIcon Symbol="Send" />
-                    </Button>
-
-                </StackPanel>
-
-                <Border >
-                    <TextBlock VerticalAlignment="Center">
-                        <Run Text="#" />
-                        <Run Text="{Binding Name}" />
-                    </TextBlock>
-                </Border>
-            </toolkit:DockPanel>
-        </DataTemplate>
-
-
-        <Style TargetType="ListViewItem" x:Key="ChannelListItemStyle">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <!--
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
-                        <ListViewItemPresenter
-          SelectedBackground="{ThemeResource  SystemControlHighlightListAccentLowBrush}"
-                />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            -->
-        </Style>
+        
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -145,6 +86,12 @@
                            toolkit:DockPanel.Dock="Left"
                            Margin="16 8 0 8"
                            />
+                    </Border>
+
+                    <Border toolkit:DockPanel.Dock="Bottom"
+                            Height="48"
+                            >
+                        
                     </Border>
 
                     <!-- Channel List (Text + Voice) -->

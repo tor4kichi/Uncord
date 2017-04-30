@@ -1,49 +1,90 @@
 ﻿<UserControl
     x:Class="Uncord.Views.MenuView"
+    x:Name="MenuViewRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Uncord.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <StackPanel>
+    <toolkit:DockPanel>
 
-        <!-- TODO: Friends を表示 -->
-        <!--
-        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
-                   Opacity="0.8"
-                   >
-            <TextBlock.Text>
-                <Binding Source="Friends"
-                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
-                         />
-            </TextBlock.Text>
-        </TextBlock>
-        
-        <Border BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}" 
-                BorderThickness="0 1 0 0"
-                />
+        <!-- ログインユーザー情報＋設定 -->
+        <StackPanel toolkit:DockPanel.Dock="Bottom">
 
-        -->
-        
-        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
-                   Opacity="0.8"
-                   >
-            <TextBlock.Text>
-                <Binding Source="Guilds"
-                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
-                         />
-            </TextBlock.Text>
-        </TextBlock>
 
-        <local:GuildListView />
+            <toolkit:DockPanel
+                Visibility="{Binding HasCurrentVoiceChannel.Value, Converter={StaticResource BoolToVisibilityConverter}}"
+                >
 
-        
-        
-    </StackPanel>
+                <Border toolkit:DockPanel.Dock="Top"
+                        >
+                    <TextBlock Text="接続中のボイスチャンネル" />
+                </Border>
+                
+                <Button Background="Transparent"
+                        Command="{Binding DisconnectVoiceChannelCommand}"
+                        toolkit:DockPanel.Dock="Right"
+                        >
+                    <SymbolIcon Symbol="Remove"
+                                Foreground="Red"
+                                />
+                </Button>
+
+                <StackPanel 
+                        Orientation="Horizontal"
+                        
+                        >
+                    <SymbolIcon Symbol="Volume" Margin="8 0 8 0" />
+
+                    <TextBlock Text="{Binding CurrentVoiceChannelName.Value}"
+                               VerticalAlignment="Center"
+                               />
+                </StackPanel>
+            </toolkit:DockPanel>
+            
+            <StackPanel Orientation="Horizontal"
+                        BorderBrush="#22000000"
+                        BorderThickness="1 0 0 0"
+                        >
+                <uwpcontrol:ImageEx Source="{Binding LoginUserAvaterUrl.Value}"
+                                    Height="32"
+                                    Width="32"
+                                    />
+                <TextBlock Text="{Binding LoginUserName.Value}" />
+            </StackPanel>
+           
+        </StackPanel>
+
+
+        <ScrollViewer>
+            <ItemsControl>
+
+                <Button Background="Transparent"
+                    Command="{Binding OpenPortalPageCommand}"
+                    >
+                    <SymbolIcon Symbol="Home" />
+                </Button>
+                
+                <Button Background="Transparent"
+                    Command="{Binding OpenSettingsPageCommand}"
+                    >
+                    <SymbolIcon Symbol="Setting" />
+                </Button>
+
+                
+            </ItemsControl>
+        </ScrollViewer>
+
+    </toolkit:DockPanel>
 </UserControl>

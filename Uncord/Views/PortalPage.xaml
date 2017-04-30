@@ -1,0 +1,70 @@
+﻿<Page
+    x:Class="Uncord.Views.PortalPage"
+    x:Name="PageRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <ScrollViewer>
+
+
+            <StackPanel>
+
+                <TextBlock Text="サーバー" />
+
+                <!-- Guilds -->
+                <ItemsControl ItemsSource="{Binding Guilds}"
+                  >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Margin="0 4"
+                            Command="{Binding ElementName=PageRoot, Path=DataContext.OpenGuildChannelsPageCommand}"
+                            CommandParameter="{Binding Id}"
+                            >
+                                <StackPanel Orientation="Horizontal"
+                                    >
+                                    <uwpcontrol:ImageEx Source="{Binding IconUrl}"
+                                            Height="32"
+                                            Width="32"
+                                            />
+
+                                    <Border Width="8" />
+
+                                    <TextBlock Text="{Binding Name}"
+                                        VerticalAlignment="Center"
+                                        />
+
+                                </StackPanel>
+
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- New Messages -->
+
+                <!-- Friends -->
+
+                <!-- Account -->
+
+                <!-- Settings -->
+                <Button Content="Settings"
+                Command="{Binding OpenSettingsPageCommand}"
+                />
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
