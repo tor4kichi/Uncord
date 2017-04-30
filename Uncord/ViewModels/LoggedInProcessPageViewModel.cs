@@ -36,9 +36,13 @@ namespace Uncord.ViewModels
                 .RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 async () => 
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(0.5));
+                    await _DicordContext.WaitLoginAction();
+
+                    await Task.Delay(TimeSpan.FromSeconds(3));
 
                     _NavigationService.Navigate(PageTokens.PortalPageToken, null);
+
+                    _NavigationService.ClearHistory();
 
                     (App.Current as App).IsHideMenu = false;
                 })

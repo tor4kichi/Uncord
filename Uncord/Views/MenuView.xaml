@@ -52,17 +52,27 @@
                                />
                 </StackPanel>
             </toolkit:DockPanel>
-            
-            <StackPanel Orientation="Horizontal"
+
+            <Button Background="Transparent">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="ログアウト" 
+                                        Command="{Binding LogoutCommand}"
+                                        />
+                    </MenuFlyout>
+                </Button.Flyout>
+                <StackPanel Orientation="Horizontal"
                         BorderBrush="#22000000"
                         BorderThickness="1 0 0 0"
                         >
-                <uwpcontrol:ImageEx Source="{Binding LoginUserAvaterUrl.Value}"
+                    <uwpcontrol:ImageEx Source="{Binding LoginUserAvaterUrl.Value}"
                                     Height="32"
                                     Width="32"
                                     />
-                <TextBlock Text="{Binding LoginUserName.Value}" />
-            </StackPanel>
+                    <TextBlock Text="{Binding LoginUserName.Value}" />
+                </StackPanel>
+
+            </Button>
            
         </StackPanel>
 

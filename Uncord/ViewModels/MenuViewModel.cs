@@ -68,8 +68,23 @@ namespace Uncord.ViewModels
             IsOpenMenu = true;
         }
 
+        private DelegateCommand _LogoutCommand;
+        public DelegateCommand LogoutCommand
+        {
+            get
+            {
+                return _LogoutCommand
+                    ?? (_LogoutCommand = new DelegateCommand(async () =>
+                    {
+                        NavigationService.Navigate(PageTokens.AccountLoginPageToken, null);
 
-        
+                        NavigationService.ClearHistory();
+
+                        await DiscordContext.LogOut();
+                    }));
+            }
+        }
+
 
         private DelegateCommand _OpenPortalPageCommand;
         public DelegateCommand OpenPortalPageCommand

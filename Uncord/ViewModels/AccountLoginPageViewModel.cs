@@ -54,6 +54,8 @@ namespace Uncord.ViewModels
                 if (isLoginSuccess)
                 {
                     _NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
+
+                    _NavigationService.ClearHistory();
                 }
                 else
                 {

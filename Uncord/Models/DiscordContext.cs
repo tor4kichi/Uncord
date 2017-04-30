@@ -275,14 +275,13 @@ namespace Uncord.Models
         private async Task DiscordSocketClient_Connected()
         {
             Debug.WriteLine("listup guild.");
-            
+
 
 
             //            var groupChannels = await DiscordSocketClient.GetGroupChannelsAsync();
             //            var connections = await DiscordSocketClient.GetConnectionsAsync();
             //            var DmChannels = await DiscordSocketClient.GetDMChannelsAsync();
             //            var channels = DiscordSocketClient.PrivateChannels;
-
             await Task.Delay(0);
         }
 
@@ -299,19 +298,28 @@ namespace Uncord.Models
         #region Guild Event Handler
 
 
-        private Task DiscordSocketClient_GuildUpdated(SocketGuild arg1, SocketGuild arg2)
+        private async Task DiscordSocketClient_GuildUpdated(SocketGuild arg1, SocketGuild arg2)
         {
-            _Guilds.Remove(arg1);
-            _Guilds.Add(arg2);
-
-            return Task.CompletedTask;
+            using (var releaser = await _LoginLock.LockAsync())
+            {
+                _Guilds.Remove(arg1);
+                _Guilds.Add(arg2);
+            }
         }
 
-        private Task DiscordSocketClient_JoinedGuild(SocketGuild arg)
+        private async Task DiscordSocketClient_JoinedGuild(SocketGuild arg)
         {
-            _Guilds.Add(arg);
+            using (var releaser = await _LoginLock.LockAsync())
+            {
+                var already = _Guilds.FirstOrDefault(x => x.Id == arg.Id);
 
-            return Task.CompletedTask;
+                if (already != null)
+                {
+                    _Guilds.Remove(already);
+                }
+
+                _Guilds.Add(arg);
+            }
         }
 
         private Task DiscordSocketClient_LeftGuild(SocketGuild arg)
