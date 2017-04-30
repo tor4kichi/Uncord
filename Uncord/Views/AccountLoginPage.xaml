@@ -131,8 +131,7 @@
                         MinWidth="240"
                         >
 
-                <TextBox Style="{StaticResource AnimatedHeaderedTextBoxStyle}"
-                         Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          InputScope="EmailSmtpAddress"
                          >
                     <TextBox.Header>
@@ -144,20 +143,19 @@
                         <mybehavior:MoveHeaderOnFocusBehavior />
                     </i:Interaction.Behaviors>
                 </TextBox>
-                <TextBox Style="{StaticResource AnimatedHeaderedTextBoxStyle}"
-                         Text="{Binding Password.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+
+                <Border Height="16" />
+                
+                <PasswordBox 
+                         Password="{Binding Password.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          InputScope="Password"
                         >
-                    <TextBox.Header>
+                    <PasswordBox.Header>
                         <Binding Source="Password"
                                  Converter="{StaticResource ResourceNameToResourceStringConverter}"
                                  />
-                    </TextBox.Header>
-                    <i:Interaction.Behaviors>
-                        <mybehavior:MoveHeaderOnFocusBehavior />
-                    </i:Interaction.Behaviors>
-
-                </TextBox>
+                    </PasswordBox.Header>
+                </PasswordBox>
 
 
                 <Button MinWidth="120"
