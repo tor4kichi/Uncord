@@ -8,10 +8,19 @@ namespace Uncord
 {
     public sealed class PageTokens
     {
-        public static string EmptyPageToken = ToPageToken(typeof(Views.EmptyPage));
         public static string AccountLoginPageToken = ToPageToken(typeof(Views.AccountLoginPage));
         public static string LoggedInProcessPageToken = ToPageToken(typeof(Views.LoggedInProcessPage));
-        public static string GuildPageToken = ToPageToken(typeof(Views.GuildPage));
+
+        public static string PortalPageToken = ToPageToken(typeof(Views.PortalPage));
+        public static string SettingsToken = ToPageToken(typeof(Views.SettingsPage));
+
+        public static string FriendsToken = ToPageToken(typeof(Views.FriendsPage));
+        public static string GuildChannelsToken = ToPageToken(typeof(Views.GuildChannelsPage));
+        public static string TextChannelToken = ToPageToken(typeof(Views.TextChannelPage));
+
+
+
+
 
         public static string ToPageToken(Type type)
         {

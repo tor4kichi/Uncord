@@ -38,7 +38,7 @@ namespace Uncord.ViewModels
                 {
                     await Task.Delay(TimeSpan.FromSeconds(0.5));
 
-                    _NavigationService.Navigate(PageTokens.EmptyPageToken, null);
+                    _NavigationService.Navigate(PageTokens.PortalPageToken, null);
 
                     (App.Current as App).IsHideMenu = false;
                 })

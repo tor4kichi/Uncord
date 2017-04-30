@@ -251,6 +251,11 @@ namespace Uncord.Models
                 _AudioOutStream = null;
             }
 
+            if (InputDeviceState != InputDeviceState.Avairable)
+            {
+                return;
+            }
+
             _AudioOutStream = audioClient.CreatePCMStream(AudioApplication.Voice, 1920, 100);
 
             _FrameOutputNode.Stop();
@@ -264,6 +269,16 @@ namespace Uncord.Models
 
         public async void StopAudioInput()
         {
+            if (_FrameOutputNode == null)
+            {
+                return;
+            }
+
+            if (_AudioOutStream == null)
+            {
+                return;
+            }
+
             _FrameOutputNode.Stop();
 
             await _AudioOutStream.FlushAsync();

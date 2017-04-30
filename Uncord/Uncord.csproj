@@ -115,20 +115,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\AppVersion.cs" />
     <Compile Include="Util\DiscordApiHelper.cs" />
+    <Compile Include="ViewModels\NavigationPayloadBase.cs" />
     <Compile Include="ViewModels\AccountLoginPageViewModel.cs" />
-    <Compile Include="ViewModels\EmptyPageViewModel.cs" />
-    <Compile Include="ViewModels\GuildListViewModel.cs" />
-    <Compile Include="ViewModels\GuildPageViewModel.cs" />
-    <Compile Include="ViewModels\GuildTextChannelViewModel.cs" />
-    <Compile Include="ViewModels\GuildVoiceChannelViewModel.cs" />
+    <Compile Include="ViewModels\FriendsPageViewModel.cs" />
+    <Compile Include="ViewModels\PortalPageViewModel.cs" />
+    <Compile Include="ViewModels\GuildChannelsPageViewModel.cs" />
+    <Compile Include="ViewModels\TextChannelMessageViewModel.cs" />
     <Compile Include="ViewModels\LoggedInProcessPageViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
+    <Compile Include="ViewModels\SettingsPageViewModel.cs" />
+    <Compile Include="ViewModels\TextChannelPageViewModel.cs" />
+    <Compile Include="ViewModels\UncordViewModelBase.cs" />
     <Compile Include="Views\AccountLoginPage.xaml.cs">
       <DependentUpon>AccountLoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Behaviors\KeyboardTrigger.cs" />
     <Compile Include="Views\Behaviors\MoveHeaderOnFocusBehavior.cs" />
     <Compile Include="Views\Behaviors\WebViewDisplayHtmlBehavior.cs" />
+    <Compile Include="Views\FriendsPage.xaml.cs">
+      <DependentUpon>FriendsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Message\DiscordMessageAttachementControl.xaml.cs">
       <DependentUpon>DiscordMessageAttachementControl.xaml</DependentUpon>
     </Compile>
@@ -145,23 +151,23 @@
     <Compile Include="Views\Controls\Message\MessageEmbedTypeTemplateSelector.cs" />
     <Compile Include="Views\Controls\Message\VideoEmbedTemplateSelector.cs" />
     <Compile Include="Views\Converter\YoutubeUrlToEmbedHtmlStringConverter.cs" />
-    <Compile Include="Views\EmptyPage.xaml.cs">
-      <DependentUpon>EmptyPage.xaml</DependentUpon>
+    <Compile Include="Views\PortalPage.xaml.cs">
+      <DependentUpon>PortalPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GuildListView.xaml.cs">
-      <DependentUpon>GuildListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\GuildPage.xaml.cs">
-      <DependentUpon>GuildPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\GuildTextChannelControl.xaml.cs">
-      <DependentUpon>GuildTextChannelControl.xaml</DependentUpon>
+    <Compile Include="Views\GuildChannelsPage.xaml.cs">
+      <DependentUpon>GuildChannelsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoggedInProcessPage.xaml.cs">
       <DependentUpon>LoggedInProcessPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TextChannelPage.xaml.cs">
+      <DependentUpon>TextChannelPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +202,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FriendsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\Message\DiscordMessageAttachementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -212,19 +222,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\EmptyPage.xaml">
+    <Page Include="Views\PortalPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GuildListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\GuildPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\GuildTextChannelControl.xaml">
+    <Page Include="Views\GuildChannelsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -236,10 +238,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Styles\AnimatedHeaderedTextBoxStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\TextChannelPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

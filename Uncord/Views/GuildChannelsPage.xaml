@@ -1,0 +1,113 @@
+﻿<Page
+    x:Class="Uncord.Views.GuildChannelsPage"
+    x:Name="PageRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    
+    <Grid>
+        <toolkit:DockPanel 
+                               
+                               >
+            <Border toolkit:DockPanel.Dock="Top" 
+                    Height="48"
+                    BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
+                    BorderThickness="0 0 0 1"
+                    >
+                <TextBlock Text="{Binding GuildName.Value}"
+                           Style="{StaticResource TitleTextBlockStyle}"
+                           toolkit:DockPanel.Dock="Left"
+                           Margin="16 8 0 8"
+                           />
+            </Border>
+
+            <Border toolkit:DockPanel.Dock="Bottom"
+                            Height="48"
+                            >
+
+            </Border>
+
+            <!-- Channel List (Text + Voice) -->
+            <ScrollViewer>
+                <StackPanel Margin="16 0 16 0">
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Text Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
+                        <Border Width="16" />
+                        <HyperlinkButton >
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Add" />
+                            </StackPanel>
+                        </HyperlinkButton>
+                    </StackPanel>
+
+                    <ItemsControl ItemsSource="{Binding TextChannels}"
+                                  
+                                  >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <toolkit:DockPanel>
+                                    <Button Command="{Binding ElementName=PageRoot, Path=DataContext.OpenTextChannelPageCommand}"
+                                            CommandParameter="{Binding Id}"
+                                            >
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="{Binding Name}" />
+                                        </TextBlock>
+                                    </Button>
+                                </toolkit:DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+
+                    <Border Height="16" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Voice Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
+                        <Border Width="16" />
+                        <HyperlinkButton >
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Add" />
+                            </StackPanel>
+                        </HyperlinkButton>
+                    </StackPanel>
+
+                    <ListView ItemsSource="{Binding VoiceChannels}"
+                                  >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <toolkit:DockPanel>
+                                    <Button Command="{Binding ElementName=PageRoot, Path=DataContext.ConnectVoiceChannelCommand}"
+                                            CommandParameter="{Binding Id}"
+                                            >
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="{Binding Name}" />
+                                        </TextBlock>
+                                    </Button>
+                                </toolkit:DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ListView>
+
+                </StackPanel>
+            </ScrollViewer>
+        </toolkit:DockPanel>
+    </Grid>
+</Page>
