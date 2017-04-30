@@ -41,6 +41,12 @@ namespace Uncord.ViewModels
             NowTryLogin = new ReactiveProperty<bool>(false);
 
             TryLoginCommand.Subscribe(async _ => await TryLogin(Mail.Value, Password.Value));
+
+            if (_DiscordContext.TryGetRecentLoginAccount(out var mailAndPassword))
+            {
+                Mail.Value = mailAndPassword.Item1;
+                Password.Value = mailAndPassword.Item2;
+            }
         }
 
 
