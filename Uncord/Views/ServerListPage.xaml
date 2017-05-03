@@ -23,28 +23,29 @@
 
         <toolkit:DockPanel>
 
-            <!-- Top Bar -->
-            <toolkit:DockPanel toolkit:DockPanel.Dock="Top"
-                  Background="#44000000"
-                  >
+            <Border toolkit:DockPanel.Dock="Top"
+                        Background="#44000000"
+                        BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
+                        BorderThickness="0 0 0 1"
+                    Height="48"
+                        >
 
-                <StackPanel Orientation="Horizontal"
+                <!-- Top Bar -->
+                <toolkit:DockPanel >
+
+                    <StackPanel Orientation="Horizontal"
                             toolkit:DockPanel.Dock="Right"
-                            Margin="0 0 8 0"
+                                
                             >
-                    <ToggleButton IsChecked="{Binding ElementName=SplitView, Path=IsPaneOpen, Mode=TwoWay}"
-                            Background="Transparent"
-                            >
-                        <SymbolIcon Symbol="People" />
-                    </ToggleButton>
-                </StackPanel>
+                    </StackPanel>
 
-
-                <TextBlock Text="サーバー"
-                           Style="{StaticResource SubheaderTextBlockStyle}"
+                    <TextBlock Text="サーバー"
+                           Style="{StaticResource TitleTextBlockStyle}"
                            Margin="24 8 0 8"
                            />
-            </toolkit:DockPanel>
+
+                </toolkit:DockPanel>
+            </Border>
 
             <ScrollViewer>
 
