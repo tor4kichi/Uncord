@@ -118,7 +118,7 @@
     <Compile Include="ViewModels\NavigationPayloadBase.cs" />
     <Compile Include="ViewModels\AccountLoginPageViewModel.cs" />
     <Compile Include="ViewModels\FriendsPageViewModel.cs" />
-    <Compile Include="ViewModels\PortalPageViewModel.cs" />
+    <Compile Include="ViewModels\ServerListPageViewModel.cs" />
     <Compile Include="ViewModels\GuildChannelsPageViewModel.cs" />
     <Compile Include="ViewModels\TextChannelMessageViewModel.cs" />
     <Compile Include="ViewModels\LoggedInProcessPageViewModel.cs" />
@@ -151,8 +151,8 @@
     <Compile Include="Views\Controls\Message\MessageEmbedTypeTemplateSelector.cs" />
     <Compile Include="Views\Controls\Message\VideoEmbedTemplateSelector.cs" />
     <Compile Include="Views\Converter\YoutubeUrlToEmbedHtmlStringConverter.cs" />
-    <Compile Include="Views\PortalPage.xaml.cs">
-      <DependentUpon>PortalPage.xaml</DependentUpon>
+    <Compile Include="Views\ServerListPage.xaml.cs">
+      <DependentUpon>ServerListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GuildChannelsPage.xaml.cs">
       <DependentUpon>GuildChannelsPage.xaml</DependentUpon>
@@ -259,7 +259,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PortalPage.xaml">
+    <Page Include="Views\ServerListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

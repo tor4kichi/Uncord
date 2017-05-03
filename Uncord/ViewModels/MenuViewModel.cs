@@ -94,7 +94,7 @@ namespace Uncord.ViewModels
                 return _OpenPortalPageCommand
                     ?? (_OpenPortalPageCommand = new DelegateCommand(() =>
                     {
-                        NavigationService.Navigate(PageTokens.PortalPageToken, null);
+                        NavigationService.Navigate(PageTokens.ServerListPageToken, null);
                     }));
             }
         }
@@ -120,7 +120,7 @@ namespace Uncord.ViewModels
                 return _OpenFriendsPageCommand
                     ?? (_OpenFriendsPageCommand = new DelegateCommand(() =>
                     {
-                        NavigationService.Navigate(PageTokens.FriendsToken, null);
+                        NavigationService.Navigate(PageTokens.FriendsPageToken, null);
                     }));
             }
         }

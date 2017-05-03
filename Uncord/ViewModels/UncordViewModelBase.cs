@@ -62,7 +62,7 @@ namespace Uncord.ViewModels
                 return _OpenPortalPageCommand
                     ?? (_OpenPortalPageCommand = new DelegateCommand(() =>
                     {
-                        NavigatePage(PageTokens.PortalPageToken);
+                        NavigatePage(PageTokens.ServerListPageToken);
                     }));
             }
         }
@@ -89,7 +89,7 @@ namespace Uncord.ViewModels
                     ?? (_OpenFriendsPageCommand = new DelegateCommand(() =>
                     {
                         // TODO: ユーザーIDを指定してオープンに対応（DM表示）
-                        NavigatePage(PageTokens.FriendsToken);
+                        NavigatePage(PageTokens.FriendsPageToken);
                     }));
             }
         }
@@ -104,7 +104,7 @@ namespace Uncord.ViewModels
                     {
                         if (guildId.HasValue)
                         {
-                            NavigatePage(PageTokens.GuildChannelsToken, guildId.Value);
+                            NavigatePage(PageTokens.GuildChannelsPageToken, guildId.Value);
                         }
                     }));
             }
@@ -120,7 +120,7 @@ namespace Uncord.ViewModels
                     {
                         if (textChannelId.HasValue)
                         {
-                            NavigatePage(PageTokens.TextChannelToken, textChannelId.Value);
+                            NavigatePage(PageTokens.TextChannelPageToken, textChannelId.Value);
                         }
                     }));
             }

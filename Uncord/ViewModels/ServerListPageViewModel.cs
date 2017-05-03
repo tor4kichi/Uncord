@@ -12,7 +12,7 @@ using Uncord.Models;
 
 namespace Uncord.ViewModels
 {
-    public class PortalPageViewModel : UncordPageViewModelBase
+    public class ServerListPageViewModel : UncordPageViewModelBase
     {
         INavigationService _NavigationService;
         DiscordContext _DiscordContext;
@@ -20,7 +20,7 @@ namespace Uncord.ViewModels
         public ReadOnlyReactiveCollection<SocketGuild> Guilds { get; private set; }
 
 
-        public PortalPageViewModel(Models.DiscordContext discordContext, INavigationService navService)
+        public ServerListPageViewModel(Models.DiscordContext discordContext, INavigationService navService)
         {
             _DiscordContext = discordContext;
             _NavigationService = navService;
