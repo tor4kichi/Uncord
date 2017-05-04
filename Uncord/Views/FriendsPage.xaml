@@ -16,5 +16,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock Text="Friends" />
+        
+        <!-- Note: トップバー位置にはモバイル表示時の動的に変化するマージンが必要です -->
+        
     </Grid>
 </Page>

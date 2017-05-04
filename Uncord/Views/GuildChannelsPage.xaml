@@ -16,98 +16,297 @@
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     d:DesignHeight="300"
     d:DesignWidth="400">
+    <Page.Resources>
+        
+        <!-- 参加者ユーザーのテンプレート -->
+        <DataTemplate x:Key="ParticipantTemplate">
+            <toolkit:DockPanel>
+                <!-- TODO: ユーザーを選択してメンションを飛ばすUIを表示 フライアウトでOK -->
+                
+                <Grid toolkit:DockPanel.Dock="Left">
+                    <uwpcontrol:ImageEx Source="{Binding AvaterUrl}"
+                                        Height="40"
+                                        Width="40"
+                                        />
 
-    
+                    <!-- TODO: User Online State icon -->
+                </Grid>
+
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Username}"
+                               VerticalAlignment="Center"
+                           />
+
+                    <!--
+                    <Border Visibility="{Binding IsGamePlaying, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock Text="{Binding PlayingGameName}" />
+                    </Border>
+                    -->
+
+                </StackPanel>
+            </toolkit:DockPanel>
+        </DataTemplate>
+    </Page.Resources>
+
     <Grid>
-        <toolkit:DockPanel 
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ResponsiveSplitViewPane">
+
+                <!-- 大画面 -->
+                <VisualState x:Name="LargeMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 中画面 -->
+                <VisualState x:Name="MiddleMonitor">
+
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 小画面 -->
+                <!--
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="SplitView.DisplayMode" Value="CompactOverlay" />
+
+                        <Setter Target="SemiMobilePaneOpener.Visibility" Value="Visible" />
+                        <Setter Target="MobilePaneOpener.Visibility" Value="Collapsed" />
+
+                    </VisualState.Setters>
+                </VisualState>
+                -->
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+            </VisualStateGroup>
+
+
+        </VisualStateManager.VisualStateGroups>
+
+        <SplitView PanePlacement="Right"
+                   x:Name="SplitView"
+                   DisplayMode="Overlay"
+                   >
+            
+            <!-- 参加者一覧の右サイドペイン -->
+            <SplitView.Pane>
+                <toolkit:DockPanel>
+
+                    <toolkit:DockPanel toolkit:DockPanel.Dock="Top"
+                                       Height="48"
+                                       Margin="8"
+                                       >
+                        <Border toolkit:DockPanel.Dock="Right">
+                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                       >
+                                <Run Text="{Binding OnlineParticipantCount.Value}" />
+                                <Run Text="/" />
+                                <Run Text="{Binding ParticipantCount.Value}" />
+                            </TextBlock>
+                        </Border>
+
+                        <TextBlock Text="参加者"
+                                   Style="{StaticResource TitleTextBlockStyle}"
+                                   VerticalAlignment="Center"
+                                   >
+
+                        </TextBlock>
+                    </toolkit:DockPanel>
+
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding ParticipantByRoles}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="16 8 16 8">
+                                        <toolkit:DockPanel>
+                                            <TextBlock Text="{Binding RoleName}"
+                                                       toolkit:DockPanel.Dock="Left"
+                                                       VerticalAlignment="Center"
+                                                       />
+
+                                            <TextBlock toolkit:DockPanel.Dock="Right"
+                                                       VerticalAlignment="Center">
+                                                <Run Text="{Binding Count}" />
+                                            </TextBlock>
+
+                                            <Border>
+                                                <Border BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                                        BorderThickness="0 1 0 0"
+                                                        VerticalAlignment="Center"
+                                                        Margin="8 0 8 0"
+                                                        />  
+                                            </Border>
+                                            
+                                        </toolkit:DockPanel>
+
+                                        <ItemsControl ItemsSource="{Binding Users}"
+                                                      ItemTemplate="{StaticResource ParticipantTemplate}"
+                                                      >
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </ScrollViewer>
+                </toolkit:DockPanel>
+            </SplitView.Pane>
+
+
+            <!-- チャンネル一覧とページアクション -->
+            <toolkit:DockPanel 
                                
                                >
-            <Border toolkit:DockPanel.Dock="Top" 
-                    Height="48"
-                    BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
-                    BorderThickness="0 0 0 1"
-                    >
-                <TextBlock Text="{Binding GuildName.Value}"
-                           Style="{StaticResource TitleTextBlockStyle}"
-                           toolkit:DockPanel.Dock="Left"
-                           Margin="16 8 0 8"
-                           />
-            </Border>
 
-            <Border toolkit:DockPanel.Dock="Bottom"
+                
+
+                <Border toolkit:DockPanel.Dock="Top"
+                        >
+
+                    <!-- Top Bar -->
+                    <toolkit:WrapPanel Orientation="Horizontal"
+                                       Margin="64 8 0 8"
+                                       x:Name="TopBarLayout"
+                                       >
+
+                        <TextBlock Text="{Binding GuildName.Value}"
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           Margin="0 0 32 0"
+                           />
+                        
+                        <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Bottom"
+                                    Margin="0 8 0 0"
+                            >
+                            <ToggleButton IsChecked="{Binding ElementName=SplitView, Path=IsPaneOpen, Mode=TwoWay}"
+                                            Background="Transparent"
+                                            >
+                                <SymbolIcon Symbol="People" />
+                            </ToggleButton>
+                        </StackPanel>
+
+                        
+
+                    </toolkit:WrapPanel>
+                </Border>
+
+                <Border toolkit:DockPanel.Dock="Bottom"
                             Height="48"
                             >
 
-            </Border>
+                </Border>
 
-            <!-- Channel List (Text + Voice) -->
-            <ScrollViewer>
-                <StackPanel Margin="16 0 16 0">
+                <!-- Channel List (Text + Voice) -->
+                <ScrollViewer>
+                    <StackPanel Margin="16 0 16 0">
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Text Channel"
-                                   Style="{StaticResource SubtitleTextBlockStyle}"
-                                   />
-                        <Border Width="16" />
-                        <HyperlinkButton >
-                            <StackPanel Orientation="Horizontal">
-                                <SymbolIcon Symbol="Add" />
-                            </StackPanel>
-                        </HyperlinkButton>
-                    </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" 
+                                    Margin="24 16 16 16"
+                                    >
+                            <TextBlock Text="Text Channel"
+                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                       VerticalAlignment="Center"
+                                       
+                                />
+                            <!-- 
+                            <Border Width="16" />
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+                            -->
+                        </StackPanel>
 
-                    <ItemsControl ItemsSource="{Binding TextChannels}"
-                                  
+                            
+                        
+
+                        <ItemsControl ItemsSource="{Binding TextChannels}"
+                                  Margin="16 0 0 0"
                                   >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <toolkit:DockPanel>
-                                    <Button Command="{Binding ElementName=PageRoot, Path=DataContext.OpenTextChannelPageCommand}"
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <toolkit:DockPanel Margin="0 0 0 8">
+                                        <Button Command="{Binding ElementName=PageRoot, Path=DataContext.OpenTextChannelPageCommand}"
                                             CommandParameter="{Binding Id}"
+                                                Background="Transparent"
                                             >
-                                        <TextBlock VerticalAlignment="Center">
-                                            <Run Text="{Binding Name}" />
-                                        </TextBlock>
-                                    </Button>
-                                </toolkit:DockPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                                            <toolkit:DockPanel>
+                                                
+                                                <TextBlock VerticalAlignment="Center">
+                                                    <Run Text="#" />
+                                                    <Run Text="{Binding Name}" />
+                                                </TextBlock>
+                                            </toolkit:DockPanel>
+                                        </Button>
+                                    </toolkit:DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
 
-                    <Border Height="16" />
+                        <Border Height="16" />
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Voice Channel"
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="24 16 16 16"
+                                    >
+                            <TextBlock Text="Voice Channel"
                                    Style="{StaticResource SubtitleTextBlockStyle}"
+                                       VerticalAlignment="Center"
                                    />
-                        <Border Width="16" />
-                        <HyperlinkButton >
-                            <StackPanel Orientation="Horizontal">
-                                <SymbolIcon Symbol="Add" />
-                            </StackPanel>
-                        </HyperlinkButton>
-                    </StackPanel>
+                            <!--
+                            <Border Width="16" />
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+                            -->
+                        </StackPanel>
 
-                    <ListView ItemsSource="{Binding VoiceChannels}"
+                        <ItemsControl ItemsSource="{Binding VoiceChannels}"
+                                      Margin="16 0 0 0"
                                   >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <toolkit:DockPanel>
-                                    <Button Command="{Binding ElementName=PageRoot, Path=DataContext.ConnectVoiceChannelCommand}"
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <toolkit:DockPanel Margin="0 0 0 8">
+                                        <Button Command="{Binding ElementName=PageRoot, Path=DataContext.ConnectVoiceChannelCommand}"
                                             CommandParameter="{Binding Id}"
+                                                Background="Transparent"
                                             >
-                                        <TextBlock VerticalAlignment="Center">
+                                            <TextBlock VerticalAlignment="Center">
                                             <Run Text="{Binding Name}" />
-                                        </TextBlock>
-                                    </Button>
-                                </toolkit:DockPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ListView>
+                                            </TextBlock>
+                                        </Button>
+                                    </toolkit:DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                </StackPanel>
-            </ScrollViewer>
-        </toolkit:DockPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </toolkit:DockPanel>
+        </SplitView>
+        
+        
     </Grid>
 </Page>

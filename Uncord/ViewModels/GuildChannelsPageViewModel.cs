@@ -10,6 +10,8 @@ using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using Prism.Commands;
+using System.Diagnostics;
+using Discord;
 
 namespace Uncord.ViewModels
 {
@@ -34,7 +36,13 @@ namespace Uncord.ViewModels
 
         public DelegateCommand UnselectVoiceChannelCommand { get; private set; }
 
+        // TODO: ユーザーの参加と離脱に対応
+        // TODO: ユーザーのロール割り当ての変更に対応
+        Dictionary<SocketRole, UsersByRole> _RoleToUsersMap = new Dictionary<SocketRole, UsersByRole>();
+        public ObservableCollection<UsersByRole> ParticipantByRoles { get; }
 
+        public ReactiveProperty<int> OnlineParticipantCount { get; }
+        public ReactiveProperty<int> ParticipantCount { get; }
 
         public GuildChannelsPageViewModel(Models.DiscordContext discordContext)
         {
@@ -50,6 +58,12 @@ namespace Uncord.ViewModels
             AfkChannel = new ReactiveProperty<SocketVoiceChannel>();
             HasAfkChannel = AfkChannel.Select(x => x != null)
                 .ToReactiveProperty();
+
+            ParticipantByRoles = new ObservableCollection<UsersByRole>();
+            OnlineParticipantCount = new ReactiveProperty<int>();
+            ParticipantCount = new ReactiveProperty<int>();
+
+
         }
 
         
@@ -66,6 +80,9 @@ namespace Uncord.ViewModels
             {
                 return;
             }
+
+
+            GuildName.Value = _Guild.Name;
 
             _DiscordContext.DiscordSocketClient.ChannelCreated += Discord_ChannelCreated;
             _DiscordContext.DiscordSocketClient.ChannelDestroyed += Discord_ChannelDestroyed;
@@ -100,7 +117,51 @@ namespace Uncord.ViewModels
                 AfkChannel.Value = afkChannel;
             }
 
-            GuildName.Value = _Guild.Name;
+
+            var roles = _Guild.Roles.ToList();
+            roles.Sort((x, y) => y.Position - x.Position);
+
+            foreach (var role in roles)
+            {
+                var usersByRole = new UsersByRole(role);
+                ParticipantByRoles.Add(usersByRole);
+                _RoleToUsersMap.Add(role, usersByRole);
+            }
+
+            // サーバーに参加しているユーザーを取得
+            _Guild.DownloadUsersAsync()
+                .ContinueWith(_ => 
+                {
+                    Debug.WriteLine("member downloaded");
+                    Debug.WriteLine(_Guild.DownloadedMemberCount);
+                    Debug.WriteLine(_Guild.MemberCount);
+                    Debug.WriteLine(_Guild.HasAllMembers);
+
+                    ParticipantCount.Value = _Guild.MemberCount;
+
+                    OnlineParticipantCount.Value = _Guild.Users.Count(x =>
+                        x.Status.HasFlag(
+                            UserStatus.Online
+                            | UserStatus.Idle
+                            | UserStatus.AFK
+                            | UserStatus.DoNotDisturb
+                            ));
+
+                    UIDispatcherScheduler.Default.Schedule(this, (scheduler, state) => 
+                    {
+                        foreach (var user in _Guild.Users)
+                        {
+                            foreach (var role in user.Roles)
+                            {
+                                _RoleToUsersMap[role].Users.Add(new UserViewModel(user));
+                            }
+                        }
+
+                        return default(IDisposable);
+                    });
+                });
+
+
 
             base.OnNavigatedTo(e, viewModelState);
         }
@@ -173,5 +234,33 @@ namespace Uncord.ViewModels
             return Task.CompletedTask;
         }
 
+    }
+
+
+    public class UsersByRole
+    {
+        public SocketRole SocketRole { get; }
+
+        public string RoleName => SocketRole.Name;
+
+        public ObservableCollection<UserViewModel> Users { get; } = new ObservableCollection<UserViewModel>();
+
+        
+        public UsersByRole(SocketRole role)
+        {
+            SocketRole = role;
+        }
+    }
+
+    public class UserViewModel
+    {
+        public string Username { get; }
+        public string AvatarUrl { get; }
+
+        public UserViewModel(SocketGuildUser user)
+        {
+            Username = user.Username;
+            AvatarUrl = user.GetAvatarUrl(ImageFormat.Jpeg, size: 64);
+        }
     }
 }
