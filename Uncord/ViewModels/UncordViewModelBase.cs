@@ -8,6 +8,8 @@ using Prism.Windows.Navigation;
 using Microsoft.Practices.Unity;
 using Prism.Commands;
 using Uncord.Models;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
 namespace Uncord.ViewModels
 {
@@ -16,7 +18,6 @@ namespace Uncord.ViewModels
         private INavigationService NavigationService { get; }
         public DiscordContext DiscordContext { get; }
         public MenuViewModel MenuVM { get; }
-
 
         public UncordPageViewModelBase()
         {

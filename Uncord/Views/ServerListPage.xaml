@@ -18,20 +18,68 @@
 
     
     
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid >
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ResponsiveSplitViewPane">
+
+                <!-- 大画面 -->
+                <VisualState x:Name="LargeMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 中画面 -->
+                <VisualState x:Name="MiddleMonitor">
+
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 小画面 -->
+                <!--
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="SplitView.DisplayMode" Value="CompactOverlay" />
+
+                        <Setter Target="SemiMobilePaneOpener.Visibility" Value="Visible" />
+                        <Setter Target="MobilePaneOpener.Visibility" Value="Collapsed" />
+
+                    </VisualState.Setters>
+                </VisualState>
+                -->
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+            </VisualStateGroup>
+
+
+        </VisualStateManager.VisualStateGroups>
 
 
         <toolkit:DockPanel>
 
             <Border toolkit:DockPanel.Dock="Top"
-                        Background="#44000000"
-                        BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
-                        BorderThickness="0 0 0 1"
-                    Height="48"
                         >
 
                 <!-- Top Bar -->
-                <toolkit:DockPanel >
+                <toolkit:DockPanel Margin="64 8 0 8"
+                                   x:Name="TopBarLayout"
+                                   >
 
                     <StackPanel Orientation="Horizontal"
                             toolkit:DockPanel.Dock="Right"
@@ -40,8 +88,8 @@
                     </StackPanel>
 
                     <TextBlock Text="サーバー"
-                           Style="{StaticResource TitleTextBlockStyle}"
-                           Margin="24 8 0 8"
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           
                            />
 
                 </toolkit:DockPanel>
@@ -86,7 +134,7 @@
                                         <TextBlock Text="{Binding Name}"
                                                 VerticalAlignment="Center"
                                                    TextWrapping="Wrap"
-                                                   Margin="0 4 0 0"
+                                                   Margin="0 8 0 0"
                                                    Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
                                                    FontWeight="SemiBold"
                                                 />

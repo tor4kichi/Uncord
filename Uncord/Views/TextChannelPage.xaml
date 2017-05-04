@@ -48,6 +48,37 @@
                 </VisualState>
 
             </VisualStateGroup>
+
+            <VisualStateGroup x:Name="MenuIconMarginStateGroup">
+
+                <!-- 大画面 -->
+                <VisualState x:Name="LargeMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 中画面 -->
+                <VisualState x:Name="MiddleMonitor">
+
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+            </VisualStateGroup>
+
+            
         </VisualStateManager.VisualStateGroups>
 
         <Grid x:Name="InvalidLayout"
@@ -61,14 +92,12 @@
 
             <toolkit:DockPanel >
 
-                <Border Margin="0"
+                <Border Margin="64 8 0 8"
                         toolkit:DockPanel.Dock="Top"
-                        Height="48"
-                        BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
-                        BorderThickness="0 0 0 1"
+                        x:Name="TopBarLayout"
                         >
-                    <TextBlock Style="{StaticResource TitleTextBlockStyle}"
-                           Margin="16 0 0 0"
+                    <TextBlock Style="{StaticResource SubheaderTextBlockStyle}"
+                           Margin="0 0 0 0"
                                VerticalAlignment="Center"
                            >
                         <Run Text="#" />

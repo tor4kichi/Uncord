@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:iconPack="using:MahApps.Metro.IconPacks"
     mc:Ignorable="d">
 
 
@@ -120,23 +121,7 @@
             <Grid>
 
 
-                <Border Background="Transparent"
-                        IsHitTestVisible="True"
-                        x:Name="MobilePaneOpener"
-                        HorizontalAlignment="Left"
-                        Height="32"
-                        Width="32"
-                        VerticalAlignment="Top"
-                        >
-
-                    <SymbolIcon Symbol="More" />
-
-                    <i:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Tapped">
-                            <core:ChangePropertyAction TargetObject="{Binding ElementName=SplitView}" PropertyName="IsPaneOpen" Value="True" />
-                        </core:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </Border>
+                
                 
                 <!-- コンテンツは小画面時にトップバー左側に
                   ペイン開閉アイコンのためのスペースが必要 -->
@@ -145,6 +130,33 @@
                                 VerticalContentAlignment="Stretch"
                         />
 
+
+                <Button Background="Transparent"
+                        IsHitTestVisible="True"
+                        x:Name="MobilePaneOpener"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="8 8"
+                        Height="48"
+                        Width="48"
+                        >
+
+                    <iconPack:PackIconMaterial Kind="Menu"
+                                               RenderTransformOrigin="0.5, 0.5"
+                                               Margin="0 0"
+                                               >
+                        <iconPack:PackIconMaterial.RenderTransform>
+                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                        </iconPack:PackIconMaterial.RenderTransform>
+                    </iconPack:PackIconMaterial>
+
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <core:ChangePropertyAction TargetObject="{Binding ElementName=SplitView}" PropertyName="IsPaneOpen" Value="True" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Button>
+                
             </Grid>
 
 

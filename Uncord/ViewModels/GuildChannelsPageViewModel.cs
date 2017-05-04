@@ -117,7 +117,6 @@ namespace Uncord.ViewModels
                 AfkChannel.Value = afkChannel;
             }
 
-            ParticipantCount.Value = _Guild.MemberCount;
 
             var roles = _Guild.Roles.ToList();
             roles.Sort((x, y) => y.Position - x.Position);
@@ -137,6 +136,8 @@ namespace Uncord.ViewModels
                     Debug.WriteLine(_Guild.DownloadedMemberCount);
                     Debug.WriteLine(_Guild.MemberCount);
                     Debug.WriteLine(_Guild.HasAllMembers);
+
+                    ParticipantCount.Value = _Guild.MemberCount;
 
                     OnlineParticipantCount.Value = _Guild.Users.Count(x =>
                         x.Status.HasFlag(

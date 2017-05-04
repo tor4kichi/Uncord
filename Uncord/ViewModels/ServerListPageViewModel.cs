@@ -27,5 +27,12 @@ namespace Uncord.ViewModels
 
             Guilds = _DiscordContext.Guilds;
         }
+
+        public override void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
+        {
+            (App.Current as App).IsHideMenu = false;
+
+            base.OnNavigatedTo(e, viewModelState);
+        }
     }
 }
