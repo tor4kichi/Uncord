@@ -13,6 +13,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Uncord.Models;
+using WinRTXamlToolkit.Async;
 
 namespace Uncord.ViewModels
 {
@@ -37,14 +38,37 @@ namespace Uncord.ViewModels
         public ReadOnlyReactiveProperty<string> LoginUserName { get; }
         public ReadOnlyReactiveProperty<string> LoginUserAvaterUrl { get; }
 
-        public ReadOnlyReactiveProperty<bool> HasCurrentVoiceChannel { get; }
+        public ReadOnlyReactiveCollection<SocketGuild> Guilds { get; private set; }
 
-        public ReadOnlyReactiveProperty<string> CurrentVoiceChannelName { get; }
+        public ReactiveProperty<SocketGuild> SelectedGuild { get; }
+
+
+
+        public ReactiveProperty<string> GuildName { get; private set; }
+
+        ObservableCollection<SocketTextChannel> _TextChannels;
+        public ReadOnlyReactiveCollection<SocketTextChannel> TextChannels { get; private set; }
+
+        ObservableCollection<SocketVoiceChannel> _VoiceChannels;
+        public ReadOnlyReactiveCollection<SocketVoiceChannel> VoiceChannels { get; private set; }
+
+        public ReactiveProperty<SocketVoiceChannel> AfkChannel { get; private set; }
+        public ReactiveProperty<bool> HasAfkChannel { get; private set; }
+
+        public DelegateCommand UnselectTextChannelCommand { get; private set; }
+
+        public DelegateCommand UnselectVoiceChannelCommand { get; private set; }
+
+        private AsyncLock _GuildChangingLock { get; } = new AsyncLock();
 
         public MenuViewModel(DiscordContext discordContext, INavigationService navService)
         {
             DiscordContext = discordContext;
             NavigationService = navService;
+
+            Guilds = DiscordContext.Guilds;
+            SelectedGuild = new ReactiveProperty<SocketGuild>();
+            GuildName = new ReactiveProperty<string>("");
 
             LoginUserName = DiscordContext.ObserveProperty(x => x.CurrentUser)
                 .Select(x => x?.Username ?? "")
@@ -54,13 +78,73 @@ namespace Uncord.ViewModels
                 .Select(x => x?.GetAvatarUrl() ?? "")
                 .ToReadOnlyReactiveProperty();
 
-            HasCurrentVoiceChannel = DiscordContext.ObserveProperty(x => x.CurrentVoiceChannel)
-                .Select(x => x != null)
-                .ToReadOnlyReactiveProperty();
 
-            CurrentVoiceChannelName = DiscordContext.ObserveProperty(x => x.CurrentVoiceChannel)
-                .Select(x => x?.Name ?? "")
-                .ToReadOnlyReactiveProperty();
+            _TextChannels = new ObservableCollection<SocketTextChannel>();
+            TextChannels = _TextChannels.ToReadOnlyReactiveCollection();
+
+            _VoiceChannels = new ObservableCollection<SocketVoiceChannel>();
+            VoiceChannels = _VoiceChannels.ToReadOnlyReactiveCollection();
+
+            AfkChannel = new ReactiveProperty<SocketVoiceChannel>();
+            HasAfkChannel = AfkChannel.Select(x => x != null)
+                .ToReactiveProperty();
+
+
+            SelectedGuild.Subscribe(async guild => 
+            {
+                using (var releaser = await _GuildChangingLock.LockAsync())
+                {
+                    if (guild != null)
+                    {
+                        _TextChannels.Clear();
+                        _VoiceChannels.Clear();
+                        AfkChannel.Value = null;
+
+                        GuildName.Value = guild.Name;
+
+                        DiscordContext.DiscordSocketClient.ChannelCreated += Discord_ChannelCreated;
+                        DiscordContext.DiscordSocketClient.ChannelDestroyed += Discord_ChannelDestroyed;
+                        DiscordContext.DiscordSocketClient.ChannelUpdated += Discord_ChannelUpdated;
+
+
+                        // Listup Text Channels
+                        var channels = guild.TextChannels.ToList();
+                        channels.Sort((x, y) => x.Position - y.Position);
+                        foreach (var textChannel in channels)
+                        {
+                            _TextChannels.Add(textChannel);
+                        }
+
+
+                        // Listup Voice Channels
+                        var afkChannel = guild.AFKChannel;
+                        var afkChannelId = afkChannel?.Id;
+                        var voiceChannels =
+                                guild.VoiceChannels
+                                .Where(x => x.Id != afkChannelId)
+                                .ToList();
+                        voiceChannels.Sort((x, y) => x.Position - y.Position);
+
+                        foreach (var channel in voiceChannels)
+                        {
+                            _VoiceChannels.Add(channel);
+                        }
+
+                        if (afkChannel != null)
+                        {
+                            AfkChannel.Value = afkChannel;
+                        }
+                    }
+                    else
+                    {
+                        await Task.Delay(300);
+                        _TextChannels.Clear();
+                        _VoiceChannels.Clear();
+                        AfkChannel.Value = null;
+                        GuildName.Value = null;
+                    }
+                }
+            });
         }
 
         public void OpenMenu()
@@ -86,15 +170,15 @@ namespace Uncord.ViewModels
         }
 
 
-        private DelegateCommand _OpenPortalPageCommand;
-        public DelegateCommand OpenPortalPageCommand
+        private DelegateCommand<SocketGuild> _SelectGuildCommand;
+        public DelegateCommand<SocketGuild> SelectGuildCommand
         {
             get
             {
-                return _OpenPortalPageCommand
-                    ?? (_OpenPortalPageCommand = new DelegateCommand(() =>
+                return _SelectGuildCommand
+                    ?? (_SelectGuildCommand = new DelegateCommand<SocketGuild>((guild) =>
                     {
-                        NavigationService.Navigate(PageTokens.ServerListPageToken, null);
+                        SelectedGuild.Value = guild;
                     }));
             }
         }
@@ -125,18 +209,106 @@ namespace Uncord.ViewModels
             }
         }
 
-        private DelegateCommand _DisconnectVoiceChannelCommand;
-        public DelegateCommand DisconnectVoiceChannelCommand
+        private DelegateCommand<ulong?> _OpenTextChannelPageCommand;
+        public DelegateCommand<ulong?> OpenTextChannelPageCommand
         {
             get
             {
-                return _DisconnectVoiceChannelCommand
-                    ?? (_DisconnectVoiceChannelCommand = new DelegateCommand(async () =>
+                return _OpenTextChannelPageCommand
+                    ?? (_OpenTextChannelPageCommand = new DelegateCommand<ulong?>((textChannelId) =>
                     {
-                        // Voiceチャンネルの選択を解除
-                        await DiscordContext.DisconnectCurrentVoiceChannel();
+                        if (textChannelId.HasValue)
+                        {
+                            NavigationService.Navigate(PageTokens.TextChannelPageToken, textChannelId.Value);
+                        }
                     }));
             }
         }
+
+        private DelegateCommand<ulong?> _OpenVoiceChannelPageCommand;
+        public DelegateCommand<ulong?> OpenVoiceChannelPageCommand
+        {
+            get
+            {
+                return _OpenVoiceChannelPageCommand
+                    ?? (_OpenVoiceChannelPageCommand = new DelegateCommand<ulong?>((voiceChannelId) =>
+                    {
+                        if (voiceChannelId.HasValue)
+                        {
+                            NavigationService.Navigate(PageTokens.VoiceChannelPageToken, voiceChannelId.Value);
+                        }
+                    }));
+            }
+        }
+
+        private DelegateCommand<ulong?> _ConnectVoiceChannelCommand;
+        public DelegateCommand<ulong?> ConnectVoiceChannelCommand
+        {
+            get
+            {
+                return _ConnectVoiceChannelCommand
+                    ?? (_ConnectVoiceChannelCommand = new DelegateCommand<ulong?>(async (voiceChannelId) =>
+                    {
+                        // Voiceチャンネルを選択
+                        if (voiceChannelId.HasValue)
+                        {
+                            await DiscordContext.ConnectVoiceChannel(voiceChannelId.Value);
+                        }
+                    }));
+            }
+        }
+
+
+        private async Task Discord_ChannelUpdated(SocketChannel oldChannel, SocketChannel newChannel)
+        {
+            await Discord_ChannelDestroyed(oldChannel);
+            await Discord_ChannelCreated(newChannel);
+        }
+
+        private Task Discord_ChannelCreated(SocketChannel newChannel)
+        {
+            if (newChannel is SocketGuildChannel)
+            {
+                var newGuildChanneld = newChannel as SocketGuildChannel;
+                if (newGuildChanneld.Guild.Id == SelectedGuild.Value.Id)
+                {
+                    if (newGuildChanneld is SocketTextChannel)
+                    {
+                        _TextChannels.Add(newGuildChanneld as SocketTextChannel);
+                    }
+                    else if (newGuildChanneld is SocketVoiceChannel)
+                    {
+                        _VoiceChannels.Add(newGuildChanneld as SocketVoiceChannel);
+                    }
+
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task Discord_ChannelDestroyed(SocketChannel oldChannel)
+        {
+            if (oldChannel is SocketGuildChannel)
+            {
+                var oldGuildChanneld = oldChannel as SocketGuildChannel;
+                if (oldGuildChanneld.Guild.Id == SelectedGuild.Value.Id)
+                {
+                    if (oldGuildChanneld is SocketTextChannel)
+                    {
+                        var channelVM = _TextChannels.SingleOrDefault(x => oldChannel.Id == x.Id);
+                        _TextChannels.Remove(channelVM);
+                    }
+                    else if (oldGuildChanneld is SocketVoiceChannel)
+                    {
+                        var channelVM = _VoiceChannels.SingleOrDefault(x => oldChannel.Id == x.Id);
+                        _VoiceChannels.Remove(channelVM);
+                    }
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+
     }
 }

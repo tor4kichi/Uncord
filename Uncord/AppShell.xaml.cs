@@ -36,6 +36,13 @@ namespace Uncord
             set { SetValue(IsMenuHideProperty, value); }
         }
 
+        internal void OpenMenu()
+        {
+            SplitView.IsPaneOpen = true;
+        }
+
+        
+
         public AppShell()
         {
             this.InitializeComponent();

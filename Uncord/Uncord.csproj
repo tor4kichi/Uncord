@@ -115,17 +115,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\AppVersion.cs" />
     <Compile Include="Util\DiscordApiHelper.cs" />
+    <Compile Include="ViewModels\LandingPageViewModel.cs" />
     <Compile Include="ViewModels\NavigationPayloadBase.cs" />
     <Compile Include="ViewModels\AccountLoginPageViewModel.cs" />
     <Compile Include="ViewModels\FriendsPageViewModel.cs" />
     <Compile Include="ViewModels\ServerListPageViewModel.cs" />
-    <Compile Include="ViewModels\GuildChannelsPageViewModel.cs" />
     <Compile Include="ViewModels\TextChannelMessageViewModel.cs" />
     <Compile Include="ViewModels\LoggedInProcessPageViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\TextChannelPageViewModel.cs" />
     <Compile Include="ViewModels\UncordViewModelBase.cs" />
+    <Compile Include="ViewModels\VoiceChannelPageViewModel.cs" />
+    <Compile Include="ViewModels\VoiceChannelStatusViewModel.cs" />
     <Compile Include="Views\AccountLoginPage.xaml.cs">
       <DependentUpon>AccountLoginPage.xaml</DependentUpon>
     </Compile>
@@ -151,11 +153,11 @@
     <Compile Include="Views\Controls\Message\MessageEmbedTypeTemplateSelector.cs" />
     <Compile Include="Views\Controls\Message\VideoEmbedTemplateSelector.cs" />
     <Compile Include="Views\Converter\YoutubeUrlToEmbedHtmlStringConverter.cs" />
+    <Compile Include="Views\LandingPage.xaml.cs">
+      <DependentUpon>LandingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ServerListPage.xaml.cs">
       <DependentUpon>ServerListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\GuildChannelsPage.xaml.cs">
-      <DependentUpon>GuildChannelsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoggedInProcessPage.xaml.cs">
       <DependentUpon>LoggedInProcessPage.xaml</DependentUpon>
@@ -168,6 +170,12 @@
     </Compile>
     <Compile Include="Views\TextChannelPage.xaml.cs">
       <DependentUpon>TextChannelPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VoiceChannelPage.xaml.cs">
+      <DependentUpon>VoiceChannelPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VoiceChannelStatusView.xaml.cs">
+      <DependentUpon>VoiceChannelStatusView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -259,11 +267,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ServerListPage.xaml">
+    <Page Include="Views\LandingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GuildChannelsPage.xaml">
+    <Page Include="Views\ServerListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -285,6 +293,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Views\TextChannelPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VoiceChannelPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VoiceChannelStatusView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -121,14 +121,23 @@
             <Grid>
 
 
-                
-                
-                <!-- コンテンツは小画面時にトップバー左側に
+                <toolkit:DockPanel>
+
+                    <views:VoiceChannelStatusView
+                        toolkit:DockPanel.Dock="Bottom"
+                        />
+
+
+                    <!-- コンテンツは小画面時にトップバー左側に
                   ペイン開閉アイコンのためのスペースが必要 -->
-                <ContentControl x:Name="PageContent"
+                    <ContentControl x:Name="PageContent"
                                 HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Stretch"
                         />
+                </toolkit:DockPanel>
+                
+                
+                
 
 
                 <Button Background="Transparent"

@@ -12,6 +12,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    xmlns:uwpanimation="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d"
     d:DesignHeight="300"
@@ -20,40 +21,34 @@
     <toolkit:DockPanel>
 
         <!-- ログインユーザー情報＋設定 -->
-        <StackPanel toolkit:DockPanel.Dock="Bottom">
+        <StackPanel toolkit:DockPanel.Dock="Bottom"
+                    BorderBrush="#44000000"
+                    BorderThickness="0 1 0 0"
+                    >
 
-
-            <toolkit:DockPanel
-                Visibility="{Binding HasCurrentVoiceChannel.Value, Converter={StaticResource BoolToVisibilityConverter}}"
-                >
-
-                <Border toolkit:DockPanel.Dock="Top"
-                        >
-                    <TextBlock Text="接続中のボイスチャンネル" />
-                </Border>
-                
-                <Button Background="Transparent"
-                        Command="{Binding DisconnectVoiceChannelCommand}"
-                        toolkit:DockPanel.Dock="Right"
-                        >
-                    <SymbolIcon Symbol="Remove"
-                                Foreground="Red"
-                                />
-                </Button>
-
-                <StackPanel 
-                        Orientation="Horizontal"
-                        
-                        >
-                    <SymbolIcon Symbol="Volume" Margin="8 0 8 0" />
-
-                    <TextBlock Text="{Binding CurrentVoiceChannelName.Value}"
-                               VerticalAlignment="Center"
-                               />
+            <Button Background="Transparent"
+                    Command="{Binding OpenSettingsPageCommand}"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        Height="48"
+                    >
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Setting"
+                                    Margin="8 0 16 0"
+                                    />
+                    <TextBlock Text="設定"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
                 </StackPanel>
-            </toolkit:DockPanel>
 
-            <Button Background="Transparent">
+            </Button>
+            
+            <Button Background="Transparent"
+                    HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                    Height="48"
+                    >
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="ログアウト" 
@@ -66,35 +61,234 @@
                         BorderThickness="1 0 0 0"
                         >
                     <uwpcontrol:ImageEx Source="{Binding LoginUserAvaterUrl.Value}"
-                                    Height="32"
-                                    Width="32"
+                                    Height="24"
+                                    Width="24"
+                                        Margin="8 0 12 0"
                                     />
-                    <TextBlock Text="{Binding LoginUserName.Value}" />
+                    <TextBlock Text="{Binding LoginUserName.Value}" 
+                               VerticalAlignment="Center"
+                               />
                 </StackPanel>
 
             </Button>
-           
+
+            
+
         </StackPanel>
 
 
-        <ScrollViewer>
-            <ItemsControl>
+        <Grid>
 
-                <Button Background="Transparent"
-                    Command="{Binding OpenPortalPageCommand}"
-                    >
-                    <SymbolIcon Symbol="Home" />
-                </Button>
-                
-                <Button Background="Transparent"
-                    Command="{Binding OpenSettingsPageCommand}"
-                    >
-                    <SymbolIcon Symbol="Setting" />
-                </Button>
+            
+            <i:Interaction.Behaviors>
+                <!-- show servers list -->
+                <core:DataTriggerBehavior Binding="{Binding SelectedGuild.Value}" Value="{x:Null}" ComparisonCondition="Equal">
+                    <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ToggleShowServersLayout" />
+                </core:DataTriggerBehavior>
 
+                <!-- show server channels -->
+                <core:DataTriggerBehavior Binding="{Binding SelectedGuild.Value}" Value="{x:Null}" ComparisonCondition="NotEqual" >
+                    <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ToggleShowServerChannelsLayout" />
+                </core:DataTriggerBehavior>
+            </i:Interaction.Behaviors>
+            
+            
+            
+            <!-- サーバーのチャンネル -->
+            <toolkit:DockPanel x:Name="ChannelsLayout"
+                               >
+
+                <toolkit:DockPanel 
+                            toolkit:DockPanel.Dock="Top"
+                            >
+
+                    <Button Background="Transparent"
+                            Command="{Binding SelectGuildCommand}"
+                            CommandParameter="{x:Null}"
+                            Height="48"
+                            Width="48"
+                            Margin="0 0 8 0"
+                            toolkit:DockPanel.Dock="Left"
+                            >
+                        <SymbolIcon Symbol="Back" />
+                    </Button>
+
+                    <!--
+                    <Button Background="Transparent"
+                            Height="48"
+                            Width="48"
+                            Margin="0 0 0 0"
+                            toolkit:DockPanel.Dock="Right"
+                            >
+                        <SymbolIcon Symbol="More" />
+                    </Button>
+                    -->
+
+                    <TextBlock Text="{Binding GuildName.Value}" 
+                               VerticalAlignment="Center"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               />
+
+                </toolkit:DockPanel>
+
+
+                <ScrollViewer>
+                    <StackPanel Margin="24 0"
+                                >
+
+
+                        <StackPanel Orientation="Horizontal" 
+                                    Margin="0 16"
+                                    HorizontalAlignment="Right"
+                                    >
+                            <TextBlock Text="Text Channel"
+                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                       VerticalAlignment="Center"
+                                       
+                                />
+                            <!-- 
+                            <Border Width="16" />
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+                            -->
+                        </StackPanel>
+
+
+
+
+                        <ItemsControl ItemsSource="{Binding TextChannels}"
+                                  Margin="0 0"
+                                  >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <toolkit:DockPanel Margin="0 0 0 0"
+                                                       >
+                                        <Button Command="{Binding ElementName=MenuViewRoot, Path=DataContext.OpenTextChannelPageCommand}"
+                                                CommandParameter="{Binding Id}"
+                                                Background="Transparent"
+                                                HorizontalAlignment="Stretch"
+                                                HorizontalContentAlignment="Right"
+                                                Height="40"
+                                            >
+                                            <toolkit:DockPanel>
+
+                                                <TextBlock VerticalAlignment="Center">
+                                                    <Run Text="#" />
+                                                    <Run Text="{Binding Name}" />
+                                                </TextBlock>
+                                            </toolkit:DockPanel>
+                                        </Button>
+                                    </toolkit:DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+
+                        <Border Height="16" />
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0 16"
+                                    HorizontalAlignment="Right"
+                                    >
+                            <TextBlock Text="Voice Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                       VerticalAlignment="Center"
+                                   />
+                            <!--
+                            <Border Width="16" />
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+                            -->
+                        </StackPanel>
+
+                        <ItemsControl ItemsSource="{Binding VoiceChannels}"
+                                      Margin="0 0"
+                                  >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <toolkit:DockPanel Margin="0 0 0 0"
+                                                       >
+                                        <Button Command="{Binding ElementName=MenuViewRoot, Path=DataContext.ConnectVoiceChannelCommand}"
+                                                CommandParameter="{Binding Id}"
+                                                Background="Transparent"
+                                                HorizontalAlignment="Stretch"
+                                                HorizontalContentAlignment="Right"
+                                                Height="40"
+
+                                            >
+                                            <TextBlock VerticalAlignment="Center">
+                                            <Run Text="{Binding Name}" />
+                                            </TextBlock>
+                                        </Button>
+                                    </toolkit:DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </StackPanel>
+                </ScrollViewer>
                 
-            </ItemsControl>
-        </ScrollViewer>
+            </toolkit:DockPanel>
+
+            
+            
+            <!-- サーバー -->
+            <toolkit:DockPanel x:Name="ServersLayout">
+
+                <Border Height="48"
+                        toolkit:DockPanel.Dock="Top"
+                        >
+                </Border>
+
+
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Guilds}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Button Background="Transparent"
+                                        Command="{Binding ElementName=MenuViewRoot, Path=DataContext.SelectGuildCommand}"
+                                        CommandParameter="{Binding}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Padding="16 0"
+                                        Margin="8 0"
+                                        Height="48"
+                                        >
+                                    <toolkit:DockPanel
+                                        >
+                                        <uwpcontrol:ImageEx Source="{Binding IconUrl}"
+                                                        Height="32"
+                                                        Width="32"
+                                                        Margin="0 0 8 0"
+                                                            toolkit:DockPanel.Dock="Left"
+                                            />
+
+                                        <TextBlock Text="{Binding Name}"
+                                                VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                />
+
+                                    </toolkit:DockPanel>
+
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+
+
+                    </ItemsControl>
+                </ScrollViewer>
+
+            </toolkit:DockPanel>
+        </Grid>
+
 
     </toolkit:DockPanel>
 </UserControl>

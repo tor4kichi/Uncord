@@ -37,6 +37,12 @@ namespace Uncord
             set { _AppShell.IsMenuHide = value; }
         }
 
+
+        public void OpenMenu()
+        {
+            _AppShell.OpenMenu();
+        }
+
         /// <summary>
         /// 単一アプリケーション オブジェクトを初期化します。これは、実行される作成したコードの
         ///最初の行であるため、main() または WinMain() と論理的に等価です。
@@ -72,6 +78,7 @@ namespace Uncord
             _AppShell = appShell;
             appShell.SetContent(rootFrame);
 
+            
 
             // 自動ログインチェック
             var discordContext = Container.Resolve<Models.DiscordContext>();

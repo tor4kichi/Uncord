@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="Uncord.Views.VoiceChannelStatusView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid Visibility="{Binding IsConnectVoiceChannel.Value, Converter={StaticResource BoolToVisibilityConverter}}"
+          Height="48"
+          Background="#44000000"
+          >
+        <toolkit:DockPanel VerticalAlignment="Center">
+
+            <StackPanel Orientation="Horizontal"
+                        toolkit:DockPanel.Dock="Right"
+                        >
+                <Button Background="Transparent"
+                        Command="{Binding DisconnectVoiceChannelCommand}"
+                        >
+                    <SymbolIcon Symbol="Remove" />
+                </Button>
+            </StackPanel>
+
+            <Button Command="{Binding OpenVoiceChannelPageCommand}"
+                    Background="Transparent"
+                    >
+                <TextBlock Text="{Binding CurrentVoiceChannelName.Value}"
+                   VerticalAlignment="Center"
+                   />
+            </Button>
+
+        </toolkit:DockPanel>
+    </Grid>
+</UserControl>

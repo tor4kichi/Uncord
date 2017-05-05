@@ -40,7 +40,7 @@ namespace Uncord.ViewModels
 
                     await Task.Delay(TimeSpan.FromSeconds(3));
 
-                    _NavigationService.Navigate(PageTokens.ServerListPageToken, null);
+                    _NavigationService.Navigate(PageTokens.LandingPageToken, null);
 
                     _NavigationService.ClearHistory();
 

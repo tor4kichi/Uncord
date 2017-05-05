@@ -11,12 +11,15 @@ namespace Uncord
         public static string AccountLoginPageToken = ToPageToken(typeof(Views.AccountLoginPage));
         public static string LoggedInProcessPageToken = ToPageToken(typeof(Views.LoggedInProcessPage));
 
+        public static string LandingPageToken = ToPageToken(typeof(Views.LandingPage));
+
+
         public static string ServerListPageToken = ToPageToken(typeof(Views.ServerListPage));
         public static string SettingsToken = ToPageToken(typeof(Views.SettingsPage));
 
         public static string FriendsPageToken = ToPageToken(typeof(Views.FriendsPage));
-        public static string GuildChannelsPageToken = ToPageToken(typeof(Views.GuildChannelsPage));
         public static string TextChannelPageToken = ToPageToken(typeof(Views.TextChannelPage));
+        public static string VoiceChannelPageToken = ToPageToken(typeof(Views.VoiceChannelPage));
 
 
 

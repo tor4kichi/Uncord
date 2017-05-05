@@ -95,21 +95,6 @@ namespace Uncord.ViewModels
             }
         }
 
-        private DelegateCommand<ulong?> _OpenGuildChannelsPageCommand;
-        public DelegateCommand<ulong?> OpenGuildChannelsPageCommand
-        {
-            get
-            {
-                return _OpenGuildChannelsPageCommand
-                    ?? (_OpenGuildChannelsPageCommand = new DelegateCommand<ulong?>((guildId) =>
-                    {
-                        if (guildId.HasValue)
-                        {
-                            NavigatePage(PageTokens.GuildChannelsPageToken, guildId.Value);
-                        }
-                    }));
-            }
-        }
 
         private DelegateCommand<ulong?> _OpenTextChannelPageCommand;
         public DelegateCommand<ulong?> OpenTextChannelPageCommand
