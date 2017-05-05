@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Prism.Windows.Navigation;
 using Windows.UI.Xaml;
 using Uncord.Models;
+using Reactive.Bindings;
 
 namespace Uncord.ViewModels
 {
@@ -16,6 +17,8 @@ namespace Uncord.ViewModels
         DiscordContext _DicordContext;
 
         public string Token { get; set; }
+
+        public ReactiveProperty<string> LoginProcessStatus { get; }
 
         public LoggedInProcessPageViewModel(Models.DiscordContext dicordContext, INavigationService navService)
         {
@@ -38,7 +41,9 @@ namespace Uncord.ViewModels
                 {
                     await _DicordContext.WaitLoginAction();
 
-                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    LoginProcessStatus.Value = "ログイン完了";
+
+                    await Task.Delay(TimeSpan.FromSeconds(0));
 
                     _NavigationService.Navigate(PageTokens.LandingPageToken, null);
 
