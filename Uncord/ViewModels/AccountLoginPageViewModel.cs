@@ -8,6 +8,7 @@ using Prism.Windows.Navigation;
 using Reactive.Bindings;
 using System.Reactive.Linq;
 using Uncord.Models;
+using Prism.Commands;
 
 namespace Uncord.ViewModels
 {
@@ -73,7 +74,6 @@ namespace Uncord.ViewModels
                 NowTryLogin.Value = false;
             }
         }
-
 
         public override void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {

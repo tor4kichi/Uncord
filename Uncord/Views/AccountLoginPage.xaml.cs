@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,33 @@ namespace Uncord.Views
         public AccountLoginPage()
         {
             this.InitializeComponent();
+        }
+
+
+        public void ShowLoginScreenBarrie()
+        {
+            LoginScreenBarrie.Visibility = Visibility.Visible;
+            LoginScreenBarrie
+                .Fade(value: 1.0f)
+                .SetDuration(200)
+                .Start()
+                ;
+        }
+
+        public void HideLoginScreenBarrie()
+        {
+            LoginScreenBarrie.Visibility = Visibility.Visible;
+            var anim = LoginScreenBarrie
+                .Fade(value: 0.0f)
+                .SetDuration(200)
+                ;
+            anim.Completed += HideLoginScreenBarrieCompleted;
+            anim.Start();
+        }
+
+        private void HideLoginScreenBarrieCompleted(object sender, AnimationSetCompletedEventArgs e)
+        {
+            LoginScreenBarrie.Visibility = Visibility.Collapsed;
         }
     }
 }

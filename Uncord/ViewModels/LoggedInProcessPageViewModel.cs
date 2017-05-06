@@ -26,6 +26,7 @@ namespace Uncord.ViewModels
             _DicordContext = dicordContext;
 
             Token = _DicordContext.DiscordAccessToken;
+            LoginProcessStatus = new ReactiveProperty<string>();
         }
             
 
