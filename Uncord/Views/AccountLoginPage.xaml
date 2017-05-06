@@ -14,22 +14,7 @@
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-
+    <ScrollViewer>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Layout">
 
@@ -51,7 +36,7 @@
                         <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="2" />
                     </VisualState.Setters>
                 </VisualState>
-                
+
                 <!-- 中画面 -->
                 <VisualState x:Name="MiddleMonitor">
                     <VisualState.StateTriggers>
@@ -89,17 +74,35 @@
                         <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="3" />
                     </VisualState.Setters>
                 </VisualState>
-                
+
                 <!-- 720pxより小さい画面はデフォルト値として指定します -->
-                
-                
+
+
             </VisualStateGroup>
 
 
         </VisualStateManager.VisualStateGroups>
+        
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- タイトル表示 -->
-        <Border Grid.RowSpan="1"
+            
+
+            <!-- タイトル表示 -->
+            <Border Grid.RowSpan="1"
                     Grid.ColumnSpan="5"
                     Grid.Row="1"
                     Grid.Column="0"
@@ -107,129 +110,136 @@
                     HorizontalAlignment="Stretch"
                 x:Name="AppLabelLayout"
                 >
-            <StackPanel HorizontalAlignment="Center"
+                <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                     >
-                <TextBlock Text="Uncord"
+                    <TextBlock Text="Uncord"
                        Style="{StaticResource HeaderTextBlockStyle}"
                        />
-                <TextBlock Text="Discord client for windows10" />
-            </StackPanel>
+                    <TextBlock Text="Discord client for windows10" />
+                </StackPanel>
 
-        </Border>
+            </Border>
 
-        <Border Grid.RowSpan="3"
+            <Border Grid.RowSpan="3"
                     Grid.ColumnSpan="5"
                     Grid.Row="2"
                     Grid.Column="0"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
-                x:Name="LoginFormLayout"
+                    x:Name="LoginFormLayout"
                 >
-            <StackPanel VerticalAlignment="Top"
+                <StackPanel VerticalAlignment="Top"
                         HorizontalAlignment="Center"
                         MinWidth="240"
                         >
 
-                <TextBox Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          InputScope="EmailSmtpAddress"
                          >
-                    <TextBox.Header>
-                        <Binding Source="Mail"
+                        <TextBox.Header>
+                            <Binding Source="Mail"
                                  Converter="{StaticResource ResourceNameToResourceStringConverter}"
                                  />
-                    </TextBox.Header>
-                    <i:Interaction.Behaviors>
-                        <mybehavior:MoveHeaderOnFocusBehavior />
-                    </i:Interaction.Behaviors>
-                </TextBox>
+                        </TextBox.Header>
+                        <i:Interaction.Behaviors>
+                            <mybehavior:MoveHeaderOnFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
 
-                <Border Height="16" />
-                
-                <PasswordBox 
+                    <Border Height="16" />
+
+                    <PasswordBox 
                          Password="{Binding Password.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          InputScope="Password"
                         >
-                    <PasswordBox.Header>
-                        <Binding Source="Password"
+                        <PasswordBox.Header>
+                            <Binding Source="Password"
                                  Converter="{StaticResource ResourceNameToResourceStringConverter}"
                                  />
-                    </PasswordBox.Header>
-                </PasswordBox>
+                        </PasswordBox.Header>
+                    </PasswordBox>
 
+                    <Border Height="24" />
 
-                <Button MinWidth="120"
+                    <ToggleButton IsChecked="{Binding IsRememberPassword.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Text="パスワードを保存する" />
+                    </ToggleButton>
+
+                    <Button MinWidth="120"
                         MinHeight="40"
                         Margin="0 24 0 8"
                         HorizontalAlignment="Stretch"
                         Command="{Binding TryLoginCommand}"
                         >
-                    <Button.Content>
-                        <Binding Source="LoginAccount" 
+                        <Button.Content>
+                            <Binding Source="LoginAccount" 
                                  Converter="{StaticResource ResourceNameToResourceStringConverter}"
                                  />
-                    </Button.Content>
-                </Button>
+                        </Button.Content>
+                    </Button>
 
-                <HyperlinkButton NavigateUri="https://discordapp.com/register"
+                    <HyperlinkButton NavigateUri="https://discordapp.com/register"
                                  HorizontalAlignment="Right"
                                  TabIndex="20"
                                  Margin="0 16 0 0"
                                  >
-                    <HyperlinkButton.Content>
-                        <Binding Source="RegisterAccount" 
+                        <HyperlinkButton.Content>
+                            <Binding Source="RegisterAccount" 
                                  Converter="{StaticResource ResourceNameToResourceStringConverter}"
                                  />
-                    </HyperlinkButton.Content>
-                </HyperlinkButton>
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
 
-                <HyperlinkButton NavigateUri="https://discordapp.com/login"
+                    <HyperlinkButton NavigateUri="https://discordapp.com/login"
                                  HorizontalAlignment="Right"
                                  TabIndex="20"
                                  Margin="0 16 0 0"
                                  >
-                    <HyperlinkButton.Content>
-                        <Binding Source="ForgetPassword" 
+                        <HyperlinkButton.Content>
+                            <Binding Source="ForgetPassword" 
                                  Converter="{StaticResource ResourceNameToResourceStringConverter}"
                                  />
-                    </HyperlinkButton.Content>
-                </HyperlinkButton>
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
 
-            </StackPanel>
-        </Border>
+                </StackPanel>
+            </Border>
 
-        <Border x:Name="LoginScreenBarrie"
+            <Border x:Name="LoginScreenBarrie"
                 Visibility="Collapsed"
                 Opacity="0"
                 Grid.RowSpan="5"
                 Grid.ColumnSpan="5"
                 Background="#AAFFFFFF"
                 >
-            <i:Interaction.Behaviors>
-                <core:DataTriggerBehavior Binding="{Binding NowTryLogin.Value}" Value="True">
-                    <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ShowLoginScreenBarrie" />
-                </core:DataTriggerBehavior>
-                <core:DataTriggerBehavior Binding="{Binding NowTryLogin.Value}" Value="False">
-                    <core:CallMethodAction TargetObject="{x:Bind}" MethodName="HideLoginScreenBarrie" />
-                </core:DataTriggerBehavior>
-            </i:Interaction.Behaviors>
-            
-            <StackPanel Orientation="Horizontal"
+                <i:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{Binding NowTryLogin.Value}" Value="True">
+                        <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ShowLoginScreenBarrie" />
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{Binding NowTryLogin.Value}" Value="False">
+                        <core:CallMethodAction TargetObject="{x:Bind}" MethodName="HideLoginScreenBarrie" />
+                    </core:DataTriggerBehavior>
+                </i:Interaction.Behaviors>
+
+                <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         >
-                
-                <ProgressRing IsActive="{Binding NowTryLogin.Value}"
+
+                    <ProgressRing IsActive="{Binding NowTryLogin.Value}"
                               Height="64"
                               Width="64"
                               />
-                
-                <TextBlock Text="ログイン中"
+
+                    <TextBlock Text="ログイン中"
                            Margin="16 0 0 0"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center"
                            />
-            </StackPanel>
-        </Border>
-    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+    
 </Page>

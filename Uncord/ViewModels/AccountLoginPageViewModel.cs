@@ -19,6 +19,7 @@ namespace Uncord.ViewModels
 
         public ReactiveProperty<string> Mail { get; private set; }
         public ReactiveProperty<string> Password { get; private set; }
+        public ReactiveProperty<bool> IsRememberPassword { get; private set; }
 
         public ReactiveCommand TryLoginCommand { get; private set; }
 
@@ -31,6 +32,7 @@ namespace Uncord.ViewModels
 
             Mail = new ReactiveProperty<string>("");
             Password = new ReactiveProperty<string>("");
+            IsRememberPassword = new ReactiveProperty<bool>(false);
 
             TryLoginCommand = Observable.CombineLatest(
                 Mail.Select(x => !string.IsNullOrEmpty(x)), /* TODO: check with regex */
@@ -41,23 +43,24 @@ namespace Uncord.ViewModels
 
             NowTryLogin = new ReactiveProperty<bool>(false);
 
-            TryLoginCommand.Subscribe(async _ => await TryLogin(Mail.Value, Password.Value));
+            TryLoginCommand.Subscribe(async _ => await TryLogin(Mail.Value, Password.Value, IsRememberPassword.Value));
 
             if (_DiscordContext.TryGetRecentLoginAccount(out var mailAndPassword))
             {
                 Mail.Value = mailAndPassword.Item1;
                 Password.Value = mailAndPassword.Item2;
+                IsRememberPassword.Value = true;
             }
         }
 
 
-        private async Task TryLogin(string mail, string password)
+        private async Task TryLogin(string mail, string password, bool isRememberPassword)
         {
             try
             {
                 NowTryLogin.Value = true;
 
-                var isLoginSuccess = await _DiscordContext.TryLogin(mail, password);
+                var isLoginSuccess = await _DiscordContext.TryLogin(mail, password, isRememberPassword);
                 if (isLoginSuccess)
                 {
                     _NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
@@ -67,6 +70,12 @@ namespace Uncord.ViewModels
                 else
                 {
                     // ログイン失敗
+                }
+
+                // パスワードを保存しない場合は、以前入力されたログイン資格情報を削除
+                if (!isRememberPassword)
+                {
+                    _DiscordContext.RemoveRecentLoginAccount();
                 }
             }
             finally

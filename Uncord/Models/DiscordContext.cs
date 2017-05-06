@@ -396,7 +396,7 @@ namespace Uncord.Models
             return true;
         }
 
-        public async Task<bool> TryLogin(string mail, string password)
+        public async Task<bool> TryLogin(string mail, string password, bool isRemember)
         {
             await LogOut();
 
@@ -410,7 +410,14 @@ namespace Uncord.Models
 
                 DiscordAccessToken = token;
 
-                AddOrUpdateRecentLoginAccount(mail, password);
+                if (isRemember)
+                {
+                    AddOrUpdateRecentLoginAccount(mail, password);
+                }
+                else
+                {
+                    
+                }
             }
 
             if (IsValidateToken)
@@ -449,27 +456,35 @@ namespace Uncord.Models
 
         public bool TryGetRecentLoginAccount(out Tuple<string, string> mailAndPassword)
         {
-            var vault = new Windows.Security.Credentials.PasswordVault();
-            var oldItems = vault.FindAllByResource(nameof(Uncord));
-            if (oldItems.Count == 0)
+            try
+            {
+                var vault = new Windows.Security.Credentials.PasswordVault();
+                var oldItems = vault.FindAllByResource(nameof(Uncord));
+                if (oldItems.Count == 0)
+                {
+                    mailAndPassword = null;
+                    return false;
+                }
+                var prevAccount = oldItems.First();
+                var retrievedAccount = vault.Retrieve(prevAccount.Resource, prevAccount.UserName);
+
+                if (string.IsNullOrWhiteSpace(retrievedAccount.UserName)
+                    || string.IsNullOrWhiteSpace(retrievedAccount.Password)
+                    )
+                {
+                    mailAndPassword = null;
+                    return false;
+                }
+
+                mailAndPassword = new Tuple<string, string>(retrievedAccount.UserName, retrievedAccount.Password);
+
+                return true;
+            }
+            catch
             {
                 mailAndPassword = null;
                 return false;
             }
-            var prevAccount = oldItems.First();
-            var retrievedAccount = vault.Retrieve(prevAccount.Resource, prevAccount.UserName);
-
-            if (string.IsNullOrWhiteSpace(retrievedAccount.UserName)
-                || string.IsNullOrWhiteSpace(retrievedAccount.Password)
-                )
-            {
-                mailAndPassword = null;
-                return false;
-            }
-
-            mailAndPassword = new Tuple<string, string>(retrievedAccount.UserName, retrievedAccount.Password);
-
-            return true;
         }
 
         private void AddOrUpdateRecentLoginAccount(string mail, string password)
@@ -497,6 +512,22 @@ namespace Uncord.Models
             }
         }
 
+
+
+        public void RemoveRecentLoginAccount()
+        {
+            var vault = new Windows.Security.Credentials.PasswordVault();
+            try
+            {
+                var oldItems = vault.FindAllByResource(nameof(Uncord));
+                foreach (var vaultItem in oldItems)
+                {
+                    vault.Remove(vaultItem);
+                }
+                oldItems = null;
+            }
+            catch { }
+        }
 
         #region Guild 
 
