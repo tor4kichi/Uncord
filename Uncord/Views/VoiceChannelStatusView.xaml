@@ -11,34 +11,142 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    xmlns:iconPack="using:MahApps.Metro.IconPacks"
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid Visibility="{Binding IsConnectVoiceChannel.Value, Converter={StaticResource BoolToVisibilityConverter}}"
-          Height="48"
+    <UserControl.Resources>
+        <x:Double x:Key="ViewHeight">64.0</x:Double>
+    </UserControl.Resources>
+    
+    <Grid Height="{StaticResource ViewHeight}"
+          x:Name="VoiceChannelStatusViewLayout"
+          Visibility="Collapsed"
+          Background="{StaticResource DisocrPrimaryBackgroundBrush}"
           >
-        <toolkit:DockPanel VerticalAlignment="Center">
+
+        <i:Interaction.Behaviors>
+            <core:DataTriggerBehavior Binding="{Binding IsConnectVoiceChannel.Value}" Value="True">
+                <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ShowVioceChannelStatusView" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{Binding IsConnectVoiceChannel.Value}" Value="False">
+                <core:CallMethodAction TargetObject="{x:Bind}" MethodName="HideVioceChannelStatusView" />
+            </core:DataTriggerBehavior>
+        </i:Interaction.Behaviors>
+        <toolkit:DockPanel VerticalAlignment="Center"
+                           MaxWidth="640"
+                           >
+
+            <StackPanel Orientation="Horizontal"
+                        toolkit:DockPanel.Dock="Left"
+                        >
+                <Button Command="{Binding DisconnectVoiceChannelCommand}"
+                        VerticalAlignment="Stretch"
+                        Background="Transparent"
+                        >
+                    <iconPack:PackIconMaterial Kind="Close"
+                                               Height="24"
+                                               Width="24"
+                                               />
+                </Button>
+            </StackPanel>
 
             <StackPanel Orientation="Horizontal"
                         toolkit:DockPanel.Dock="Right"
                         >
-                <Button Background="Transparent"
-                        Command="{Binding DisconnectVoiceChannelCommand}"
-                        >
-                    <SymbolIcon Symbol="Remove" />
+
+                <Button Command="{Binding OpenVoiceChannelPageCommand}"
+                        Background="Transparent"
+                        VerticalAlignment="Stretch"
+                        Margin="0 0 16 0"
+                    >
+                    <StackPanel>
+                        <TextBlock Text="{Binding CurrentVoiceChannelName.Value}"
+                                   VerticalAlignment="Center"
+                           />
+
+                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
+                                   VerticalAlignment="Center"
+                                   Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                   FontWeight="SemiBold"
+                                   >
+                            <Run Text="{Binding CurrentServerName.Value}" />
+                        </TextBlock>
+                    </StackPanel>
                 </Button>
+                
+                <Button Command="{Binding ToggleMicMuteCommand}"
+                        Margin="0 0 8 0"
+                        Background="Transparent"
+                        >
+                    <Grid>
+                        <iconPack:PackIconMaterial Kind="Microphone"
+                                                   Height="32"
+                                                   Width="32"
+                                                   Margin="0 0 0 0"
+                                                   />
+
+                        <Border Visibility="{Binding IsMicMute.Value, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Line Stroke="DarkRed" StrokeThickness="2" 
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  X2="31"
+                                  Y1="31"
+                                  />
+                        </Border>
+
+                    </Grid>
+                </Button>
+
+                <Button Command="{Binding ToggleSpeakerMuteCommand}"
+                        Margin="0 0 8 0"
+                        Background="Transparent"
+                        >
+                    <Grid>
+                        <iconPack:PackIconMaterial Kind="Headphones"
+                                                   Height="32"
+                                                   Width="32"
+                                                   Margin="0 0 0 0"
+                                                   />
+
+                        <Border Visibility="{Binding IsSpeakerMute.Value, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Line Stroke="DarkRed" StrokeThickness="2" 
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  X2="31"
+                                  Y1="31"
+                                  />
+                        </Border>
+
+                    </Grid>
+                </Button>
+
+                <!--
+                <Button Command="{Binding OpenAudioSettingCommand}"
+                Margin="0 0 8 0"
+                >
+                    <Grid>
+                        <iconPack:PackIconMaterial Kind="Settings"
+                                                   Height="32"
+                                                   Width="32"
+                                                   Margin="0 0 0 0"
+                                                   />
+                    </Grid>
+                </Button>
+                -->
+
+
             </StackPanel>
 
-            <Button Command="{Binding OpenVoiceChannelPageCommand}"
-                    Background="Transparent"
-                    >
-                <TextBlock Text="{Binding CurrentVoiceChannelName.Value}"
-                   VerticalAlignment="Center"
-                   />
-            </Button>
 
+            <StackPanel Orientation="Horizontal">
+                
+            </StackPanel>
+            
+
+            
         </toolkit:DockPanel>
     </Grid>
 </UserControl>

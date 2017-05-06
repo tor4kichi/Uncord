@@ -94,7 +94,6 @@
 
 
             <Grid toolkit:DockPanel.Dock="Bottom"
-                  Background="{StaticResource DisocrPrimaryBackgroundBrush}"
                   >
                 <views:VoiceChannelStatusView />
             </Grid>

@@ -1,4 +1,5 @@
 ﻿using Discord.Audio;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,7 +31,7 @@ namespace Uncord.Models
         void GetBuffer(out byte* buffer, out uint capacity);
     }
 
-    public class AudioPlaybackManager : IDisposable
+    public class AudioPlaybackManager : BindableBase, IDisposable
     {
         // ユーザーのクライアント端末を中心に入出力方向を決定しています
         // Output = スピーカー、イヤホン
@@ -50,6 +51,14 @@ namespace Uncord.Models
         private AudioInputManager Input;
 
         public readonly static double DefaultMicSilentThreshold = 10.0;
+
+        private InputDeviceState _InputDeviceState;
+        public InputDeviceState InputDeviceState
+        {
+            get { return _InputDeviceState; }
+            private set { SetProperty(ref _InputDeviceState, value); }
+        }
+
 
         // マイク入力の無音設定
         // 発話中は20～40程度を示します
@@ -110,6 +119,7 @@ namespace Uncord.Models
 
                 // マイク入力を初期化
                 Input = await AudioInputManager.CreateAsync(AudioGraph);
+                Input.InputDeviceStateChanged += Input_InputDeviceStateChanged;
 
                 // スピーカー出力を初期化
                 Output = await AudioOutputManager.CreateAsync(AudioGraph);
@@ -117,6 +127,7 @@ namespace Uncord.Models
             }
         }
 
+        
         public void StartAudioOutput(Discord.Audio.AudioInStream audioInStream)
         {
             Output.StartAudioOutput(audioInStream);
@@ -127,14 +138,14 @@ namespace Uncord.Models
         }
 
 
-        public void StartAudioInput(IAudioClient audioClient)
+        public Task StartAudioInput(IAudioClient audioClient)
         {
-            Input.StartAudioInput(audioClient);
+            return Input.StartAudioInput(audioClient);
         }
 
-        public void StopAudioInput()
+        public Task StopAudioInput()
         {
-            Input.StopAudioInput();
+            return Input.StopAudioInput();
         }
 
 
@@ -144,7 +155,18 @@ namespace Uncord.Models
             {
                 return AudioGraph != null;
             }
-        }    
+        }
+
+
+        #region Event Handler
+
+        private void Input_InputDeviceStateChanged(InputDeviceState obj)
+        {
+            InputDeviceState = obj;
+        }
+
+        #endregion
+
     }
 
 
@@ -155,14 +177,27 @@ namespace Uncord.Models
         internal static async Task<AudioInputManager> CreateAsync(AudioGraph audioGraph, DeviceInformation microphoneDevice = null)
         {
             var audioInputManager = new AudioInputManager(audioGraph);
-            await audioInputManager.InitializeAudioInput();
+            await audioInputManager.ResetAudioInput();
             return audioInputManager;
         }
 
         private AudioGraph _AudioGraph;
 
-        public InputDeviceState InputDeviceState { get; private set; }
+        private InputDeviceState _InputDeviceState;
+        public InputDeviceState InputDeviceState
+        {
+            get { return _InputDeviceState; }
+            private set
+            {
+                if (_InputDeviceState != value)
+                {
+                    _InputDeviceState = value;
+                    InputDeviceStateChanged?.Invoke(value);
+                }
+            }
+        }
 
+        public event Action<InputDeviceState> InputDeviceStateChanged;
 
         public double SilentThreshold { get; set; } = AudioPlaybackManager.DefaultMicSilentThreshold;
 
@@ -176,6 +211,8 @@ namespace Uncord.Models
 
         private AsyncLock _OutputStreamLock = new AsyncLock();
 
+
+
         private AudioInputManager(AudioGraph audioGraph)
         {
             _AudioGraph = audioGraph;
@@ -186,7 +223,7 @@ namespace Uncord.Models
             _InputNode.Dispose();
             _FrameOutputNode.Dispose();
 
-            StopAudioInput();
+            StopAudioInput().ConfigureAwait(false);
         }
 
 
@@ -197,7 +234,7 @@ namespace Uncord.Models
 
 
 
-        private async Task InitializeAudioInput(DeviceInformation microphoneDevice = null)
+        public async Task<bool> ResetAudioInput(DeviceInformation microphoneDevice = null)
         {
             if (microphoneDevice == null)
             {
@@ -205,7 +242,7 @@ namespace Uncord.Models
                 if (inputDevices.Count == 0)
                 {
                     InputDeviceState = InputDeviceState.MicrophoneNotDetected;
-                    return;
+                    return false;
                 }
 
                 microphoneDevice = inputDevices[0];
@@ -234,16 +271,18 @@ namespace Uncord.Models
                     InputDeviceState = InputDeviceState.UnknowunError;
                 }
 
-                return;
+                return false;
             }
 
             _InputNode = deviceInputNodeCreateResult.DeviceInputNode;
             _FrameOutputNode = _AudioGraph.CreateFrameOutputNode(inputAudioEnocdingProperties);
             _InputNode.AddOutgoingConnection(_FrameOutputNode);
+
+            return true;
         }
 
 
-        public void StartAudioInput(IAudioClient audioClient)
+        public async Task StartAudioInput(IAudioClient audioClient)
         {
             if (_AudioOutStream != null)
             {
@@ -253,7 +292,10 @@ namespace Uncord.Models
 
             if (InputDeviceState != InputDeviceState.Avairable)
             {
-                return;
+                if (!await ResetAudioInput())
+                {
+                    return;
+                }
             }
 
             _AudioOutStream = audioClient.CreatePCMStream(AudioApplication.Voice, 1920, 100);
@@ -267,7 +309,7 @@ namespace Uncord.Models
             _AudioGraph.Start();
         }
 
-        public async void StopAudioInput()
+        public async Task StopAudioInput()
         {
             if (_FrameOutputNode == null)
             {
