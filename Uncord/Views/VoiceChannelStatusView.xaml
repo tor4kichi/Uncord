@@ -18,7 +18,6 @@
 
     <Grid Visibility="{Binding IsConnectVoiceChannel.Value, Converter={StaticResource BoolToVisibilityConverter}}"
           Height="48"
-          Background="#44000000"
           >
         <toolkit:DockPanel VerticalAlignment="Center">
 

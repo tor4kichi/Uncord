@@ -43,6 +43,10 @@
             <x:Double x:Key="SmallMinWidth" >720</x:Double>
             <!-- x-small is smaller 720px -->
 
+            <Color x:Key="DiscordPrimaryBackgroundColor">#FF7289DA</Color>
+            
+            <SolidColorBrush x:Key="DisocrPrimaryBackgroundBrush"
+                Color="{StaticResource DiscordPrimaryBackgroundColor}" />
 
             <myconverter:YoutubeUrlToEmbedHtmlStringConverter x:Key="youtubeUrlToEmbedHtmlStringConverter" />
 
