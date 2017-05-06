@@ -472,8 +472,8 @@ namespace Uncord.Models
                     // 1サンプルあたり4byte使っているため4で割ってサンプル数を算出
                     var sampleCount = buffer.Length / 4;
 
-                    // outSoundLevelは無音時で5.0~8.0, 発話中で20.0以上程度を示す
                     // 1000掛けているのは扱いやすくするため
+                    // outSoundLevelは無音時で5.0~8.0, 発話中で20.0以上程度を示す
                     outSoundLevel = (sum / sampleCount) * 1000; 
 
 #if DEBUG
@@ -553,12 +553,17 @@ namespace Uncord.Models
             AudioInStream = audioInStream;
 
             // 音声出力用のオーディオグラフ入力ノードを作成
+            // Note: Channels = 2 かつ BitRateがDisocrdに合わせて16bitじゃなきゃダメ
+            #region DO NOT TOUCH
+
             _FrameInputNode = _AudioGraph.CreateFrameInputNode(
                 AudioEncodingProperties.CreatePcm(
                     OpusConvertConstants.SamplingRate,
-                    2,
-                    OpusConvertConstants.SampleBits
+                    OpusConvertConstants.Channels,
+                    16
                     ));
+
+            #endregion
 
             // デフォルトの出力ノードに接続
             _FrameInputNode.AddOutgoingConnection(_OutputNode);
@@ -603,6 +608,12 @@ namespace Uncord.Models
             }
 
             uint numSamplesNeeded = (uint)args.RequiredSamples;
+
+            if (numSamplesNeeded == 0)
+            {
+                return;
+            }
+
             // audioDataのサイズはAudioInStream内のFrameが示すバッファサイズと同一サイズにしておくべきだけど
             var sampleNeededBytes = numSamplesNeeded * OpusConvertConstants.SampleBytes * OpusConvertConstants.Channels;
 
@@ -622,6 +633,7 @@ namespace Uncord.Models
         unsafe AudioFrame GenerateAudioData(byte[] readedData, uint audioDataLength)
         {
             AudioFrame frame = new Windows.Media.AudioFrame((uint)audioDataLength);
+
             using (var buffer = frame.LockBuffer(AudioBufferAccessMode.Write))
             using (IMemoryBufferReference reference = buffer.CreateReference())
             {

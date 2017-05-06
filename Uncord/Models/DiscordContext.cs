@@ -666,7 +666,7 @@ namespace Uncord.Models
                 return;
             }
 
-            AudioManager.StartAudioInput(_CurrentVoiceAudioClient);
+            await AudioManager.StartAudioInput(_CurrentVoiceAudioClient);
 
             await Task.Delay(0);
         }
@@ -675,7 +675,7 @@ namespace Uncord.Models
 
         private async Task StopAudioCapture()
         {
-            AudioManager.StopAudioInput();
+            await AudioManager.StopAudioInput();
 
             await Task.Delay(0);
         }
