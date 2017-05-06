@@ -43,7 +43,7 @@ namespace Uncord.ViewModels
             AudioManager = audioManager;
             NavigationService = navService;
 
-            IsSpeakerMute_Internal = new ReactiveProperty<bool>(false);
+            IsSpeakerMute_Internal = AudioManager.ToReactivePropertyAsSynchronized(x => x.IsSpeakerMute);
             IsMicMute_Internal = AudioManager.ToReactivePropertyAsSynchronized(x => x.IsMicMute);
 
             IsSpeakerMute = IsSpeakerMute_Internal

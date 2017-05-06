@@ -91,7 +91,21 @@ namespace Uncord.Models
 
         private AudioOutputManager Output;
 
-        
+
+        private bool _IsSpeakerMute;
+        public bool IsSpeakerMute
+        {
+            get { return _IsSpeakerMute; }
+            set
+            {
+                if (SetProperty(ref _IsSpeakerMute, value))
+                {
+                    Output.IsMute = IsSpeakerMute;
+                }
+            }
+        }
+
+
 
 
         public AudioPlaybackManager()
@@ -479,6 +493,23 @@ namespace Uncord.Models
         private AudioGraph _AudioGraph;
 
         public Discord.Audio.AudioInStream AudioInStream { get; private set; }
+
+        private bool _IsMute;
+        public bool IsMute
+        {
+            get { return _IsMute; }
+            internal set
+            {
+                if (_IsMute != value)
+                {
+                    _IsMute = value;
+                    if (_OutputNode != null)
+                    {
+                        _OutputNode.ConsumeInput = !_IsMute;
+                    }
+                }
+            }
+        }
 
         private AudioDeviceOutputNode _OutputNode;
 
