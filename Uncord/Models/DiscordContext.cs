@@ -624,7 +624,7 @@ namespace Uncord.Models
         {
             AudioManager.StopAudioOutput();
 
-            using (var releaser = await _VoiceChannelLock.LockAsync())
+//            using (var releaser = await _VoiceChannelLock.LockAsync())
             {
                 if (IsConnectedVoiceChannel)
                 {

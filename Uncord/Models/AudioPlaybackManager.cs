@@ -74,6 +74,18 @@ namespace Uncord.Models
             set { Input.SilentThreshold = value; }
         }
 
+        private bool _IsMicMute;
+        public bool IsMicMute
+        {
+            get { return _IsMicMute; }
+            set
+            {
+                if (SetProperty(ref _IsMicMute, value))
+                {
+                    Input.IsMute = IsMicMute;
+                }
+            }
+        }
 
 
 
@@ -197,10 +209,29 @@ namespace Uncord.Models
             }
         }
 
+
+        
+
         public event Action<InputDeviceState> InputDeviceStateChanged;
 
         public double SilentThreshold { get; set; } = AudioPlaybackManager.DefaultMicSilentThreshold;
 
+        private bool _IsMute;
+        public bool IsMute
+        {
+            get { return _IsMute; }
+            set
+            {
+                if (_IsMute != value)
+                {
+                    _IsMute = value;
+                    if (_InputNode != null)
+                    {
+                        _InputNode.ConsumeInput = !_IsMute;
+                    }
+                }
+            }
+        }
 
         private AudioOutStream _AudioOutStream;
 
@@ -343,6 +374,11 @@ namespace Uncord.Models
         {
             using (var release = await _OutputStreamLock.LockAsync())
             {
+                if (_IsMute)
+                {
+                    return;
+                }
+
                 if (_AudioOutStream == null)
                 {
                     return;
@@ -526,7 +562,8 @@ namespace Uncord.Models
         {
             if (AudioInStream == null)
             {
-                throw new Exception("not connected to discord audio channel.");
+                return;
+                //throw new Exception("not connected to discord audio channel.");
             }
 
             if (AudioInStream.AvailableFrames == 0)
