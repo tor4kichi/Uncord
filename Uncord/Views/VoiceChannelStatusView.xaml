@@ -11,6 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    xmlns:templateSelector="using:Uncord.Views.TemplateSelector"
     xmlns:iconPack="using:MahApps.Metro.IconPacks"
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d"
@@ -19,6 +20,39 @@
 
     <UserControl.Resources>
         <x:Double x:Key="ViewHeight">64.0</x:Double>
+
+
+        <templateSelector:GeneralTemplateSelector x:Key="MicDetectionStatusTemplateSelector">
+            <templateSelector:GeneralTemplateSelector.Empty>
+                <DataTemplate>
+                    <TextBlock Text="Ready" />
+                </DataTemplate>
+            </templateSelector:GeneralTemplateSelector.Empty>
+            <templateSelector:GeneralTemplateSelector.Items>
+                <templateSelector:ValueAndTemplate Value="MicrophoneNotDetected">
+                    <templateSelector:ValueAndTemplate.Template>
+                        <DataTemplate>
+                            <TextBlock Text="Not Detected" />
+                        </DataTemplate>
+                    </templateSelector:ValueAndTemplate.Template>
+                </templateSelector:ValueAndTemplate>
+                <templateSelector:ValueAndTemplate Value="AccessDenied">
+                    <templateSelector:ValueAndTemplate.Template>
+                        <DataTemplate>
+                            <TextBlock Text="AccessDenied" />
+                        </DataTemplate>
+                    </templateSelector:ValueAndTemplate.Template>
+                </templateSelector:ValueAndTemplate>
+                <templateSelector:ValueAndTemplate Value="UnknowunError">
+                    <templateSelector:ValueAndTemplate.Template>
+                        <DataTemplate>
+                            <TextBlock Text="UnknowunError" />
+                        </DataTemplate>
+                    </templateSelector:ValueAndTemplate.Template>
+                </templateSelector:ValueAndTemplate>
+            </templateSelector:GeneralTemplateSelector.Items>
+        </templateSelector:GeneralTemplateSelector>
+        
     </UserControl.Resources>
     
     <Grid Height="{StaticResource ViewHeight}"
@@ -56,6 +90,26 @@
             <StackPanel Orientation="Horizontal"
                         toolkit:DockPanel.Dock="Right"
                         >
+
+
+                <StackPanel Orientation="Horizontal"
+                    Margin="8 0" 
+                        Visibility="{Binding HasMicError.Value, Converter={StaticResource BoolToVisibilityConverter}}"
+                        >
+
+                    <Button Background="Transparent"
+                            Command="{Binding UpdateMicCommand}"
+                            >
+                        <SymbolIcon Symbol="Refresh" 
+                                    />
+                    </Button>
+                    
+                    <ContentControl Content="{Binding InputDeviceState.Value}"
+                                    ContentTemplateSelector="{StaticResource MicDetectionStatusTemplateSelector}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    />
+                </StackPanel>
 
                 <Button Command="{Binding OpenVoiceChannelPageCommand}"
                         Background="Transparent"

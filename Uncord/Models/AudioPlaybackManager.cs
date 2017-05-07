@@ -146,6 +146,7 @@ namespace Uncord.Models
                 // マイク入力を初期化
                 Input = await AudioInputManager.CreateAsync(AudioGraph);
                 Input.InputDeviceStateChanged += Input_InputDeviceStateChanged;
+                this.InputDeviceState = Input.InputDeviceState;
 
                 // スピーカー出力を初期化
                 Output = await AudioOutputManager.CreateAsync(AudioGraph);
@@ -181,6 +182,12 @@ namespace Uncord.Models
             {
                 return AudioGraph != null;
             }
+        }
+
+
+        public Task<bool> ResetMic(DeviceInformation micDevice = null)
+        {
+            return Input.ResetAudioInput(micDevice);
         }
 
 
@@ -323,6 +330,8 @@ namespace Uncord.Models
             _FrameOutputNode = _AudioGraph.CreateFrameOutputNode(inputAudioEnocdingProperties);
             _InputNode.AddOutgoingConnection(_FrameOutputNode);
 
+            InputDeviceState = InputDeviceState.Avairable;
+
             return true;
         }
 
@@ -381,7 +390,7 @@ namespace Uncord.Models
                 }
             }
         }
-
+        
 
         
         private async void AudioGraph_QuantumStarted(AudioGraph sender, object args)

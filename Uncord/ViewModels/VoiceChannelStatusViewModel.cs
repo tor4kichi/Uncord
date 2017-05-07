@@ -29,6 +29,7 @@ namespace Uncord.ViewModels
         public ReadOnlyReactiveProperty<string> CurrentServerName { get; }
 
         public ReadOnlyReactiveProperty<InputDeviceState> InputDeviceState { get; }
+        public ReadOnlyReactiveProperty<bool> HasMicError { get; }
 
         private ReactiveProperty<bool> IsMicMute_Internal { get; }
         private ReactiveProperty<bool> IsSpeakerMute_Internal { get; }
@@ -74,6 +75,9 @@ namespace Uncord.ViewModels
                 .ToReadOnlyReactiveProperty();
 
             InputDeviceState = AudioManager.ObserveProperty(x => x.InputDeviceState)
+                .ToReadOnlyReactiveProperty();
+            HasMicError = InputDeviceState
+                .Select(x => x != Models.InputDeviceState.Avairable)
                 .ToReadOnlyReactiveProperty();
         }
 
@@ -140,6 +144,20 @@ namespace Uncord.ViewModels
                     ?? (_ToggleSpeakerMuteCommand = new DelegateCommand(() =>
                     {
                         IsSpeakerMute_Internal.Value = !IsSpeakerMute_Internal.Value;
+                    }));
+            }
+        }
+
+
+        private DelegateCommand _UpdateMicCommand;
+        public DelegateCommand UpdateMicCommand
+        {
+            get
+            {
+                return _UpdateMicCommand
+                    ?? (_UpdateMicCommand = new DelegateCommand(() =>
+                    {
+                        AudioManager.ResetMic();
                     }));
             }
         }
