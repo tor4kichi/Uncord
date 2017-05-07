@@ -268,12 +268,20 @@ namespace Uncord.Models
         private AudioInputManager(AudioGraph audioGraph)
         {
             _AudioGraph = audioGraph;
+
+            _MicCaptureDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.AudioCapture);
+            _MicCaptureDeviceWatcher.Added += AudioWatcher_Added;
+            _MicCaptureDeviceWatcher.Removed += AudioWatcher_Removed;
+            _MicCaptureDeviceWatcher.Updated += AudioWatcher_Updated;
+            _MicCaptureDeviceWatcher.EnumerationCompleted += AudioWatcher_EnumerationCompleted;
+
         }
 
         public void Dispose()
         {
             _InputNode.Dispose();
             _FrameOutputNode.Dispose();
+            _MicCaptureDeviceWatcher.Stop();
 
             StopAudioInput().ConfigureAwait(false);
         }
@@ -338,6 +346,8 @@ namespace Uncord.Models
 
         public async Task StartAudioInput(IAudioClient audioClient)
         {
+            StartMicConnectWatcher();
+
             if (_AudioOutStream != null)
             {
                 _AudioOutStream.Dispose();
@@ -365,6 +375,8 @@ namespace Uncord.Models
 
         public async Task StopAudioInput()
         {
+            StopMicConnectWatcher();
+
             if (_FrameOutputNode == null)
             {
                 return;
@@ -494,7 +506,36 @@ namespace Uncord.Models
             }
         }
 
-        
+
+        DeviceWatcher _MicCaptureDeviceWatcher;
+        private void StartMicConnectWatcher()
+        {
+            _MicCaptureDeviceWatcher.Start();
+        }
+
+        private void StopMicConnectWatcher()
+        {
+            _MicCaptureDeviceWatcher.Stop();
+        }
+
+        private void AudioWatcher_EnumerationCompleted(DeviceWatcher sender, object args)
+        {
+        }
+
+        private void AudioWatcher_Updated(DeviceWatcher sender, DeviceInformationUpdate args)
+        {
+            
+        }
+
+        private async void AudioWatcher_Removed(DeviceWatcher sender, DeviceInformationUpdate args)
+        {
+            await ResetAudioInput();   
+        }
+
+        private async void AudioWatcher_Added(DeviceWatcher sender, DeviceInformation args)
+        {
+            await ResetAudioInput();
+        }
     }
 
     public class AudioOutputManager : IDisposable
