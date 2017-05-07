@@ -553,6 +553,8 @@ namespace Uncord.Models
                 throw new ArgumentNullException("VoiceChannel is null");
             }
 
+            CurrentVoiceChannel = voiceChannel;
+
             // ボイスチャンネルへの接続を開始
             // 音声の送信はConnectedイベント後
             // 受信はStreamCreatedイベント後に行われます
