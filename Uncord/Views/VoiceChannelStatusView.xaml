@@ -32,14 +32,27 @@
                 <templateSelector:ValueAndTemplate Value="MicrophoneNotDetected">
                     <templateSelector:ValueAndTemplate.Template>
                         <DataTemplate>
-                            <TextBlock Text="Not Detected" />
+                            <TextBlock Text="Mic Not Detected" />
                         </DataTemplate>
                     </templateSelector:ValueAndTemplate.Template>
                 </templateSelector:ValueAndTemplate>
                 <templateSelector:ValueAndTemplate Value="AccessDenied">
                     <templateSelector:ValueAndTemplate.Template>
                         <DataTemplate>
-                            <TextBlock Text="AccessDenied" />
+                            <HyperlinkButton NavigateUri="https://github.com/tor4kichi/Uncord/wiki/can-not-use-Mic-with-AccessDenied"
+                                             Margin="8 0"
+                                             Foreground="DarkRed"
+                                                 >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Mic AccessDenied" VerticalAlignment="Center" />
+                                
+                                    <SymbolIcon Symbol="Help"
+                                                Height="32"
+                                                Width="32"
+                                                />
+                                </StackPanel>
+                            </HyperlinkButton>
+
                         </DataTemplate>
                     </templateSelector:ValueAndTemplate.Template>
                 </templateSelector:ValueAndTemplate>
