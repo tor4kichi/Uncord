@@ -37,6 +37,10 @@
             <converter:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
 
             <converter:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+            <converter:BoolToObjectConverter x:Key="InvertBooleanConverter"
+                                             TrueValue="False"
+                                             FalseValue="True"
+                                             />
 
             <x:Double x:Key="LargeMinWidth" >1366</x:Double>
             <x:Double x:Key="MidiumMinWidth" >1024</x:Double>

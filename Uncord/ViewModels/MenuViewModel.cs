@@ -252,6 +252,7 @@ namespace Uncord.ViewModels
                         // Voiceチャンネルを選択
                         if (voiceChannelId.HasValue)
                         {
+                            NavigationService.Navigate(PageTokens.VoiceChannelPageToken, voiceChannelId.Value);
                             await DiscordContext.ConnectVoiceChannel(voiceChannelId.Value);
                         }
                     }));
