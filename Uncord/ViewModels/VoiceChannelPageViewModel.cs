@@ -10,6 +10,8 @@ using System.Collections.ObjectModel;
 using Prism.Commands;
 using Reactive.Bindings.Extensions;
 using System.Reactive.Linq;
+using System.Diagnostics;
+using WinRTXamlToolkit.Async;
 
 namespace Uncord.ViewModels
 {
@@ -20,14 +22,16 @@ namespace Uncord.ViewModels
 
         public ReactiveProperty<string> VoiceChannelName { get; }
 
-        public ObservableCollection<SocketGuildUser> Users { get; }
+        public ObservableCollection<SocketUser> Users { get; }
 
         public ReadOnlyReactiveProperty<bool> IsConnectedVoiceChannel { get; }
+
+        AsyncLock _VoiceChannelUserUpdateLock = new AsyncLock();
 
         public VoiceChannelPageViewModel()
         {
             VoiceChannelName = new ReactiveProperty<string>();
-            Users = new ObservableCollection<SocketGuildUser>();
+            Users = new ObservableCollection<SocketUser>();
 
             VoiceChannel = new ReactiveProperty<SocketVoiceChannel>();
 
@@ -58,19 +62,74 @@ namespace Uncord.ViewModels
             var voiceChannel = VoiceChannel.Value;
             VoiceChannelName.Value = voiceChannel.Name;
             
-            foreach (var user in voiceChannel.Users)
-            {
-                Users.Add(user);
-            }
+            DiscordContext.DiscordSocketClient.UserVoiceStateUpdated += DiscordSocketClient_UserVoiceStateUpdated;
+            
+            RefreshUser().ConfigureAwait(false);
 
             base.OnNavigatedTo(e, viewModelState);
         }
 
+        private async Task RefreshUser()
+        {
+            using (var releaser = await _VoiceChannelUserUpdateLock.LockAsync())
+            {
+                Users.Clear();
+
+                if (VoiceChannel.Value == null)
+                {
+                    return;
+                }
+
+                foreach (var user in VoiceChannel.Value.Users)
+                {
+                    Users.Add(user);
+                }
+            }
+        }
+
+        private async Task DiscordSocketClient_UserVoiceStateUpdated(SocketUser arg1, SocketVoiceState arg2, SocketVoiceState arg3)
+        {
+            using (var releaser = await _VoiceChannelUserUpdateLock.LockAsync())
+            {
+                UIDispatcherScheduler.Default.Schedule(this, 
+                    (scheduler, state) => 
+                    {
+                        if (arg2.VoiceChannel == null && arg3.VoiceChannel != null)
+                        {
+                            if (arg3.VoiceChannel == VoiceChannel.Value)
+                            {
+                                Users.Add(arg1);
+                            }
+                        }
+                        else if (arg2.VoiceChannel != null && arg3.VoiceChannel == null)
+                        {
+                            if (arg2.VoiceChannel == VoiceChannel.Value)
+                            {
+                                Users.Remove(arg1);
+                            }
+                        }
+                        else
+                        {
+                            // Update
+                        }
+
+                        return default(IDisposable);
+                    });
+
+                Debug.WriteLine(arg1.Username);
+            }
+        }
 
         public override void OnNavigatingFrom(NavigatingFromEventArgs e, Dictionary<string, object> viewModelState, bool suspending)
         {
             VoiceChannelName.Value = "";
             Users.Clear();
+
+            if (DiscordContext.DiscordSocketClient != null)
+            {
+                DiscordContext.DiscordSocketClient.UserVoiceStateUpdated -= DiscordSocketClient_UserVoiceStateUpdated;
+            }
+
 
             base.OnNavigatingFrom(e, viewModelState, suspending);
         }

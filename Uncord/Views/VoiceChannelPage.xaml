@@ -94,7 +94,9 @@
                 <ItemsControl ItemsSource="{Binding Users}" Margin="40 8 0 8">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Username}" />
+                            <Border Margin="0 8">
+                                <TextBlock Text="{Binding Username}" />
+                            </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
