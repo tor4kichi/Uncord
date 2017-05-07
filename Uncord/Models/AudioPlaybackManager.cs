@@ -41,6 +41,9 @@ namespace Uncord.Models
         // 入出力先のデバイスごとにNodeが作成されるため、
         // ユーザーによるコントロールを受け付けられるようにします
 
+        const string AudioSettingsContainerName = @"audio";
+
+        
 
         public AudioGraph AudioGraph { get; private set; }
 
@@ -74,7 +77,7 @@ namespace Uncord.Models
             set { Input.SilentThreshold = value; }
         }
 
-        private bool _IsMicMute;
+        private bool _IsMicMute = Util.LocalSettingsHelper.GetValue(AudioSettingsContainerName, @"mic_mute", false);
         public bool IsMicMute
         {
             get { return _IsMicMute; }
@@ -83,16 +86,34 @@ namespace Uncord.Models
                 if (SetProperty(ref _IsMicMute, value))
                 {
                     Input.IsMute = IsMicMute;
+                    Util.LocalSettingsHelper.SetValue(AudioSettingsContainerName, @"mic_mute", _IsMicMute);
                 }
             }
         }
 
 
+        public const double MicMaxVolume = 1.0;
+        public const double MicMinVolume = 0.0;
+
+
+        private double _MicVolume = Util.LocalSettingsHelper.GetValue(AudioSettingsContainerName, @"mic_volume", MicMaxVolume);
+        public double MicVolume
+        {
+            get { return _MicVolume; }
+            set
+            {
+                if (SetProperty(ref _MicVolume, Math.Max(MicMinVolume, Math.Min(MicMaxVolume, value))))
+                {
+                    Input.MinGain = _MicVolume;
+                    Util.LocalSettingsHelper.SetValue(AudioSettingsContainerName, @"mic_volume", _MicVolume);
+                }
+            }
+        }
 
         private AudioOutputManager Output;
 
 
-        private bool _IsSpeakerMute;
+        private bool _IsSpeakerMute = Util.LocalSettingsHelper.GetValue(AudioSettingsContainerName, @"speaker_mute", false);
         public bool IsSpeakerMute
         {
             get { return _IsSpeakerMute; }
@@ -101,10 +122,28 @@ namespace Uncord.Models
                 if (SetProperty(ref _IsSpeakerMute, value))
                 {
                     Output.IsMute = IsSpeakerMute;
+                    Util.LocalSettingsHelper.SetValue(AudioSettingsContainerName, @"speaker_mute", IsSpeakerMute);
                 }
             }
         }
 
+        public const double SpeakerMaxVolume = 2.0;
+        public const double SpeakerMinVolume = 0.0;
+
+
+        private double _SpeakerVolume = Util.LocalSettingsHelper.GetValue(AudioSettingsContainerName, @"speaker_volume", 1.0);
+        public double SpeakerVolume
+        {
+            get { return _SpeakerVolume; }
+            set
+            {
+                if (SetProperty(ref _SpeakerVolume, Math.Max(SpeakerMinVolume, Math.Min(SpeakerMaxVolume, value))))
+                {
+                    Output.SpeakerGain = _SpeakerVolume;
+                    Util.LocalSettingsHelper.SetValue(AudioSettingsContainerName, @"speaker_volume", _SpeakerVolume);
+                }
+            }
+        }
 
 
 
@@ -145,11 +184,13 @@ namespace Uncord.Models
 
                 // マイク入力を初期化
                 Input = await AudioInputManager.CreateAsync(AudioGraph);
+                Input.MinGain = _MicVolume;
                 Input.InputDeviceStateChanged += Input_InputDeviceStateChanged;
                 this.InputDeviceState = Input.InputDeviceState;
 
                 // スピーカー出力を初期化
                 Output = await AudioOutputManager.CreateAsync(AudioGraph);
+                Output.SpeakerGain = _SpeakerVolume;
 
             }
         }
@@ -249,6 +290,23 @@ namespace Uncord.Models
                     if (_InputNode != null)
                     {
                         _InputNode.ConsumeInput = !_IsMute;
+                    }
+                }
+            }
+        }
+
+        private double _MicGain;
+        public double MinGain
+        {
+            get { return _MicGain; }
+            internal set
+            {
+                if (_MicGain != value)
+                {
+                    _MicGain = value;
+                    if (_InputNode != null)
+                    {
+                        _InputNode.OutgoingGain = _MicGain;
                     }
                 }
             }
@@ -556,6 +614,24 @@ namespace Uncord.Models
                     if (_OutputNode != null)
                     {
                         _OutputNode.ConsumeInput = !_IsMute;
+                    }
+                }
+            }
+        }
+
+
+        private double _SpeakerGain;
+        public double SpeakerGain
+        {
+            get { return _SpeakerGain; }
+            internal set
+            {
+                if (_SpeakerGain != value)
+                {
+                    _SpeakerGain = value;
+                    if (_FrameInputNode != null)
+                    {
+                        _FrameInputNode.OutgoingGain = _SpeakerGain;
                     }
                 }
             }

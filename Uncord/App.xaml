@@ -49,6 +49,7 @@
                 Color="{StaticResource DiscordPrimaryBackgroundColor}" />
 
             <myconverter:YoutubeUrlToEmbedHtmlStringConverter x:Key="youtubeUrlToEmbedHtmlStringConverter" />
+            <myconverter:ParcentageValueConverter x:Key="ParcentageValueConverter" />
 
         </ResourceDictionary>
     </prism:PrismUnityApplication.Resources>
