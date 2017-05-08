@@ -25,6 +25,7 @@ namespace Uncord.ViewModels
         public IUser Author { get; private set; }
         public string AuthorAvatarUrl { get; private set; }
         public DateTime MessageRecievedAt { get; private set; }
+        public ulong AuthorId { get; }
 
         public MessageAggregatedByAuthorViewModel(IMessage firstMessage)
         {
@@ -32,13 +33,14 @@ namespace Uncord.ViewModels
             MessageSample = firstMessage;
 
             Author = MessageSample.Author;
+            AuthorId = Author.Id;
             AuthorAvatarUrl = MessageSample.Author.GetAvatarUrl(size:64);
             MessageRecievedAt = firstMessage.Timestamp.LocalDateTime;
         }
 
         public bool IsSameAuthor(IMessage message)
         {
-            return Messages.First().Message.Author.Id == message.Author.Id;
+            return AuthorId == message.Author.Id;
         }
 
         public void AddMessage(IMessage message)
@@ -52,8 +54,10 @@ namespace Uncord.ViewModels
         // TODO: 削除した場合にnullを挿入して削除されたメッセージとしてUI上に表示できるようにする
         public bool TryRemoveMessage(IMessage message)
         {
-            var target = Messages.FirstOrDefault(x => x.Message.Id == message.Id);
+            var target = Messages.FirstOrDefault(x => x?.Message.Id == message.Id);
             if (target == null) { return false; }
+            var index = Messages.IndexOf(target);
+            Messages.Insert(index, null);
             return Messages.Remove(target);
         }
 

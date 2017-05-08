@@ -11,6 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:mycontrols="using:Uncord.Views.Controls"
+    xmlns:templateSelector="using:Uncord.Views.TemplateSelector"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -39,7 +40,23 @@
                 </DataTemplate>
             </local:MessageAttachementTypeTemplateSelector.Other>
         </local:MessageAttachementTypeTemplateSelector>
-        
+
+
+
+        <templateSelector:EmptyOrContentTemplateSelector x:Key="MessageDeleteCapableTemplateSelector"                                             
+                                                         Content="{StaticResource MessageItemTemplate}"
+                                                         >
+            <templateSelector:EmptyOrContentTemplateSelector.Empty>
+                <DataTemplate>
+                    <TextBlock Text="[deleted]" 
+                               Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                               Height="32"
+                               VerticalAlignment="Center"
+                               />
+                </DataTemplate>
+            </templateSelector:EmptyOrContentTemplateSelector.Empty>
+        </templateSelector:EmptyOrContentTemplateSelector>
+
         <DataTemplate x:Key="MessageItemTemplate">
             <toolkit:DockPanel>
                 <Grid toolkit:DockPanel.Dock="Right">
@@ -146,7 +163,7 @@
 
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding Messages}"
-                              ItemTemplate="{StaticResource MessageItemTemplate}"
+                              ItemTemplateSelector="{StaticResource MessageDeleteCapableTemplateSelector}"
                               ItemContainerStyle="{StaticResource MessageItemContainerStyle}"
                               >
                     
