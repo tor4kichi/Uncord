@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -16,18 +17,18 @@ using WinRTXamlToolkit.Async;
 
 namespace Uncord.ViewModels
 {
-    public class TextChannelMessageViewModel : BindableBase
+    public class MessageAggregatedByAuthorViewModel : BindableBase
     {
-        public ObservableCollection<IMessage> Messages { get; private set; } = new ObservableCollection<IMessage>();
+        public ObservableCollection<MessageViewModel> Messages { get; private set; } = new ObservableCollection<MessageViewModel>();
 
         public IMessage MessageSample { get; private set; }
         public IUser Author { get; private set; }
         public string AuthorAvatarUrl { get; private set; }
         public DateTime MessageRecievedAt { get; private set; }
 
-        public TextChannelMessageViewModel(IMessage firstMessage)
+        public MessageAggregatedByAuthorViewModel(IMessage firstMessage)
         {
-            Messages.Add(firstMessage);
+            Messages.Add(new MessageViewModel(firstMessage));
             MessageSample = firstMessage;
 
             Author = MessageSample.Author;
@@ -37,12 +38,12 @@ namespace Uncord.ViewModels
 
         public bool IsSameAuthor(IMessage message)
         {
-            return Messages.First().Author.Id == message.Author.Id;
+            return Messages.First().Message.Author.Id == message.Author.Id;
         }
 
         public void AddMessage(IMessage message)
         {
-            Messages.Add(message);
+            Messages.Add(new MessageViewModel(message));
 
             MessageRecievedAt = message.Timestamp.LocalDateTime;
             RaisePropertyChanged(nameof(MessageRecievedAt));
@@ -51,7 +52,43 @@ namespace Uncord.ViewModels
         // TODO: 削除した場合にnullを挿入して削除されたメッセージとしてUI上に表示できるようにする
         public bool TryRemoveMessage(IMessage message)
         {
-            return Messages.Remove(message);
+            var target = Messages.FirstOrDefault(x => x.Message.Id == message.Id);
+            if (target == null) { return false; }
+            return Messages.Remove(target);
+        }
+
+        
+    }
+
+    public class MessageViewModel : BindableBase
+    {
+        public IMessage Message { get; }
+
+        public MessageViewModel(IMessage message)
+        {
+            Message = message;
+        }
+
+
+        private DelegateCommand _RemoveMessageCommand;
+        public DelegateCommand RemoveMessageCommand
+        {
+            get
+            {
+                return _RemoveMessageCommand
+                    ?? (_RemoveMessageCommand = new DelegateCommand(async () =>
+                    {
+                        try
+                        {
+                            await Message.DeleteAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.ToString());
+                        }
+                    }
+                    ));
+            }
         }
     }
 }
