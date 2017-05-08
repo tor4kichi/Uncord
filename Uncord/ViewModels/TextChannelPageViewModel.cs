@@ -37,7 +37,7 @@ namespace Uncord.ViewModels
         // メッセージ読み取り
         AsyncLock _MessageUpdateLock = new AsyncLock();
         ObservableCollection<Discord.IMessage> _Messages;
-        public ReadOnlyReactiveCollection<TextChannelMessageViewModel> Messages { get; private set; }
+        public ObservableCollection<MessageAggregatedByAuthorViewModel> Messages { get; private set; }
 
         // メッセージ書き込み
         public ReactiveProperty<string> SendMessageText { get; private set; }
@@ -55,53 +55,60 @@ namespace Uncord.ViewModels
 
             _Messages = new ObservableCollection<IMessage>();
 
-            Messages = _Messages
+            var uiDispatcher = Windows.UI.Xaml.Window.Current.Dispatcher;
+            Messages = new ObservableCollection<MessageAggregatedByAuthorViewModel>();
+                
+                
+           _Messages
                 .CollectionChangedAsObservable()
-                .Where((x) =>
+                .Subscribe(async (x) =>
                 {
-                    if (x.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                    using (var releaser = await _MessageUpdateLock.LockAsync())
                     {
-                        var items = x.NewItems;
-                        // 前回受け取ったメッセージと同じ送信者の場合は
-                        // 前回生成したMessageVMにIMessageをまとめる
-                        foreach (var item in items.Cast<IMessage>())
+                        if (x.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
                         {
-                            var lastMessage = Messages.LastOrDefault();
-                            if (lastMessage?.IsSameAuthor(item) ?? false)
+                            var items = x.NewItems;
+                            // 前回受け取ったメッセージと同じ送信者の場合は
+                            // 前回生成したMessageVMにIMessageをまとめる
+                            foreach (var item in items.Cast<IMessage>())
                             {
-                                lastMessage.AddMessage(item);
-                                return false;
-                            }
-                            else
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    else if (x.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
-                    {
-                        var items = x.OldItems;
-                        // 前回受け取ったメッセージと同じ送信者の場合は
-                        // 前回生成したMessageVMにIMessageをまとめる
-                        foreach (var item in items.Cast<IMessage>())
-                        {
-                            foreach (var message in Messages)
-                            {
-                                if (message.TryRemoveMessage(item))
+                                var lastMessage = Messages.LastOrDefault();
+                                if (lastMessage?.IsSameAuthor(item) ?? false)
                                 {
-                                    break;
+                                    await uiDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                                    {
+                                        lastMessage.AddMessage(item);
+                                    });
+                                }
+                                else
+                                {
+                                    // 新規
+                                    await uiDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                                    {
+                                        Messages.Add(new MessageAggregatedByAuthorViewModel(item));
+                                    });
                                 }
                             }
                         }
-
-                        return false;
+                        else if (x.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+                        {
+                            var items = x.OldItems;
+                            // 前回受け取ったメッセージと同じ送信者の場合は
+                            // 前回生成したMessageVMにIMessageをまとめる
+                            foreach (var item in items.Cast<IMessage>())
+                            {
+                                await uiDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                                {
+                                    var message = Messages.FirstOrDefault(y => y.TryRemoveMessage(item));
+                                    if (message?.Messages.Count == 0)
+                                    {
+                                        Messages.Remove(message);
+                                    }
+                                });
+                            }
+                        }
                     }
-
-                    return false;
                 })
-                .Select(x => new TextChannelMessageViewModel(x.NewItems[0] as IMessage))
-                .SubscribeOnUIDispatcher()
-                .ToReadOnlyReactiveCollection()
                 .AddTo(_CompositeDisposable);
 
             SendMessageText = new ReactiveProperty<string>("")
@@ -154,6 +161,8 @@ namespace Uncord.ViewModels
 
             // テキストチャンネルページを表示中だけメッセージ受信を処理する
             SocketClient.MessageReceived += Discord_MessageReceived;
+            SocketClient.MessageDeleted += SocketClient_MessageDeleted;
+            SocketClient.MessageUpdated += SocketClient_MessageUpdated;
 
             _Messages.Clear();
 
@@ -185,12 +194,16 @@ namespace Uncord.ViewModels
             base.OnNavigatedTo(e, viewModelState);
         }
 
+        
+
         public override void OnNavigatingFrom(NavigatingFromEventArgs e, Dictionary<string, object> viewModelState, bool suspending)
         {
             // メッセージ受信処理を終了
             if (SocketClient != null)
             {
                 SocketClient.MessageReceived -= Discord_MessageReceived;
+                SocketClient.MessageDeleted -= SocketClient_MessageDeleted;
+
             }
 
             base.OnNavigatingFrom(e, viewModelState, suspending);
@@ -237,7 +250,44 @@ namespace Uncord.ViewModels
             }
         }
 
-        
+        private async Task SocketClient_MessageDeleted(Cacheable<IMessage, ulong> deletedMessage, ISocketMessageChannel channel)
+        {
+            using (var releaser = await _MessageUpdateLock.LockAsync())
+            {
+                var messageId = deletedMessage.Id;
+                if (channel.Id == TextChannel.Id)
+                {
+                    var target = _Messages.FirstOrDefault(x => x.Id == messageId);
+                    if (target != null)
+                    {
+                        _Messages.Remove(target);
+                    }
+
+                    await Task.Delay(50);
+                }
+            }
+        }
+
+        private async Task SocketClient_MessageUpdated(Cacheable<IMessage, ulong> prevMessage, SocketMessage updatedMessage, ISocketMessageChannel channel)
+        {
+            using (var releaser = await _MessageUpdateLock.LockAsync())
+            {
+                /*
+                var messageId = deletedMessage.Id;
+                if (channel.Id == TextChannel.Id)
+                {
+                    var target = _Messages.FirstOrDefault(x => x.Id == messageId);
+                    if (target != null)
+                    {
+                        _Messages.uptarget);
+                    }
+
+                    await Task.Delay(50);
+                }
+                */
+            }
+        }
+
         public void Dispose()
         {
             _CompositeDisposable.Dispose();

@@ -11,6 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:mycontrols="using:Uncord.Views.Controls"
+    xmlns:templateSelector="using:Uncord.Views.TemplateSelector"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -39,26 +40,61 @@
                 </DataTemplate>
             </local:MessageAttachementTypeTemplateSelector.Other>
         </local:MessageAttachementTypeTemplateSelector>
-        
+
+
+
+        <templateSelector:EmptyOrContentTemplateSelector x:Key="MessageDeleteCapableTemplateSelector"                                             
+                                                         Content="{StaticResource MessageItemTemplate}"
+                                                         >
+            <templateSelector:EmptyOrContentTemplateSelector.Empty>
+                <DataTemplate>
+                    <TextBlock Text="[deleted]" 
+                               Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                               Height="32"
+                               VerticalAlignment="Center"
+                               />
+                </DataTemplate>
+            </templateSelector:EmptyOrContentTemplateSelector.Empty>
+        </templateSelector:EmptyOrContentTemplateSelector>
+
         <DataTemplate x:Key="MessageItemTemplate">
-            <StackPanel>
-                <mycontrols:DiscordMessageContent MessageContent="{Binding Content}" />
+            <toolkit:DockPanel>
+                <Grid toolkit:DockPanel.Dock="Right">
+                    <Button VerticalAlignment="Top"
+                            Margin="0"
+                            Background="Transparent"
+                            >
+                        <SymbolIcon Symbol="More" 
+                                    Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                    />
 
-                <Border Height="6" />
+                        <Button.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="削除" Command="{Binding RemoveMessageCommand}" />
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
 
-                <!-- Attachments -->
-                <Border Visibility="{Binding Attachments, Converter={StaticResource CollectionVisibilityConverter}}"
+                </Grid>
+
+                <StackPanel>
+                    <mycontrols:DiscordMessageContent MessageContent="{Binding Message.Content}" />
+
+                    <Border Height="6" />
+
+                    <!-- Attachments -->
+                    <Border Visibility="{Binding Message.Attachments, Converter={StaticResource CollectionVisibilityConverter}}"
                         Margin="0 0 0 16"
                         >
-                    <ItemsControl ItemsSource="{Binding Attachments}"
+                        <ItemsControl ItemsSource="{Binding Message.Attachments}"
                               ItemTemplateSelector="{StaticResource MessageAttachmentTemplateSelector}"
                               
                               >
-                    </ItemsControl>
-                </Border>
-                
-                <!-- Embeds -->
-                <Border Visibility="{Binding Embeds, Converter={StaticResource CollectionVisibilityConverter}}"
+                        </ItemsControl>
+                    </Border>
+
+                    <!-- Embeds -->
+                    <Border Visibility="{Binding Message.Embeds, Converter={StaticResource CollectionVisibilityConverter}}"
                         BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
                         BorderThickness="4 0 0 0"
                         Background="#20000000"
@@ -68,24 +104,26 @@
                         HorizontalAlignment="Left"
                         Margin="0 0 0 16"
                         >
-                    <ItemsControl ItemsSource="{Binding Embeds}"
+                        <ItemsControl ItemsSource="{Binding Message.Embeds}"
                                   HorizontalAlignment="Left"
                                   >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <mycontrols:DiscordMessageEmbedControl />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <mycontrols:DiscordMessageEmbedControl />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                </Border>
-                
-                <!-- TODO: IsPinned -->
-                <!-- TODO: Tags -->
-                <!-- TODO: Sender type -->
+                    </Border>
+
+                    <!-- TODO: IsPinned -->
+                    <!-- TODO: Tags -->
+                    <!-- TODO: Sender type -->
 
 
-            </StackPanel>
+                </StackPanel>
+            </toolkit:DockPanel>
+            
         </DataTemplate>
 
         <Style TargetType="ContentPresenter" x:Key="MessageItemContainerStyle">
@@ -101,6 +139,8 @@
                                     Width="48"
                                     />
             </Grid>
+
+            
 
             <Grid toolkit:DockPanel.Dock="Top">
                 <StackPanel Orientation="Horizontal">
@@ -123,7 +163,7 @@
 
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding Messages}"
-                              ItemTemplate="{StaticResource MessageItemTemplate}"
+                              ItemTemplateSelector="{StaticResource MessageDeleteCapableTemplateSelector}"
                               ItemContainerStyle="{StaticResource MessageItemContainerStyle}"
                               >
                     

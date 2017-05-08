@@ -171,6 +171,7 @@
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TemplateSelector\GeneralTemplateSelector.cs" />
+    <Compile Include="Views\TemplateSelector\EmptyOrContentTemplateSelector.cs" />
     <Compile Include="Views\TextChannelPage.xaml.cs">
       <DependentUpon>TextChannelPage.xaml</DependentUpon>
     </Compile>
