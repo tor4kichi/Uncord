@@ -10,6 +10,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:iconPack="using:MahApps.Metro.IconPacks"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
 
 
@@ -88,59 +89,60 @@
 
         </VisualStateManager.VisualStateGroups>
 
-        
-        <SplitView
-            x:Name="SplitView"
-            DisplayMode="Overlay"
-            CompactPaneLength="48"
-            OpenPaneLength="240"
-            >
-            <SplitView.Pane>
-                <Grid>
 
-                    
+        <toolkit:DockPanel>
 
-                    <Border Visibility="Collapsed"
+
+            <Grid toolkit:DockPanel.Dock="Bottom"
+                  >
+                <views:VoiceChannelStatusView />
+            </Grid>
+
+            <SplitView x:Name="SplitView"
+                DisplayMode="Overlay"
+                CompactPaneLength="48"
+                OpenPaneLength="240"
+                >
+                <SplitView.Pane>
+                    <Grid>
+
+
+
+                        <Border Visibility="Collapsed"
                             x:Name="SemiMobilePaneOpener"
                             Background="Transparent"
                             IsHitTestVisible="True"
                             >
-                        <i:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="Tapped">
-                                <core:ChangePropertyAction TargetObject="{Binding ElementName=SplitView}" PropertyName="IsPaneOpen" Value="True" />
-                            </core:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
-                    </Border>
-                    
-                    <views:MenuView />
+                            <i:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="Tapped">
+                                    <core:ChangePropertyAction TargetObject="{Binding ElementName=SplitView}" PropertyName="IsPaneOpen" Value="True" />
+                                </core:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </Border>
 
-                </Grid>
-            </SplitView.Pane>
+                        <views:MenuView />
 
-
-            <Grid>
+                    </Grid>
+                </SplitView.Pane>
 
 
-                <toolkit:DockPanel>
+                <Grid>
 
-                    <views:VoiceChannelStatusView
-                        toolkit:DockPanel.Dock="Bottom"
-                        />
+
 
 
                     <!-- コンテンツは小画面時にトップバー左側に
-                  ペイン開閉アイコンのためのスペースが必要 -->
+                ペイン開閉アイコンのためのスペースが必要 -->
                     <ContentControl x:Name="PageContent"
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Stretch"
-                        />
-                </toolkit:DockPanel>
-                
-                
-                
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                    />
 
 
-                <Button Background="Transparent"
+
+
+
+                    <Button Background="Transparent"
                         IsHitTestVisible="True"
                         x:Name="MobilePaneOpener"
                         HorizontalAlignment="Left"
@@ -150,28 +152,32 @@
                         Width="48"
                         >
 
-                    <iconPack:PackIconMaterial Kind="Menu"
+                        <iconPack:PackIconMaterial Kind="Menu"
                                                RenderTransformOrigin="0.5, 0.5"
                                                Margin="0 0"
                                                >
-                        <iconPack:PackIconMaterial.RenderTransform>
-                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-                        </iconPack:PackIconMaterial.RenderTransform>
-                    </iconPack:PackIconMaterial>
+                            <iconPack:PackIconMaterial.RenderTransform>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                            </iconPack:PackIconMaterial.RenderTransform>
+                        </iconPack:PackIconMaterial>
 
-                    <i:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Tapped">
-                            <core:ChangePropertyAction TargetObject="{Binding ElementName=SplitView}" PropertyName="IsPaneOpen" Value="True" />
-                        </core:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </Button>
-                
-            </Grid>
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <core:ChangePropertyAction TargetObject="{Binding ElementName=SplitView}" PropertyName="IsPaneOpen" Value="True" />
+                            </core:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </Button>
+
+                </Grid>
 
 
-            
 
-        </SplitView>
+
+            </SplitView>
+
+
+        </toolkit:DockPanel>
+        
 
         
 

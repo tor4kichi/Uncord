@@ -14,10 +14,114 @@
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
+    <Page.Resources>
+    </Page.Resources>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <!-- Note: トップバー位置にはモバイル表示時の動的に変化するマージンが必要です -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Layout">
 
+                <!-- 大画面 -->
+                <VisualState x:Name="LargeMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 中画面 -->
+                <VisualState x:Name="MiddleMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 小画面 -->
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+
+            </VisualStateGroup>
+
+
+        </VisualStateManager.VisualStateGroups>
+        
+        <!-- Note: トップバー位置にはモバイル表示時の動的に変化するマージンが必要です -->
+        <toolkit:DockPanel Margin="16 0">
+            
+            <toolkit:DockPanel toolkit:DockPanel.Dock="Top"
+                               Height="64"
+                               x:Name="TopBarLayout"
+                               Margin="64 8 0 8"
+                               >
+                <TextBlock Text="設定"
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           />
+            </toolkit:DockPanel>
+
+            <toolkit:WrapPanel Orientation="Vertical"
+                               ItemWidth="320"
+                               Margin="40 0 0 0"
+                               >
+
+                <StackPanel>
+
+                    <TextBlock Text="オーディオ設定"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Margin="0 0"
+                               />
+
+                    <StackPanel Margin="0 16 0 0">
+                    
+                        <TextBlock Text="スピーカー音量" Margin="0 8" />
+
+                        <Slider Minimum="{Binding SpeakerMinVolume, Mode=OneWay}"
+                                Maximum="{Binding SpeakerMaxVolume, Mode=OneWay}" 
+                                Value="{Binding SpeakerVolume.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                StepFrequency="0.01"
+                                TickFrequency="0.01"
+                                ThumbToolTipValueConverter="{StaticResource ParcentageValueConverter}"
+                                Width="320"
+                                />
+                    </StackPanel>
+
+                    <StackPanel Margin="0 16 0 0">
+                        <TextBlock Text="マイク音量" Margin="0 8" />
+
+                        <Slider Minimum="{Binding MicMinVolume, Mode=OneWay}" 
+                                Maximum="{Binding MicMaxVolume, Mode=OneWay}"
+                                Value="{Binding MicVolume.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                StepFrequency="0.01"
+                                TickFrequency="0.01"
+                                ThumbToolTipValueConverter="{StaticResource ParcentageValueConverter}"
+                                Width="320"
+                                />
+                    </StackPanel>
+                </StackPanel>
+
+
+
+            </toolkit:WrapPanel>
+
+            
+            
+        </toolkit:DockPanel>
         
     </Grid>
 </Page>

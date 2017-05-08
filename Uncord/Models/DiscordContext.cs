@@ -553,6 +553,8 @@ namespace Uncord.Models
                 throw new ArgumentNullException("VoiceChannel is null");
             }
 
+            CurrentVoiceChannel = voiceChannel;
+
             // ボイスチャンネルへの接続を開始
             // 音声の送信はConnectedイベント後
             // 受信はStreamCreatedイベント後に行われます
@@ -624,7 +626,7 @@ namespace Uncord.Models
         {
             AudioManager.StopAudioOutput();
 
-            using (var releaser = await _VoiceChannelLock.LockAsync())
+//            using (var releaser = await _VoiceChannelLock.LockAsync())
             {
                 if (IsConnectedVoiceChannel)
                 {
@@ -666,7 +668,7 @@ namespace Uncord.Models
                 return;
             }
 
-            AudioManager.StartAudioInput(_CurrentVoiceAudioClient);
+            await AudioManager.StartAudioInput(_CurrentVoiceAudioClient);
 
             await Task.Delay(0);
         }
@@ -675,7 +677,7 @@ namespace Uncord.Models
 
         private async Task StopAudioCapture()
         {
-            AudioManager.StopAudioInput();
+            await AudioManager.StopAudioInput();
 
             await Task.Delay(0);
         }
