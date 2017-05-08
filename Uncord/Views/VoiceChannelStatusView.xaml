@@ -32,7 +32,9 @@
                 <templateSelector:ValueAndTemplate Value="MicrophoneNotDetected">
                     <templateSelector:ValueAndTemplate.Template>
                         <DataTemplate>
-                            <TextBlock Text="Mic Not Detected" />
+                            <TextBlock Text="Mic Not Detected"
+                                       VerticalAlignment="Center"
+                                       />
                         </DataTemplate>
                     </templateSelector:ValueAndTemplate.Template>
                 </templateSelector:ValueAndTemplate>
@@ -59,7 +61,9 @@
                 <templateSelector:ValueAndTemplate Value="UnknowunError">
                     <templateSelector:ValueAndTemplate.Template>
                         <DataTemplate>
-                            <TextBlock Text="UnknowunError" />
+                            <TextBlock Text="UnknowunError"
+                                       VerticalAlignment="Center"
+                                       />
                         </DataTemplate>
                     </templateSelector:ValueAndTemplate.Template>
                 </templateSelector:ValueAndTemplate>
