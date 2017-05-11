@@ -26,5 +26,11 @@ namespace Uncord.Views
         {
             this.InitializeComponent();
         }
+
+
+        public void ScrollToLatest()
+        {
+//            ChatItemsScrollViewer.ChangeView(null, ChatItemsScrollViewer.ScrollableHeight, null);
+        }
     }
 }

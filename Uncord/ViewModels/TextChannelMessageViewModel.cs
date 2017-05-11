@@ -64,7 +64,7 @@ namespace Uncord.ViewModels
         
     }
 
-    public class MessageViewModel : BindableBase
+    public class MessageViewModel : BindableBase, IDisposable
     {
         public IMessage Message { get; }
 
@@ -93,6 +93,24 @@ namespace Uncord.ViewModels
                     }
                     ));
             }
+        }
+
+        private DelegateCommand _EditMessageCommand;
+        public DelegateCommand EditMessageCommand
+        {
+            get
+            {
+                return _EditMessageCommand
+                    ?? (_EditMessageCommand = new DelegateCommand(() =>
+                    {
+                        
+                    }
+                    ));
+            }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

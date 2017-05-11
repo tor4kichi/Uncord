@@ -92,10 +92,23 @@
 
             <toolkit:DockPanel >
 
-                <Border Margin="64 8 0 8"
+                <toolkit:DockPanel Margin="64 8 0 8"
                         toolkit:DockPanel.Dock="Top"
                         x:Name="TopBarLayout"
                         >
+
+                    <StackPanel toolkit:DockPanel.Dock="Right">
+                    </StackPanel>
+                    
+                    <Border toolkit:DockPanel.Dock="Bottom">
+                        <ProgressBar IsIndeterminate="True"
+                                     Visibility="{Binding NowMessageLoading.Value, Converter={StaticResource BoolToVisibilityConverter}}"
+                                     >
+                            
+                        </ProgressBar>
+                        
+                    </Border>
+                    
                     <TextBlock Style="{StaticResource SubheaderTextBlockStyle}"
                            Margin="0 0 0 0"
                                VerticalAlignment="Center"
@@ -103,8 +116,11 @@
                         <Run Text="#" />
                         <Run Text="{Binding Name}" />
                     </TextBlock>
-                </Border>
+                    
+                </toolkit:DockPanel>
 
+
+                
                 <Border toolkit:DockPanel.Dock="Bottom"
                         BorderBrush="{StaticResource TextBoxDisabledBorderThemeBrush}"
                         BorderThickness="0 1 0 0"
@@ -151,15 +167,47 @@
 
                 </Border>
 
+                <!-- 最新投稿へスクロール -->
+                <!-- XInputでは非表示に -->
+                <!--
+                <Border toolkit:DockPanel.Dock="Bottom"
+                        Height="40"
+                        x:Name="ScrollToLatestLayout"
+                        IsHitTestVisible="True"
+                        Background="Transparent"
+                        >
+                    <TextBlock Text="最新までスキップ" 
+                               Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                               Margin="0 8"
+                               HorizontalAlignment="Center"
+                               />
+                    <i:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ScrollToLatest" />
+                        </core:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </Border>
+                -->
 
                 <ScrollViewer>
+
+                    <i:Interaction.Behaviors>
+                        <mybehavior:ScrollViewerAutoScrollToLatestItemBehavior
+                            ObserveCollection="{Binding ElementName=MessagesItemsControl}"
+                            />
+                    </i:Interaction.Behaviors>
+                    
                     <ItemsControl ItemsSource="{Binding Messages}"
-                    ItemTemplate="{StaticResource MessageTemplate}"
-                                  Margin="8 0 16 0"
-                              >
+                                ItemTemplate="{StaticResource MessageTemplate}"
+                                Margin="8 0 16 0"
+                                  x:Name="MessagesItemsControl"
+                                  
+                            >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <VirtualizingStackPanel VerticalAlignment="Bottom"/>
+                                <VirtualizingStackPanel VerticalAlignment="Bottom"
+                                                    >
+                                </VirtualizingStackPanel>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>

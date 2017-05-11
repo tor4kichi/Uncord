@@ -36,8 +36,10 @@ namespace Uncord.ViewModels
 
         // メッセージ読み取り
         AsyncLock _MessageUpdateLock = new AsyncLock();
-        ObservableCollection<Discord.IMessage> _Messages;
+        public ObservableCollection<Discord.IMessage> RawMessages { get; private set; }
         public ObservableCollection<MessageAggregatedByAuthorViewModel> Messages { get; private set; }
+
+        public ReactiveProperty<bool> NowMessageLoading { get; }
 
         // メッセージ書き込み
         public ReactiveProperty<string> SendMessageText { get; private set; }
@@ -53,13 +55,14 @@ namespace Uncord.ViewModels
             NowSendingMessage = new ReactiveProperty<bool>()
                 .AddTo(_CompositeDisposable);
 
-            _Messages = new ObservableCollection<IMessage>();
+            RawMessages = new ObservableCollection<IMessage>();
 
             var uiDispatcher = Windows.UI.Xaml.Window.Current.Dispatcher;
             Messages = new ObservableCollection<MessageAggregatedByAuthorViewModel>();
-                
-                
-           _Messages
+            NowMessageLoading = new ReactiveProperty<bool>(false);
+
+
+            RawMessages
                 .CollectionChangedAsObservable()
                 .Subscribe(async (x) =>
                 {
@@ -126,7 +129,7 @@ namespace Uncord.ViewModels
                 .AddTo(_CompositeDisposable);
         }
 
-        public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
+        public override void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
             // ログインしていない？
             if (SocketClient == null)
@@ -156,41 +159,56 @@ namespace Uncord.ViewModels
                 return;
             }
 
-            Name = TextChannel.Name;
-            RaisePropertyChanged(nameof(Name));
+            try
+            {
+                NowMessageLoading.Value = true;
 
-            // テキストチャンネルページを表示中だけメッセージ受信を処理する
-            SocketClient.MessageReceived += Discord_MessageReceived;
-            SocketClient.MessageDeleted += SocketClient_MessageDeleted;
-            SocketClient.MessageUpdated += SocketClient_MessageUpdated;
+                Name = TextChannel.Name;
+                RaisePropertyChanged(nameof(Name));
 
-            _Messages.Clear();
+                // テキストチャンネルページを表示中だけメッセージ受信を処理する
+                SocketClient.MessageReceived += Discord_MessageReceived;
+                SocketClient.MessageDeleted += SocketClient_MessageDeleted;
+                SocketClient.MessageUpdated += SocketClient_MessageUpdated;
 
-            await _MessageUpdateLock.LockAsync()
-                .ContinueWith(async x => 
-                {
-                    using (x.Result)
+                RawMessages.Clear();
+
+                var task = _MessageUpdateLock.LockAsync()
+                    .ContinueWith(async x =>
                     {
-                        if (_Messages.Count > 0) { return; }
-
-                        if (TextChannel == null) { throw new Exception(); }
-
-                        var rawMessages = await TextChannel.GetMessagesAsync().Flatten();
-
-                        UIDispatcherScheduler.Default.Schedule(this, TimeSpan.Zero, (scheeduler, state) =>
+                        using (x.Result)
                         {
-                            foreach (var message in rawMessages.Reverse().ToArray())
+                            if (RawMessages.Count > 0) { return; }
+
+                            if (TextChannel == null) { throw new Exception(); }
+
+                            var rawMessages = await TextChannel.GetMessagesAsync().Flatten();
+
+                            UIDispatcherScheduler.Default.Schedule(this, TimeSpan.Zero, (scheeduler, state) =>
                             {
-                                _Messages.Add(message);
-                            }
+                                var sorted = rawMessages.ToList();
+                                sorted.Sort((a, b) => (int)(a.Timestamp - b.Timestamp).TotalSeconds);
+                                foreach (var message in sorted)
+                                {
+                                    RawMessages.Add(message);
+                                }
 
-                            return null;
+                                return null;
 
-                        });
-                    }
-                })
-                .ConfigureAwait(false);
+                            });
+
+                            await Task.Delay(500);
+                        }
+                    });
+
+                task.Wait();
+            }
+            finally
+            {
+                NowMessageLoading.Value = false;
+            }
             
+
             base.OnNavigatedTo(e, viewModelState);
         }
 
@@ -243,8 +261,8 @@ namespace Uncord.ViewModels
             {
                 if (newMessage.Channel.Id == TextChannel.Id)
                 {
-                    _Messages.Add(newMessage);
-
+                    RawMessages.Add(newMessage);
+                    
                     await Task.Delay(50);
                 }
             }
@@ -257,10 +275,10 @@ namespace Uncord.ViewModels
                 var messageId = deletedMessage.Id;
                 if (channel.Id == TextChannel.Id)
                 {
-                    var target = _Messages.FirstOrDefault(x => x.Id == messageId);
+                    var target = RawMessages.FirstOrDefault(x => x.Id == messageId);
                     if (target != null)
                     {
-                        _Messages.Remove(target);
+                        RawMessages.Remove(target);
                     }
 
                     await Task.Delay(50);

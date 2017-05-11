@@ -132,8 +132,10 @@
     <Compile Include="Views\AccountLoginPage.xaml.cs">
       <DependentUpon>AccountLoginPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Behaviors\AutoScrollBehavior.cs" />
     <Compile Include="Views\Behaviors\KeyboardTrigger.cs" />
     <Compile Include="Views\Behaviors\MoveHeaderOnFocusBehavior.cs" />
+    <Compile Include="Views\Behaviors\ScrollViewerAutoScrollToLatestItemBehavior.cs" />
     <Compile Include="Views\Behaviors\WebViewDisplayHtmlBehavior.cs" />
     <Compile Include="Views\Converter\ParcentageValueConverter.cs" />
     <Compile Include="Views\FriendsPage.xaml.cs">
