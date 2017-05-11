@@ -24,6 +24,9 @@ namespace Uncord.ViewModels
         public ReactiveProperty<double> MicVolume { get; }
         public ReactiveProperty<double> SpeakerVolume { get; }
 
+        public AppDescription UncordAppDescription { get; } = DependentLibraries.UncordAppDescription;
+        public List<AppDescription> DependencyLibraries { get; }
+
         public SettingsPageViewModel(AudioPlaybackManager audioManager)
         {
             AudioPlaybackManager = audioManager;
@@ -34,6 +37,8 @@ namespace Uncord.ViewModels
             SpeakerVolume = audioManager.ToReactivePropertyAsSynchronized(
                 x => x.SpeakerVolume
                 );
+
+            DependencyLibraries = DependentLibraries.Libraries.ToList();
         }
     }
 }

@@ -63,7 +63,7 @@
         </VisualStateManager.VisualStateGroups>
         
         <!-- Note: トップバー位置にはモバイル表示時の動的に変化するマージンが必要です -->
-        <toolkit:DockPanel Margin="16 0">
+        <toolkit:DockPanel Margin="0 0">
             
             <toolkit:DockPanel toolkit:DockPanel.Dock="Top"
                                Height="64"
@@ -75,50 +75,96 @@
                            />
             </toolkit:DockPanel>
 
-            <toolkit:WrapPanel Orientation="Vertical"
-                               ItemWidth="320"
+            <ScrollViewer>
+                <toolkit:WrapPanel Orientation="Horizontal"
+                               ItemWidth="400"
                                Margin="40 0 0 0"
                                >
 
-                <StackPanel>
+                    <StackPanel Margin="0 0 0 48">
 
-                    <TextBlock Text="オーディオ設定"
+                        <TextBlock Text="オーディオ設定"
                                Style="{StaticResource SubtitleTextBlockStyle}"
                                Margin="0 0"
                                />
 
-                    <StackPanel Margin="0 16 0 0">
-                    
-                        <TextBlock Text="スピーカー音量" Margin="0 8" />
+                        <StackPanel Margin="0 16 0 0">
 
-                        <Slider Minimum="{Binding SpeakerMinVolume, Mode=OneWay}"
+                            <TextBlock Text="スピーカー音量" Margin="0 8" />
+
+                            <Slider Minimum="{Binding SpeakerMinVolume, Mode=OneWay}"
                                 Maximum="{Binding SpeakerMaxVolume, Mode=OneWay}" 
                                 Value="{Binding SpeakerVolume.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 StepFrequency="0.01"
                                 TickFrequency="0.01"
                                 ThumbToolTipValueConverter="{StaticResource ParcentageValueConverter}"
                                 Width="320"
+                                    HorizontalAlignment="Left"
                                 />
-                    </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Margin="0 16 0 0">
-                        <TextBlock Text="マイク音量" Margin="0 8" />
+                        <StackPanel Margin="0 16 0 0">
+                            <TextBlock Text="マイク音量" Margin="0 8" />
 
-                        <Slider Minimum="{Binding MicMinVolume, Mode=OneWay}" 
+                            <Slider Minimum="{Binding MicMinVolume, Mode=OneWay}" 
                                 Maximum="{Binding MicMaxVolume, Mode=OneWay}"
                                 Value="{Binding MicVolume.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 StepFrequency="0.01"
                                 TickFrequency="0.01"
                                 ThumbToolTipValueConverter="{StaticResource ParcentageValueConverter}"
                                 Width="320"
+                                    HorizontalAlignment="Left"
                                 />
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
 
 
 
-            </toolkit:WrapPanel>
+                    <StackPanel Margin="0 0 0 48">
 
+                        <TextBlock Text="アプリ情報"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Margin="0 0"
+                               />
+
+                        <StackPanel Margin="0 16 0 0">
+
+                            <TextBlock Text="Uncord プロジェクトサイト" Margin="0 8" />
+
+                            <HyperlinkButton Content="Github repository"
+                                         NavigateUri="{Binding UncordAppDescription.Url}"
+                                         />
+
+                        </StackPanel>
+
+                        <StackPanel Margin="0 16 0 0">
+
+                            <TextBlock Text="依存ライブラリ" Margin="0 8" />
+
+                            <ItemsControl ItemsSource="{Binding DependencyLibraries}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <HyperlinkButton Content="{Binding Name}"
+                                                     NavigateUri="{Binding Url}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <StackPanel Margin="0 16 0 0">
+
+                            <HyperlinkButton Content="プライバシーポリシー(TODO)"
+                                         Margin=" 0 32 0 0"
+                                         />
+
+                        </StackPanel>
+                    </StackPanel>
+
+
+                </toolkit:WrapPanel>
+
+            </ScrollViewer>
+            
             
             
         </toolkit:DockPanel>
