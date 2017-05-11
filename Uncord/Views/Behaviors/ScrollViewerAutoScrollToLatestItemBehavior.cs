@@ -106,13 +106,12 @@ namespace Uncord.Views.Behaviors
 
         private void AssociatedObject_Unloaded(object sender, RoutedEventArgs e)
         {
-            var child = AssociatedObject.Content as FrameworkElement;
-            if (child == null) { return; }
-            child.SizeChanged -= Child_SizeChanged;
-
             _AutoScrollSubscriber?.Dispose();
             _AutoScrollSubscriber = null;
 
+            var child = AssociatedObject?.Content as FrameworkElement;
+            if (child == null) { return; }
+            child.SizeChanged -= Child_SizeChanged;
         }
 
         private void Child_SizeChanged(object sender, object e)
