@@ -203,6 +203,13 @@
                         </HyperlinkButton.Content>
                     </HyperlinkButton>
 
+                    <HyperlinkButton Content="Uncordのプライバシーポリシー"
+                                     NavigateUri="https://github.com/tor4kichi/Uncord/wiki/Privacy-Policy"
+                                    Margin="0 16 0 0"
+                                     HorizontalAlignment="Right"
+                                    />
+
+
                 </StackPanel>
             </Border>
 

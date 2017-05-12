@@ -6,7 +6,7 @@
     xmlns:local="using:Uncord"
     xmlns:converter="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:myconverter="using:Uncord.Views.Converter"
-    RequestedTheme="Light">
+    RequestedTheme="Dark">
 
     <prism:PrismUnityApplication.Resources>
         <ResourceDictionary>
