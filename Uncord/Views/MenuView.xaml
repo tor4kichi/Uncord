@@ -229,7 +229,6 @@
                                             Height="40"
                                             >
                                         <TextBlock VerticalAlignment="Center">
-                                            <Run Text="#" />
                                             <Run Text="{Binding Name}" />
                                         </TextBlock>
                                     </Border>
