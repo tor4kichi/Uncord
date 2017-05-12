@@ -49,8 +49,12 @@ namespace Uncord.ViewModels
         ObservableCollection<SocketTextChannel> _TextChannels;
         public ReadOnlyReactiveCollection<SocketTextChannel> TextChannels { get; private set; }
 
+        public ReadOnlyReactiveProperty<SocketTextChannel> CurrentTextChannel { get; }
+
         ObservableCollection<SocketVoiceChannel> _VoiceChannels;
         public ReadOnlyReactiveCollection<SocketVoiceChannel> VoiceChannels { get; private set; }
+
+        public ReadOnlyReactiveProperty<SocketVoiceChannel> CurrentVoiceChannel { get; }
 
         public ReactiveProperty<SocketVoiceChannel> AfkChannel { get; private set; }
         public ReactiveProperty<bool> HasAfkChannel { get; private set; }
@@ -81,9 +85,13 @@ namespace Uncord.ViewModels
 
             _TextChannels = new ObservableCollection<SocketTextChannel>();
             TextChannels = _TextChannels.ToReadOnlyReactiveCollection();
+            CurrentTextChannel = DiscordContext.ObserveProperty(x => x.CurrentTextChannel)
+                .ToReadOnlyReactiveProperty();
 
             _VoiceChannels = new ObservableCollection<SocketVoiceChannel>();
             VoiceChannels = _VoiceChannels.ToReadOnlyReactiveCollection();
+            CurrentVoiceChannel = DiscordContext.ObserveProperty(x => x.CurrentVoiceChannel)
+                .ToReadOnlyReactiveProperty();
 
             AfkChannel = new ReactiveProperty<SocketVoiceChannel>();
             HasAfkChannel = AfkChannel.Select(x => x != null)
@@ -209,51 +217,51 @@ namespace Uncord.ViewModels
             }
         }
 
-        private DelegateCommand<ulong?> _OpenTextChannelPageCommand;
-        public DelegateCommand<ulong?> OpenTextChannelPageCommand
+        private DelegateCommand<SocketTextChannel> _OpenTextChannelPageCommand;
+        public DelegateCommand<SocketTextChannel> OpenTextChannelPageCommand
         {
             get
             {
                 return _OpenTextChannelPageCommand
-                    ?? (_OpenTextChannelPageCommand = new DelegateCommand<ulong?>((textChannelId) =>
+                    ?? (_OpenTextChannelPageCommand = new DelegateCommand<SocketTextChannel>((textChannel) =>
                     {
-                        if (textChannelId.HasValue)
+                        if (textChannel != null)
                         {
-                            NavigationService.Navigate(PageTokens.TextChannelPageToken, textChannelId.Value);
+                            NavigationService.Navigate(PageTokens.TextChannelPageToken, textChannel.Id);
                         }
                     }));
             }
         }
 
-        private DelegateCommand<ulong?> _OpenVoiceChannelPageCommand;
-        public DelegateCommand<ulong?> OpenVoiceChannelPageCommand
+        private DelegateCommand<SocketVoiceChannel> _OpenVoiceChannelPageCommand;
+        public DelegateCommand<SocketVoiceChannel> OpenVoiceChannelPageCommand
         {
             get
             {
                 return _OpenVoiceChannelPageCommand
-                    ?? (_OpenVoiceChannelPageCommand = new DelegateCommand<ulong?>((voiceChannelId) =>
+                    ?? (_OpenVoiceChannelPageCommand = new DelegateCommand<SocketVoiceChannel>((voiceChannel) =>
                     {
-                        if (voiceChannelId.HasValue)
+                        if (voiceChannel != null)
                         {
-                            NavigationService.Navigate(PageTokens.VoiceChannelPageToken, voiceChannelId.Value);
+                            NavigationService.Navigate(PageTokens.VoiceChannelPageToken, voiceChannel.Id);
                         }
                     }));
             }
         }
 
-        private DelegateCommand<ulong?> _ConnectVoiceChannelCommand;
-        public DelegateCommand<ulong?> ConnectVoiceChannelCommand
+        private DelegateCommand<SocketVoiceChannel> _ConnectVoiceChannelCommand;
+        public DelegateCommand<SocketVoiceChannel> ConnectVoiceChannelCommand
         {
             get
             {
                 return _ConnectVoiceChannelCommand
-                    ?? (_ConnectVoiceChannelCommand = new DelegateCommand<ulong?>(async (voiceChannelId) =>
+                    ?? (_ConnectVoiceChannelCommand = new DelegateCommand<SocketVoiceChannel>(async (voiceChannel) =>
                     {
                         // Voiceチャンネルを選択
-                        if (voiceChannelId.HasValue)
+                        if (voiceChannel != null)
                         {
-                            NavigationService.Navigate(PageTokens.VoiceChannelPageToken, voiceChannelId.Value);
-                            await DiscordContext.ConnectVoiceChannel(voiceChannelId.Value);
+                            NavigationService.Navigate(PageTokens.VoiceChannelPageToken, voiceChannel.Id);
+                            await DiscordContext.ConnectVoiceChannel(voiceChannel.Id);
                         }
                     }));
             }

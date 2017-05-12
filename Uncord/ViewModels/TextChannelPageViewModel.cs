@@ -159,6 +159,8 @@ namespace Uncord.ViewModels
                 return;
             }
 
+            DiscordContext.CurrentTextChannel = TextChannel;
+
             try
             {
                 NowMessageLoading.Value = true;
@@ -223,6 +225,8 @@ namespace Uncord.ViewModels
                 SocketClient.MessageDeleted -= SocketClient_MessageDeleted;
 
             }
+
+            DiscordContext.CurrentTextChannel = null;
 
             base.OnNavigatingFrom(e, viewModelState, suspending);
         }
