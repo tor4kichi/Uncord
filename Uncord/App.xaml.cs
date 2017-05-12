@@ -37,6 +37,7 @@ namespace Uncord
             set { _AppShell.IsMenuHide = value; }
         }
 
+        private bool IsPrelaunch = false;
 
         public void OpenMenu()
         {
@@ -61,6 +62,8 @@ namespace Uncord
             {
                 Debugger.Break();
             }
+
+            e.Handled = true;
         }
 
 
@@ -69,6 +72,7 @@ namespace Uncord
 
         protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
+            IsPrelaunch = args.PrelaunchActivated;
             return Task.CompletedTask;
         }
 
@@ -79,25 +83,28 @@ namespace Uncord
             appShell.SetContent(rootFrame);
 
             
+            if (!IsPrelaunch)
+            {
+                // 自動ログインチェック
+                var discordContext = Container.Resolve<Models.DiscordContext>();
 
-            // 自動ログインチェック
-            var discordContext = Container.Resolve<Models.DiscordContext>();
-            
-            if (discordContext.IsValidateToken)
-            {
-                NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
+                if (discordContext.IsValidateToken)
+                {
+                    NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
+                }
+                else
+                {
+                    NavigationService.Navigate(PageTokens.AccountLoginPageToken, null);
+                }
             }
-            else
-            {
-                NavigationService.Navigate(PageTokens.AccountLoginPageToken, null);
-            }
-            
+
             return appShell;
         }
 
         
         protected override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
+            
             // Models
             var audioManager = new Models.AudioPlaybackManager();
             await audioManager.Initialize();
