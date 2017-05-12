@@ -24,6 +24,10 @@ namespace Uncord.ViewModels
         public ReactiveCommand TryLoginCommand { get; private set; }
 
         public ReactiveProperty<bool> NowTryLogin { get; private set; }
+        public ReactiveProperty<bool> IsLoginSuccess { get; private set; }
+
+        public ReactiveProperty<bool> IsFailedLogin { get; private set; }
+
 
         public AccountLoginPageViewModel(DiscordContext discordContext, INavigationService navService)
         {
@@ -51,6 +55,9 @@ namespace Uncord.ViewModels
                 Password.Value = mailAndPassword.Item2;
                 IsRememberPassword.Value = true;
             }
+
+            IsFailedLogin = new ReactiveProperty<bool>();
+            IsLoginSuccess = new ReactiveProperty<bool>();
         }
 
 
@@ -58,11 +65,17 @@ namespace Uncord.ViewModels
         {
             try
             {
+                IsFailedLogin.Value = false;
                 NowTryLogin.Value = true;
 
                 var isLoginSuccess = await _DiscordContext.TryLogin(mail, password, isRememberPassword);
+
                 if (isLoginSuccess)
                 {
+                    IsLoginSuccess.Value = true;
+
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+
                     _NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
 
                     _NavigationService.ClearHistory();
@@ -70,6 +83,9 @@ namespace Uncord.ViewModels
                 else
                 {
                     // ログイン失敗
+                    IsFailedLogin.Value = true;
+
+                    await Task.Delay(TimeSpan.FromSeconds(0.5));
                 }
 
                 // パスワードを保存しない場合は、以前入力されたログイン資格情報を削除

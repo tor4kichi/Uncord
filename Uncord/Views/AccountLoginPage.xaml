@@ -80,6 +80,29 @@
 
             </VisualStateGroup>
 
+            <VisualStateGroup x:Name="LoginSuccessState">
+                <VisualState>
+
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsFailedLogin.Value}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NowLoginDisplayLayout.Visibility" Value="Collapsed" />
+                        <Setter Target="FailedLoginDisplayLayout.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsLoginSuccess.Value}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NowLoginDisplayLayout.Visibility" Value="Collapsed" />
+                        <Setter Target="SuccessLoginDisplayLayout.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
 
         </VisualStateManager.VisualStateGroups>
         
@@ -131,8 +154,19 @@
                 >
                 <StackPanel VerticalAlignment="Top"
                         HorizontalAlignment="Center"
-                        MinWidth="240"
+                        MinWidth="300"
                         >
+
+                    <TextBlock Margin="0 0 0 8"
+                        Visibility="{Binding IsFailedLogin.Value, Converter={StaticResource BoolToVisibilityConverter}}"
+                               TextWrapping="Wrap"
+                               MaxWidth="300"
+                         >
+                        <Run Text="ログインに失敗しました" />
+                        <LineBreak />
+                        <Run Text="入力内容に間違いがないか、またはネットワーク接続状況を確認して、再度お試しください" />
+                    </TextBlock>
+
 
                     <TextBox Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          InputScope="EmailSmtpAddress"
@@ -213,12 +247,11 @@
                 </StackPanel>
             </Border>
 
-            <Border x:Name="LoginScreenBarrie"
+            <Grid x:Name="LoginScreenBarrie"
                 Visibility="Collapsed"
                 Opacity="0"
                 Grid.RowSpan="5"
                 Grid.ColumnSpan="5"
-                Background="#AAFFFFFF"
                 >
                 <i:Interaction.Behaviors>
                     <core:DataTriggerBehavior Binding="{Binding NowTryLogin.Value}" Value="True">
@@ -229,6 +262,12 @@
                     </core:DataTriggerBehavior>
                 </i:Interaction.Behaviors>
 
+                <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        Opacity="0.5"
+                        >
+                    
+                </Border>
+                
                 <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -243,9 +282,27 @@
                            Margin="16 0 0 0"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center"
+                               x:Name="NowLoginDisplayLayout"
+                           />
+
+                    <TextBlock Text="✔ログイン成功"
+                           Margin="16 0 0 0"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           VerticalAlignment="Center"
+                               Visibility="Collapsed"
+                               x:Name="SuccessLoginDisplayLayout"
+                           />
+
+                    <TextBlock Text="❌ログイン失敗"
+                           Margin="16 0 0 0"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           VerticalAlignment="Center"
+                               Visibility="Collapsed"
+                               x:Name="FailedLoginDisplayLayout"
                            />
                 </StackPanel>
-            </Border>
+                
+            </Grid>
         </Grid>
     </ScrollViewer>
     
