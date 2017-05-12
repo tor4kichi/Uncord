@@ -23,7 +23,7 @@
 
         <!-- ログインユーザー情報＋設定 -->
         <StackPanel toolkit:DockPanel.Dock="Bottom"
-                    BorderBrush="#44000000"
+                    BorderBrush="#77777777"
                     BorderThickness="0 1 0 0"
                     >
 
