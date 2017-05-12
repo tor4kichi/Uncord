@@ -235,6 +235,7 @@
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\Uncord-icon-no-back.svg" />
+    <Content Include="Assets\uncord-icon.png" />
     <Content Include="Assets\Uncord-icon.svg" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />

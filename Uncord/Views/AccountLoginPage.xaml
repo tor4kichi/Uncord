@@ -34,6 +34,12 @@
                         <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
                         <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
                         <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="AppTitleLogoImage.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleText.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleDescription.HorizontalAlignment" Value="Right" />
+
+
                     </VisualState.Setters>
                 </VisualState>
 
@@ -53,6 +59,12 @@
                         <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
                         <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
                         <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="3" />
+
+                        <Setter Target="AppTitleLogoImage.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleText.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleDescription.HorizontalAlignment" Value="Right" />
+
+
                     </VisualState.Setters>
                 </VisualState>
 
@@ -72,6 +84,11 @@
                         <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
                         <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
                         <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="3" />
+
+                        <Setter Target="AppTitleLogoImage.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleText.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleDescription.HorizontalAlignment" Value="Right" />
+
                     </VisualState.Setters>
                 </VisualState>
 
@@ -134,12 +151,26 @@
                 x:Name="AppLabelLayout"
                 >
                 <StackPanel HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
+                            
+                            Margin="0 0 0 32"
                     >
+
+                    <Image Source="/Assets/uncord-icon.png"
+                           Height="120"
+                           Width="120"
+                           HorizontalAlignment="Center"
+                           x:Name="AppTitleLogoImage"
+                           />
+
                     <TextBlock Text="Uncord"
                        Style="{StaticResource HeaderTextBlockStyle}"
+                               HorizontalAlignment="Center"
+                               x:Name="AppTitleText"
                        />
-                    <TextBlock Text="Discord client for windows10" />
+                    <TextBlock Text="Discord client for windows10"
+                               HorizontalAlignment="Center"
+                               x:Name="AppTitleDescription"
+                               />
                 </StackPanel>
 
             </Border>
