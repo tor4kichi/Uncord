@@ -141,6 +141,7 @@
     <Compile Include="Views\Behaviors\ScrollViewerAutoScrollToLatestItemBehavior.cs" />
     <Compile Include="Views\Behaviors\WebViewDisplayHtmlBehavior.cs" />
     <Compile Include="Views\Converter\ParcentageValueConverter.cs" />
+    <Compile Include="Views\Converter\TextChannelMessageInputPlaceholderConverter.cs" />
     <Compile Include="Views\FriendsPage.xaml.cs">
       <DependentUpon>FriendsPage.xaml</DependentUpon>
     </Compile>

@@ -54,6 +54,7 @@
 
             <myconverter:YoutubeUrlToEmbedHtmlStringConverter x:Key="youtubeUrlToEmbedHtmlStringConverter" />
             <myconverter:ParcentageValueConverter x:Key="ParcentageValueConverter" />
+            <myconverter:TextChannelMessageInputPlaceholderConverter x:Key="TextChannelMessageInputPlaceholderConverter" />
 
         </ResourceDictionary>
     </prism:PrismUnityApplication.Resources>

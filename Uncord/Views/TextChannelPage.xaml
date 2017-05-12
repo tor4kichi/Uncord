@@ -11,6 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:messageControl="using:Uncord.Views.Controls.Message"
+    xmlns:tookitext="using:WinRTXamlToolkit.Controls.Extensions"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
@@ -131,6 +132,7 @@
 
                         <Border toolkit:DockPanel.Dock="Left"
                                 Margin="8"                                
+                                Visibility="Collapsed"
                                 >
                             <Button Command="{Binding PickAndSendFileCommand}"
                                     Background="Transparent"
@@ -141,6 +143,7 @@
 
                         <Border toolkit:DockPanel.Dock="Right"
                                 Margin="8"
+                                Visibility="Collapsed"
                                 >
                             <!-- TODO: Emotes (Flyout?) -->
                             <Button Background="Transparent"
@@ -151,8 +154,13 @@
                         </Border>
 
                         <TextBox Text="{Binding SendMessageText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 MinHeight="16"
                                  TextWrapping="Wrap"
+                                 MaxWidth="400"
+                                 FontSize="20"
+                                 PlaceholderText="{Binding Name, Converter={StaticResource TextChannelMessageInputPlaceholderConverter}}"
+                                 Padding="16 8"
+                                 tookitext:TextBoxFocusExtensions.AutoSelectOnFocus="True"
+                                 InputScope="Chat"
                                  >
                             <i:Interaction.Behaviors>
                                 <mybehavior:KeyboardTrigger Key="Enter">
