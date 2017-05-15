@@ -153,7 +153,8 @@
 
                         <StackPanel Margin="0 16 0 0">
 
-                            <HyperlinkButton Content="プライバシーポリシー(TODO)"
+                            <HyperlinkButton Content="プライバシーポリシー"
+                                             NavigateUri="https://github.com/tor4kichi/Uncord/wiki/Privacy-Policy"
                                          Margin=" 0 32 0 0"
                                          />
 

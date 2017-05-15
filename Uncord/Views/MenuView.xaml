@@ -13,6 +13,7 @@
     xmlns:mybehavior="using:Uncord.Views.Behaviors"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
     xmlns:uwpanimation="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:uwpUI="using:Microsoft.Toolkit.Uwp.UI"
     prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d"
     d:DesignHeight="300"
@@ -22,7 +23,7 @@
 
         <!-- ログインユーザー情報＋設定 -->
         <StackPanel toolkit:DockPanel.Dock="Bottom"
-                    BorderBrush="#44000000"
+                    BorderBrush="#77777777"
                     BorderThickness="0 1 0 0"
                     >
 
@@ -159,32 +160,33 @@
 
 
 
-                        <ItemsControl ItemsSource="{Binding TextChannels}"
+                        <ListView ItemsSource="{Binding TextChannels}"
                                   Margin="0 0"
+                                  uwpUI:ListViewBaseExtensions.Command="{Binding OpenTextChannelPageCommand}"
+                                  IsItemClickEnabled="True"
+                                  SelectionMode="Single"
+                                  SelectedItem="{Binding CurrentTextChannel.Value, Mode=TwoWay}"
                                   >
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <toolkit:DockPanel Margin="0 0 0 0"
-                                                       >
-                                        <Button Command="{Binding ElementName=MenuViewRoot, Path=DataContext.OpenTextChannelPageCommand}"
-                                                CommandParameter="{Binding Id}"
-                                                Background="Transparent"
-                                                HorizontalAlignment="Stretch"
-                                                HorizontalContentAlignment="Right"
-                                                Height="40"
-                                            >
-                                            <toolkit:DockPanel>
 
-                                                <TextBlock VerticalAlignment="Center">
-                                                    <Run Text="#" />
-                                                    <Run Text="{Binding Name}" />
-                                                </TextBlock>
-                                            </toolkit:DockPanel>
-                                        </Button>
-                                    </toolkit:DockPanel>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="Transparent"
+                                            HorizontalAlignment="Right"
+                                            Height="40"
+                                            >
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="#" />
+                                            <Run Text="{Binding Name}" />
+                                        </TextBlock>
+                                    </Border>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                            </ListView.ItemTemplate>
+                        </ListView>
 
 
                         <Border Height="16" />
@@ -207,29 +209,32 @@
                             -->
                         </StackPanel>
 
-                        <ItemsControl ItemsSource="{Binding VoiceChannels}"
-                                      Margin="0 0"
+                        <ListView ItemsSource="{Binding VoiceChannels}"
+                                  Margin="0 0"
+                                  uwpUI:ListViewBaseExtensions.Command="{Binding ConnectVoiceChannelCommand}"
+                                  IsItemClickEnabled="True"
+                                  SelectionMode="Single"
+                                  SelectedItem="{Binding CurrentVoiceChannel.Value, Mode=TwoWay}"
                                   >
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <toolkit:DockPanel Margin="0 0 0 0"
-                                                       >
-                                        <Button Command="{Binding ElementName=MenuViewRoot, Path=DataContext.ConnectVoiceChannelCommand}"
-                                                CommandParameter="{Binding Id}"
-                                                Background="Transparent"
-                                                HorizontalAlignment="Stretch"
-                                                HorizontalContentAlignment="Right"
-                                                Height="40"
 
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="Transparent"
+                                            HorizontalAlignment="Right"
+                                            Height="40"
                                             >
-                                            <TextBlock VerticalAlignment="Center">
+                                        <TextBlock VerticalAlignment="Center">
                                             <Run Text="{Binding Name}" />
-                                            </TextBlock>
-                                        </Button>
-                                    </toolkit:DockPanel>
+                                        </TextBlock>
+                                    </Border>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                            </ListView.ItemTemplate>
+                        </ListView>
 
                     </StackPanel>
                 </ScrollViewer>
