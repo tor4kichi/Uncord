@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Unity.Windows;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,14 +15,35 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
+using Microsoft.Practices.Unity;
+using System.Diagnostics;
+using Discord.Audio;
+using Windows.Media.Audio;
+using Windows.Media.Render;
 
 namespace Uncord
 {
     /// <summary>
     /// 既定の Application クラスを補完するアプリケーション固有の動作を提供します。
     /// </summary>
-    sealed partial class App : Application
+    sealed partial class App : PrismUnityApplication
     {
+        AppShell _AppShell;
+
+        public bool IsHideMenu
+        {
+            get { return _AppShell.IsMenuHide; }
+            set { _AppShell.IsMenuHide = value; }
+        }
+
+        private bool IsPrelaunch = false;
+
+        public void OpenMenu()
+        {
+            _AppShell.OpenMenu();
+        }
+
         /// <summary>
         /// 単一アプリケーション オブジェクトを初期化します。これは、実行される作成したコードの
         ///最初の行であるため、main() または WinMain() と論理的に等価です。
@@ -29,49 +51,84 @@ namespace Uncord
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
+
+            this.UnhandledException += App_UnhandledException;
         }
 
-        /// <summary>
-        /// アプリケーションがエンド ユーザーによって正常に起動されたときに呼び出されます。他のエントリ ポイントは、
-        /// アプリケーションが特定のファイルを開くために起動されたときなどに使用されます。
-        /// </summary>
-        /// <param name="e">起動の要求とプロセスの詳細を表示します。</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            // ウィンドウに既にコンテンツが表示されている場合は、アプリケーションの初期化を繰り返さずに、
-            // ウィンドウがアクティブであることだけを確認してください
-            if (rootFrame == null)
+            Debug.WriteLine(e.ToString());
+            if (Debugger.IsAttached)
             {
-                // ナビゲーション コンテキストとして動作するフレームを作成し、最初のページに移動します
-                rootFrame = new Frame();
-
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: 以前中断したアプリケーションから状態を読み込みます
-                }
-
-                // フレームを現在のウィンドウに配置します
-                Window.Current.Content = rootFrame;
+                Debugger.Break();
             }
 
-            if (e.PrelaunchActivated == false)
-            {
-                if (rootFrame.Content == null)
-                {
-                    // ナビゲーション スタックが復元されない場合は、最初のページに移動します。
-                    // このとき、必要な情報をナビゲーション パラメーターとして渡して、新しいページを
-                    //構成します
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
-                // 現在のウィンドウがアクティブであることを確認します
-                Window.Current.Activate();
-            }
+            e.Handled = true;
         }
+
+
+        
+        
+
+        protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
+        {
+            IsPrelaunch = args.PrelaunchActivated;
+            return Task.CompletedTask;
+        }
+
+        protected override UIElement CreateShell(Frame rootFrame)
+        {
+            var appShell = new AppShell();
+            _AppShell = appShell;
+            appShell.SetContent(rootFrame);
+
+            
+            if (!IsPrelaunch)
+            {
+                // 自動ログインチェック
+                var discordContext = Container.Resolve<Models.DiscordContext>();
+
+                if (discordContext.IsValidateToken)
+                {
+                    NavigationService.Navigate(PageTokens.LoggedInProcessPageToken, null);
+                }
+                else
+                {
+                    NavigationService.Navigate(PageTokens.AccountLoginPageToken, null);
+                }
+            }
+
+            return appShell;
+        }
+
+        
+        protected override async Task OnInitializeAsync(IActivatedEventArgs args)
+        {
+            
+            // Models
+            var audioManager = new Models.AudioPlaybackManager();
+            await audioManager.Initialize();
+
+            Container.RegisterInstance(audioManager);
+            Container.RegisterInstance(new Models.DiscordContext(audioManager));
+
+            // ViewModels
+            Container.RegisterInstance(Container.Resolve<ViewModels.MenuViewModel>());
+
+
+            // Setup discord voice processing.
+            Discord.Audio.Streams.OpusDecodeStream.OpusDecoderFactory = () => new Models.OpusDecoderImpl();
+            Discord.Audio.Streams.OpusEncodeStream.OpusEncodeFactory = (bitrate, app, signal) => new Models.OpusEncoderImpl(bitrate, app, signal);
+            Discord.Audio.Streams.SodiumDecryptStream.StreamCipher = Models.SodiumImpl.Instance;
+            Discord.Audio.Streams.SodiumEncryptStream.StreamCipher = Models.SodiumImpl.Instance;
+
+            // 自動ログインを行う
+            var discordContext = Container.Resolve<Models.DiscordContext>();
+            await discordContext.TryLoginWithRecordedCredential();
+            await base.OnInitializeAsync(args);
+        }
+
+        
 
         /// <summary>
         /// 特定のページへの移動が失敗したときに呼び出されます
@@ -82,19 +139,6 @@ namespace Uncord
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
-
-        /// <summary>
-        /// アプリケーションの実行が中断されたときに呼び出されます。
-        /// アプリケーションが終了されるか、メモリの内容がそのままで再開されるかに
-        /// かかわらず、アプリケーションの状態が保存されます。
-        /// </summary>
-        /// <param name="sender">中断要求の送信元。</param>
-        /// <param name="e">中断要求の詳細。</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: アプリケーションの状態を保存してバックグラウンドの動作があれば停止します
-            deferral.Complete();
-        }
+        
     }
 }

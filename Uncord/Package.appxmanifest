@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
-  <Identity Name="18803tor4kichi.Uncord" Publisher="CN=DFF1CEA0-5963-4197-8676-6105C5E8CE4B" Version="1.1.0.0" />
+  <Identity Name="18803tor4kichi.Uncord" Publisher="CN=DFF1CEA0-5963-4197-8676-6105C5E8CE4B" Version="0.1.4.0" />
   <mp:PhoneIdentity PhoneProductId="dd3c61c4-a3c4-4a5d-8ab6-1acbcb92e6d8" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Uncord</DisplayName>
@@ -15,10 +15,10 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Uncord.App">
-      <uap:VisualElements DisplayName="Uncord" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Uncord" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+      <uap:VisualElements DisplayName="Uncord" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Uncord is third patry Discord client application for Windows10 families." BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#7289DA" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
           <uap:Rotation Preference="landscape" />
@@ -30,7 +30,32 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <uap3:Capability Name="backgroundMediaPlayback" />
     <DeviceCapability Name="microphone" />
   </Capabilities>
+  <Extensions>
+    <Extension Category="windows.activatableClass.inProcessServer">
+      <InProcessServer>
+        <Path>libsodium-uwp.dll</Path>
+        <ActivatableClass ActivatableClassId="Sodium.Core" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.CryptoHash" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.GenericHash" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.GenericHashAlgorithmProvider" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.GenericHashAlgorithmNames" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.KDF" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.KeyPair" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.OneTimeAuth" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.PasswordHash" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.PublicKeyAuth" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.PublicKeyBox" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.ScalarMult" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.SealedPublicKeyBox" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.SecretBox" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.SecretKeyAuth" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.SecretAead" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.ShortHash" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.StreamEncryption" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="Sodium.Utilities" ThreadingModel="both" />
+      </InProcessServer>
+    </Extension>
+  </Extensions>
 </Package>

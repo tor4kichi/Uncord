@@ -1,0 +1,340 @@
+﻿<Page
+    x:Class="Uncord.Views.AccountLoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Layout">
+
+                <!-- 大画面 -->
+                <VisualState x:Name="LargeMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="AppLabelLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.Column)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="LoginFormLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
+                        <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="AppTitleLogoImage.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleText.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleDescription.HorizontalAlignment" Value="Right" />
+
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 中画面 -->
+                <VisualState x:Name="MiddleMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="AppLabelLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.Column)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="LoginFormLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
+                        <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="3" />
+
+                        <Setter Target="AppTitleLogoImage.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleText.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleDescription.HorizontalAlignment" Value="Right" />
+
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 小画面 -->
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="AppLabelLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.Column)" Value="1" />
+                        <Setter Target="AppLabelLayout.(Grid.ColumnSpan)" Value="2" />
+
+                        <Setter Target="LoginFormLayout.(Grid.Row)" Value="1" />
+                        <Setter Target="LoginFormLayout.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="LoginFormLayout.(Grid.Column)" Value="2" />
+                        <Setter Target="LoginFormLayout.(Grid.ColumnSpan)" Value="3" />
+
+                        <Setter Target="AppTitleLogoImage.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleText.HorizontalAlignment" Value="Right" />
+                        <Setter Target="AppTitleDescription.HorizontalAlignment" Value="Right" />
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="LoginSuccessState">
+                <VisualState>
+
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsFailedLogin.Value}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NowLoginDisplayLayout.Visibility" Value="Collapsed" />
+                        <Setter Target="FailedLoginDisplayLayout.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsLoginSuccess.Value}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NowLoginDisplayLayout.Visibility" Value="Collapsed" />
+                        <Setter Target="SuccessLoginDisplayLayout.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+
+        </VisualStateManager.VisualStateGroups>
+        
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            
+
+            <!-- タイトル表示 -->
+            <Border Grid.RowSpan="1"
+                    Grid.ColumnSpan="5"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                x:Name="AppLabelLayout"
+                >
+                <StackPanel HorizontalAlignment="Center"
+                            
+                            Margin="0 0 0 32"
+                    >
+
+                    <Image Source="/Assets/uncord-icon.png"
+                           Height="120"
+                           Width="120"
+                           HorizontalAlignment="Center"
+                           x:Name="AppTitleLogoImage"
+                           />
+
+                    <TextBlock Text="Uncord"
+                       Style="{StaticResource HeaderTextBlockStyle}"
+                               HorizontalAlignment="Center"
+                               x:Name="AppTitleText"
+                       />
+                    <TextBlock Text="Discord client for windows10"
+                               HorizontalAlignment="Center"
+                               x:Name="AppTitleDescription"
+                               />
+                </StackPanel>
+
+            </Border>
+
+            <Border Grid.RowSpan="3"
+                    Grid.ColumnSpan="5"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    x:Name="LoginFormLayout"
+                >
+                <StackPanel VerticalAlignment="Top"
+                        HorizontalAlignment="Center"
+                        MinWidth="300"
+                        >
+
+                    <TextBlock Margin="0 0 0 8"
+                        Visibility="{Binding IsFailedLogin.Value, Converter={StaticResource BoolToVisibilityConverter}}"
+                               TextWrapping="Wrap"
+                               MaxWidth="300"
+                         >
+                        <Run Text="ログインに失敗しました" />
+                        <LineBreak />
+                        <Run Text="入力内容に間違いがないか、またはネットワーク接続状況を確認して、再度お試しください" />
+                    </TextBlock>
+
+
+                    <TextBox Text="{Binding Mail.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         InputScope="EmailSmtpAddress"
+                         >
+                        <TextBox.Header>
+                            <Binding Source="Mail"
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </TextBox.Header>
+                        <i:Interaction.Behaviors>
+                            <mybehavior:MoveHeaderOnFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <Border Height="16" />
+
+                    <PasswordBox 
+                         Password="{Binding Password.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         InputScope="Password"
+                        >
+                        <PasswordBox.Header>
+                            <Binding Source="Password"
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </PasswordBox.Header>
+                    </PasswordBox>
+
+                    <Border Height="24" />
+
+                    <ToggleButton IsChecked="{Binding IsRememberPassword.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Text="パスワードを保存する" />
+                    </ToggleButton>
+
+                    <Button MinWidth="120"
+                        MinHeight="40"
+                        Margin="0 24 0 8"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding TryLoginCommand}"
+                        >
+                        <Button.Content>
+                            <Binding Source="LoginAccount" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </Button.Content>
+                    </Button>
+
+                    <HyperlinkButton NavigateUri="https://discordapp.com/register"
+                                 HorizontalAlignment="Right"
+                                 TabIndex="20"
+                                 Margin="0 16 0 0"
+                                 >
+                        <HyperlinkButton.Content>
+                            <Binding Source="RegisterAccount" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
+
+                    <HyperlinkButton NavigateUri="https://discordapp.com/login"
+                                 HorizontalAlignment="Right"
+                                 TabIndex="20"
+                                 Margin="0 16 0 0"
+                                 >
+                        <HyperlinkButton.Content>
+                            <Binding Source="ForgetPassword" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
+
+                    <HyperlinkButton Content="Uncordのプライバシーポリシー"
+                                     NavigateUri="https://github.com/tor4kichi/Uncord/wiki/Privacy-Policy"
+                                    Margin="0 16 0 0"
+                                     HorizontalAlignment="Right"
+                                    />
+
+
+                </StackPanel>
+            </Border>
+
+            <Grid x:Name="LoginScreenBarrie"
+                Visibility="Collapsed"
+                Opacity="0"
+                Grid.RowSpan="5"
+                Grid.ColumnSpan="5"
+                >
+                <i:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{Binding NowTryLogin.Value}" Value="True">
+                        <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ShowLoginScreenBarrie" />
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{Binding NowTryLogin.Value}" Value="False">
+                        <core:CallMethodAction TargetObject="{x:Bind}" MethodName="HideLoginScreenBarrie" />
+                    </core:DataTriggerBehavior>
+                </i:Interaction.Behaviors>
+
+                <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        Opacity="0.5"
+                        >
+                    
+                </Border>
+                
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
+
+                    <ProgressRing IsActive="{Binding NowTryLogin.Value}"
+                              Height="64"
+                              Width="64"
+                              />
+
+                    <TextBlock Text="ログイン中"
+                           Margin="16 0 0 0"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           VerticalAlignment="Center"
+                               x:Name="NowLoginDisplayLayout"
+                           />
+
+                    <TextBlock Text="✔ログイン成功"
+                           Margin="16 0 0 0"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           VerticalAlignment="Center"
+                               Visibility="Collapsed"
+                               x:Name="SuccessLoginDisplayLayout"
+                           />
+
+                    <TextBlock Text="❌ログイン失敗"
+                           Margin="16 0 0 0"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           VerticalAlignment="Center"
+                               Visibility="Collapsed"
+                               x:Name="FailedLoginDisplayLayout"
+                           />
+                </StackPanel>
+                
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+    
+</Page>

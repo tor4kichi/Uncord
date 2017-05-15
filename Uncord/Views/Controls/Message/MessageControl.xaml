@@ -1,0 +1,176 @@
+﻿<UserControl
+    x:Class="Uncord.Views.Controls.Message.MessageControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views.Controls.Message"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:mycontrols="using:Uncord.Views.Controls"
+    xmlns:templateSelector="using:Uncord.Views.TemplateSelector"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+
+        <local:MessageAttachementTypeTemplateSelector x:Key="MessageAttachmentTemplateSelector">
+            <local:MessageAttachementTypeTemplateSelector.Image>
+                <DataTemplate>
+                    <StackPanel>
+                        <uwpcontrol:ImageEx Source="{Binding Url}" MaxHeight="240"
+                                            HorizontalAlignment="Left"
+                                            />
+
+                        <HyperlinkButton Content="オリジナル画像を表示"
+                                         NavigateUri="{Binding Url}"
+                                         />
+
+                    </StackPanel>
+                </DataTemplate>
+            </local:MessageAttachementTypeTemplateSelector.Image>
+
+            <local:MessageAttachementTypeTemplateSelector.Other>
+                <DataTemplate>
+                    <mycontrols:DiscordMessageAttachementControl />
+                </DataTemplate>
+            </local:MessageAttachementTypeTemplateSelector.Other>
+        </local:MessageAttachementTypeTemplateSelector>
+
+
+
+        <templateSelector:EmptyOrContentTemplateSelector x:Key="MessageDeleteCapableTemplateSelector"                                             
+                                                         Content="{StaticResource MessageItemTemplate}"
+                                                         >
+            <templateSelector:EmptyOrContentTemplateSelector.Empty>
+                <DataTemplate>
+                    <TextBlock Text="[deleted]" 
+                               Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                               Height="32"
+                               VerticalAlignment="Center"
+                               />
+                </DataTemplate>
+            </templateSelector:EmptyOrContentTemplateSelector.Empty>
+        </templateSelector:EmptyOrContentTemplateSelector>
+
+        <DataTemplate x:Key="MessageItemTemplate">
+            <toolkit:DockPanel>
+                <Grid toolkit:DockPanel.Dock="Right">
+                    <Button VerticalAlignment="Top"
+                            Margin="0"
+                            Background="Transparent"
+                            >
+                        <SymbolIcon Symbol="More" 
+                                    Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                                    />
+
+                        <Button.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="削除" Command="{Binding RemoveMessageCommand}" />
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
+
+                </Grid>
+
+                <StackPanel>
+                    <mycontrols:DiscordMessageContent MessageContent="{Binding Message.Content}" />
+
+                    <Border Height="6" />
+
+                    <!-- Attachments -->
+                    <Border Visibility="{Binding Message.Attachments, Converter={StaticResource CollectionVisibilityConverter}}"
+                        Margin="0 0 0 16"
+                        >
+                        <ItemsControl ItemsSource="{Binding Message.Attachments}"
+                              ItemTemplateSelector="{StaticResource MessageAttachmentTemplateSelector}"
+                              
+                              >
+                        </ItemsControl>
+                    </Border>
+
+                    <!-- Embeds -->
+                    <Border Visibility="{Binding Message.Embeds, Converter={StaticResource CollectionVisibilityConverter}}"
+                        BorderBrush="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                        BorderThickness="4 0 0 0"
+                        Background="#20000000"
+                        Padding="8"
+                        MaxWidth="480"
+                        MinWidth="480"
+                        HorizontalAlignment="Left"
+                        Margin="0 0 0 16"
+                        >
+                        <ItemsControl ItemsSource="{Binding Message.Embeds}"
+                                  HorizontalAlignment="Left"
+                                  >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <mycontrols:DiscordMessageEmbedControl />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </Border>
+
+                    <!-- TODO: IsPinned -->
+                    <!-- TODO: Tags -->
+                    <!-- TODO: Sender type -->
+
+
+                </StackPanel>
+            </toolkit:DockPanel>
+            
+        </DataTemplate>
+
+        <Style TargetType="ContentPresenter" x:Key="MessageItemContainerStyle">
+            <Setter Property="Margin" Value="0 0 0 0" />
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid>
+        <toolkit:DockPanel>
+            <Grid toolkit:DockPanel.Dock="Left">
+                <uwpcontrol:ImageEx Source="{Binding AuthorAvatarUrl}"
+                                    Height="48"
+                                    Width="48"
+                                    />
+            </Grid>
+
+            
+
+            <Grid toolkit:DockPanel.Dock="Top">
+                <StackPanel Orientation="Horizontal">
+
+                    <HyperlinkButton Content="{Binding Author.Username}"
+                                     Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                                     FontWeight="SemiBold"
+                                     />
+
+                    <Border Width="8" />
+                    <TextBlock Text="{Binding MessageRecievedAt}"
+                               FontSize="13"
+                               Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                               VerticalAlignment="Center"
+                               Opacity="0.8"
+                           />
+
+                </StackPanel>
+            </Grid>
+
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Messages}"
+                              ItemTemplateSelector="{StaticResource MessageDeleteCapableTemplateSelector}"
+                              ItemContainerStyle="{StaticResource MessageItemContainerStyle}"
+                              >
+                    
+                </ItemsControl>
+            </StackPanel>
+            
+        </toolkit:DockPanel>
+        
+    </Grid>
+</UserControl>

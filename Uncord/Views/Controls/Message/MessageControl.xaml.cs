@@ -13,16 +13,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// 空白ページの項目テンプレートについては、https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x411 を参照してください
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace Uncord
+namespace Uncord.Views.Controls.Message
 {
-    /// <summary>
-    /// それ自体で使用できる空白ページまたはフレーム内に移動できる空白ページ。
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MessageControl : UserControl
     {
-        public MainPage()
+        public MessageControl()
         {
             this.InitializeComponent();
         }

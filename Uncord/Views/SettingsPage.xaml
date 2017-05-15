@@ -1,0 +1,174 @@
+﻿<Page
+    x:Class="Uncord.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Layout">
+
+                <!-- 大画面 -->
+                <VisualState x:Name="LargeMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 中画面 -->
+                <VisualState x:Name="MiddleMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MidiumMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="TopBarLayout.Margin" Value="40 8 0 8" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 小画面 -->
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+
+            </VisualStateGroup>
+
+
+        </VisualStateManager.VisualStateGroups>
+        
+        <!-- Note: トップバー位置にはモバイル表示時の動的に変化するマージンが必要です -->
+        <toolkit:DockPanel Margin="0 0">
+            
+            <toolkit:DockPanel toolkit:DockPanel.Dock="Top"
+                               Height="64"
+                               x:Name="TopBarLayout"
+                               Margin="64 8 0 8"
+                               >
+                <TextBlock Text="設定"
+                           Style="{StaticResource SubheaderTextBlockStyle}"
+                           />
+            </toolkit:DockPanel>
+
+            <ScrollViewer>
+                <toolkit:WrapPanel Orientation="Horizontal"
+                               ItemWidth="400"
+                               Margin="40 0 0 0"
+                               >
+
+                    <StackPanel Margin="0 0 0 48">
+
+                        <TextBlock Text="オーディオ設定"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Margin="0 0"
+                               />
+
+                        <StackPanel Margin="0 16 0 0">
+
+                            <TextBlock Text="スピーカー音量" Margin="0 8" />
+
+                            <Slider Minimum="{Binding SpeakerMinVolume, Mode=OneWay}"
+                                Maximum="{Binding SpeakerMaxVolume, Mode=OneWay}" 
+                                Value="{Binding SpeakerVolume.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                StepFrequency="0.01"
+                                TickFrequency="0.01"
+                                ThumbToolTipValueConverter="{StaticResource ParcentageValueConverter}"
+                                Width="320"
+                                    HorizontalAlignment="Left"
+                                />
+                        </StackPanel>
+
+                        <StackPanel Margin="0 16 0 0">
+                            <TextBlock Text="マイク音量" Margin="0 8" />
+
+                            <Slider Minimum="{Binding MicMinVolume, Mode=OneWay}" 
+                                Maximum="{Binding MicMaxVolume, Mode=OneWay}"
+                                Value="{Binding MicVolume.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                StepFrequency="0.01"
+                                TickFrequency="0.01"
+                                ThumbToolTipValueConverter="{StaticResource ParcentageValueConverter}"
+                                Width="320"
+                                    HorizontalAlignment="Left"
+                                />
+                        </StackPanel>
+                    </StackPanel>
+
+
+
+                    <StackPanel Margin="0 0 0 48">
+
+                        <TextBlock Text="アプリ情報"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Margin="0 0"
+                               />
+
+                        <StackPanel Margin="0 16 0 0">
+
+                            <TextBlock Text="Uncord プロジェクトサイト" Margin="0 8" />
+
+                            <HyperlinkButton Content="Github repository"
+                                         NavigateUri="{Binding UncordAppDescription.Url}"
+                                         />
+
+                        </StackPanel>
+
+                        <StackPanel Margin="0 16 0 0">
+
+                            <TextBlock Text="依存ライブラリ" Margin="0 8" />
+
+                            <ItemsControl ItemsSource="{Binding DependencyLibraries}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <HyperlinkButton Content="{Binding Name}"
+                                                     NavigateUri="{Binding Url}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <StackPanel Margin="0 16 0 0">
+
+                            <HyperlinkButton Content="プライバシーポリシー"
+                                             NavigateUri="https://github.com/tor4kichi/Uncord/wiki/Privacy-Policy"
+                                         Margin=" 0 32 0 0"
+                                         />
+
+                        </StackPanel>
+                    </StackPanel>
+
+
+                </toolkit:WrapPanel>
+
+            </ScrollViewer>
+            
+            
+            
+        </toolkit:DockPanel>
+        
+    </Grid>
+</Page>

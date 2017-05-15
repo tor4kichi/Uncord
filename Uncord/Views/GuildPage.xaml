@@ -1,0 +1,331 @@
+﻿<Page
+    x:Class="Uncord.Views.GuildPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    >
+
+    <Page.Resources>
+        
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          x:Name="GuildPageLayoutRoot"
+          >
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ResponsiveSplitViewPane">
+
+                
+                <!-- 小画面 以上 -->
+                <VisualState x:Name="SmallMonitor">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallMinWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <!-- 小画面以上のときに横レイアウトを有効化 -->
+                        <Setter Target="HorizontalLayout.Visibility" Value="Visible" />
+                        <Setter Target="VerticalLayout.Visibility" Value="Collapsed" />
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!-- 720pxより小さい画面はデフォルト値として指定します -->
+
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="VoiceChannelVerticalDisplayStateGroup">
+                <VisualState x:Name="DisplayVoiceChannel_Vertical">
+                    <VisualState.Setters>
+                        <Setter Target="NarrowTextChannelLayout.Visibility" Value="Collapsed" />
+                        <Setter Target="NarrowVoiceChannelLayout.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HiddenVoiceChannel_Vertical">
+                </VisualState>
+
+            </VisualStateGroup>
+            
+        </VisualStateManager.VisualStateGroups>
+
+        
+
+        <toolkit:DockPanel x:Name="HorizontalLayout"
+                           Visibility="Collapsed"
+                           >
+
+            <Grid toolkit:DockPanel.Dock="Left"
+                  Width="240"
+                  >
+                <Grid Background="{StaticResource ApplicationForegroundThemeBrush}"
+                      Opacity="0.025"
+                      />
+                
+                <toolkit:DockPanel 
+                               
+                               >
+                    <Border toolkit:DockPanel.Dock="Top" 
+                        Height="48"
+                        BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
+                        BorderThickness="0 0 0 1"
+                        >
+
+                        <TextBlock Text="{Binding GuildName.Value}"
+                           Style="{StaticResource TitleTextBlockStyle}"
+                           toolkit:DockPanel.Dock="Left"
+                           Margin="16 8 0 8"
+                           />
+                    </Border>
+
+                    <Border toolkit:DockPanel.Dock="Bottom"
+                            Height="48"
+                            >
+                        
+                    </Border>
+
+                    <!-- Channel List (Text + Voice) -->
+                    <ScrollViewer>
+                        <StackPanel Margin="16 0 16 0">
+
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Text Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
+                                    <Border Width="16" />
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+
+                            <ListView ItemsSource="{Binding TextChannels}"
+                                  SelectedItem="{Binding SelectedTextChannel.Value, Mode=TwoWay}"
+                                  ItemTemplate="{StaticResource TextChannelListItemTemplate}"
+                                  ItemContainerStyle="{StaticResource ChannelListItemStyle}"
+                                  >
+                            </ListView>
+
+
+                            <Border Height="16" />
+
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Voice Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
+                                    <Border Width="16" />
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+
+                            <ListView ItemsSource="{Binding VoiceChannels}"
+                                  SelectedItem="{Binding SelectedVoiceChannel.Value, Mode=TwoWay}"
+                                  ItemTemplate="{StaticResource VoiceChannelListItemTemplate}"
+                                  ItemContainerStyle="{StaticResource ChannelListItemStyle}"
+                                  >
+                            </ListView>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+
+                </toolkit:DockPanel>
+
+            </Grid>
+            
+            <ContentControl Content="{Binding SelectedTextChannel.Value, Mode=OneWay}"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                >
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <local:GuildTextChannelControl />
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+            
+            
+        </toolkit:DockPanel>
+
+        <toolkit:DockPanel x:Name="VerticalLayout">
+
+            
+
+            <!-- Bottom Text/Voice Selector -->
+            <Grid toolkit:DockPanel.Dock="Bottom"
+                  MinHeight="48"
+                  >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                
+                <Grid Grid.Column="0" Background="WhiteSmoke">
+
+
+
+                    <Button x:Name="VoiceChannelShowCollider" IsHitTestVisible="True"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                        >
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <core:GoToStateAction StateName="DisplayVoiceChannel_Vertical" />
+                            </core:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+
+                        <StackPanel>
+                            <TextBlock Text="Voice ch" 
+                                   VerticalAlignment="Center" />
+
+                            <TextBlock Text="{Binding SelectedVoiceChannel.Value.Name, Mode=OneWay}" />
+
+                        </StackPanel>
+
+                    </Button>
+
+                </Grid>
+
+                <Grid Grid.Column="1" Background="WhiteSmoke">
+
+                    <Button x:Name="VoiceChannelHideCollider" IsHitTestVisible="True"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                        >
+                        <i:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <core:GoToStateAction StateName="HiddenVoiceChannel_Vertical" />
+                            </core:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+
+                        <StackPanel>
+
+                            <TextBlock Text="Text ch" VerticalAlignment="Center" />
+
+                            <Border >
+                                <TextBlock Text="{Binding SelectedTextChannel.Value.Name, Mode=OneWay}" />
+                            </Border>
+
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+            </Grid>
+
+            <!-- Channel Content -->
+            <Grid >
+
+
+                <Grid x:Name="NarrowVoiceChannelLayout" Visibility="Collapsed">
+
+                    <toolkit:DockPanel>
+
+                        <HyperlinkButton VerticalAlignment="Center"
+                                         toolkit:DockPanel.Dock="Top"
+                                             >
+                            <StackPanel Orientation="Horizontal" Margin="16 8">
+                                <TextBlock Text="Voice Channel"
+                                       Style="{StaticResource SubtitleTextBlockStyle}"
+                                       />
+                                <Border Width="16" />
+                                <SymbolIcon Symbol="Add" />
+                            </StackPanel>
+                        </HyperlinkButton>
+
+                        <ListView ItemsSource="{Binding VoiceChannels}" 
+                                  SelectedItem="{Binding SelectedVoiceChannel.Value, Mode=TwoWay}"
+                          DisplayMemberPath="Name"
+                      
+                          />
+
+                    </toolkit:DockPanel>
+
+                </Grid>
+
+
+                <Grid x:Name="NarrowTextChannelLayout">
+
+
+                    
+                    <Grid Visibility="{Binding SelectedTextChannel.Value, Converter={StaticResource NotNullToVisibility}}"
+                                       >
+
+                        <ContentControl Content="{Binding SelectedTextChannel.Value, Mode=OneWay}"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                    >
+                            <ContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <local:GuildTextChannelControl HeaderMergin="48 0 0 0" />
+                                </DataTemplate>
+                            </ContentControl.ContentTemplate>
+
+                        </ContentControl>
+
+                        <Button Background="Transparent" 
+                                    Command="{Binding UnselectTextChannelCommand}"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Height="48"
+                                Width="48"
+                                    >
+                            <SymbolIcon Symbol="Back" 
+                                            />
+                        </Button>
+                        
+                    </Grid>
+
+                    
+
+
+                    <toolkit:DockPanel Visibility="{Binding SelectedTextChannel.Value, Converter={StaticResource NullToVisibility}}">
+                        
+                        <!-- Header (show if selected text channel) -->
+                        <toolkit:DockPanel toolkit:DockPanel.Dock="Top">
+                            <!-- Back (unselect text channel) -->
+
+                            <HyperlinkButton toolkit:DockPanel.Dock="Top"
+                                             Margin="16 8"
+                                             >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Text Channel"
+                                           Style="{StaticResource SubtitleTextBlockStyle}"
+                                           />
+                                    <Border Width="16" />
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+
+                        </toolkit:DockPanel>
+                        
+                        <!-- Content -->
+                        <Grid>
+                            <!-- Text Channel Listing (show if not selected text chanel) -->
+                            <ListView ItemsSource="{Binding TextChannels}" 
+                                      SelectedItem="{Binding SelectedTextChannel.Value, Mode=TwoWay}"
+                                  DisplayMemberPath="Name"
+                      
+                                  />
+                        </Grid>
+                    </toolkit:DockPanel>
+                </Grid>
+                
+
+            </Grid>
+
+        </toolkit:DockPanel>
+    </Grid>
+</Page>

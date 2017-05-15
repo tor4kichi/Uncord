@@ -1,0 +1,299 @@
+﻿<UserControl
+    x:Class="Uncord.Views.MenuView"
+    x:Name="MenuViewRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Uncord.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+    xmlns:uwpcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mybehavior="using:Uncord.Views.Behaviors"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    xmlns:uwpanimation="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:uwpUI="using:Microsoft.Toolkit.Uwp.UI"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <toolkit:DockPanel>
+
+        <!-- ログインユーザー情報＋設定 -->
+        <StackPanel toolkit:DockPanel.Dock="Bottom"
+                    BorderBrush="#77777777"
+                    BorderThickness="0 1 0 0"
+                    >
+
+            <Button Background="Transparent"
+                    Command="{Binding OpenSettingsPageCommand}"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        Height="48"
+                    >
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Setting"
+                                    Margin="8 0 16 0"
+                                    />
+                    <TextBlock Text="設定"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   />
+                </StackPanel>
+
+            </Button>
+            
+            <Button Background="Transparent"
+                    HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                    Height="48"
+                    >
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="ログアウト" 
+                                        Command="{Binding LogoutCommand}"
+                                        />
+                    </MenuFlyout>
+                </Button.Flyout>
+                <StackPanel Orientation="Horizontal"
+                        BorderBrush="#22000000"
+                        BorderThickness="1 0 0 0"
+                        >
+                    <uwpcontrol:ImageEx Source="{Binding LoginUserAvaterUrl.Value}"
+                                    Height="24"
+                                    Width="24"
+                                        Margin="8 0 12 0"
+                                    />
+                    <TextBlock Text="{Binding LoginUserName.Value}" 
+                               VerticalAlignment="Center"
+                               />
+                </StackPanel>
+
+            </Button>
+
+            
+
+        </StackPanel>
+
+
+        <Grid>
+
+            
+            <i:Interaction.Behaviors>
+                <!-- show servers list -->
+                <core:DataTriggerBehavior Binding="{Binding SelectedGuild.Value}" Value="{x:Null}" ComparisonCondition="Equal">
+                    <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ToggleShowServersLayout" />
+                </core:DataTriggerBehavior>
+
+                <!-- show server channels -->
+                <core:DataTriggerBehavior Binding="{Binding SelectedGuild.Value}" Value="{x:Null}" ComparisonCondition="NotEqual" >
+                    <core:CallMethodAction TargetObject="{x:Bind}" MethodName="ToggleShowServerChannelsLayout" />
+                </core:DataTriggerBehavior>
+            </i:Interaction.Behaviors>
+            
+            
+            
+            <!-- サーバーのチャンネル -->
+            <toolkit:DockPanel x:Name="ChannelsLayout"
+                               >
+
+                <toolkit:DockPanel 
+                            toolkit:DockPanel.Dock="Top"
+                            >
+
+                    <Button Background="Transparent"
+                            Command="{Binding SelectGuildCommand}"
+                            CommandParameter="{x:Null}"
+                            Height="48"
+                            Width="48"
+                            Margin="0 0 8 0"
+                            toolkit:DockPanel.Dock="Left"
+                            >
+                        <SymbolIcon Symbol="Back" />
+                    </Button>
+
+                    <!--
+                    <Button Background="Transparent"
+                            Height="48"
+                            Width="48"
+                            Margin="0 0 0 0"
+                            toolkit:DockPanel.Dock="Right"
+                            >
+                        <SymbolIcon Symbol="More" />
+                    </Button>
+                    -->
+
+                    <TextBlock Text="{Binding GuildName.Value}" 
+                               VerticalAlignment="Center"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               />
+
+                </toolkit:DockPanel>
+
+
+                <ScrollViewer>
+                    <StackPanel Margin="24 0"
+                                >
+
+
+                        <StackPanel Orientation="Horizontal" 
+                                    Margin="0 16"
+                                    HorizontalAlignment="Right"
+                                    >
+                            <TextBlock Text="Text Channel"
+                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                       VerticalAlignment="Center"
+                                       
+                                />
+                            <!-- 
+                            <Border Width="16" />
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+                            -->
+                        </StackPanel>
+
+
+
+
+                        <ListView ItemsSource="{Binding TextChannels}"
+                                  Margin="0 0"
+                                  uwpUI:ListViewBaseExtensions.Command="{Binding OpenTextChannelPageCommand}"
+                                  IsItemClickEnabled="True"
+                                  SelectionMode="Single"
+                                  SelectedItem="{Binding CurrentTextChannel.Value, Mode=TwoWay}"
+                                  >
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="Transparent"
+                                            HorizontalAlignment="Right"
+                                            Height="40"
+                                            >
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="#" />
+                                            <Run Text="{Binding Name}" />
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+
+                        <Border Height="16" />
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0 16"
+                                    HorizontalAlignment="Right"
+                                    >
+                            <TextBlock Text="Voice Channel"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                       VerticalAlignment="Center"
+                                   />
+                            <!--
+                            <Border Width="16" />
+                            <HyperlinkButton >
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" />
+                                </StackPanel>
+                            </HyperlinkButton>
+                            -->
+                        </StackPanel>
+
+                        <ListView ItemsSource="{Binding VoiceChannels}"
+                                  Margin="0 0"
+                                  uwpUI:ListViewBaseExtensions.Command="{Binding ConnectVoiceChannelCommand}"
+                                  IsItemClickEnabled="True"
+                                  SelectionMode="Single"
+                                  SelectedItem="{Binding CurrentVoiceChannel.Value, Mode=TwoWay}"
+                                  >
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="Transparent"
+                                            HorizontalAlignment="Right"
+                                            Height="40"
+                                            >
+                                        <TextBlock VerticalAlignment="Center">
+                                            <Run Text="{Binding Name}" />
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                    </StackPanel>
+                </ScrollViewer>
+                
+            </toolkit:DockPanel>
+
+            
+            
+            <!-- サーバー -->
+            <toolkit:DockPanel x:Name="ServersLayout">
+
+                <Border Height="48"
+                        toolkit:DockPanel.Dock="Top"
+                        >
+                </Border>
+
+
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Guilds}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <Button Background="Transparent"
+                                        Command="{Binding ElementName=MenuViewRoot, Path=DataContext.SelectGuildCommand}"
+                                        CommandParameter="{Binding}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Padding="16 0"
+                                        Margin="8 0"
+                                        Height="48"
+                                        >
+                                    <toolkit:DockPanel
+                                        >
+                                        <uwpcontrol:ImageEx Source="{Binding IconUrl}"
+                                                        Height="32"
+                                                        Width="32"
+                                                        Margin="0 0 8 0"
+                                                            toolkit:DockPanel.Dock="Left"
+                                            />
+
+                                        <TextBlock Text="{Binding Name}"
+                                                VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                />
+
+                                    </toolkit:DockPanel>
+
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+
+
+                    </ItemsControl>
+                </ScrollViewer>
+
+            </toolkit:DockPanel>
+        </Grid>
+
+
+    </toolkit:DockPanel>
+</UserControl>
