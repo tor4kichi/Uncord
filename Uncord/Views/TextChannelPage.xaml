@@ -109,13 +109,12 @@
                         </ProgressBar>
                         
                     </Border>
-                    
+
                     <TextBlock Style="{StaticResource SubheaderTextBlockStyle}"
                            Margin="0 0 0 0"
                                VerticalAlignment="Center"
                            >
-                        <Run Text="#" />
-                        <Run Text="{Binding Name}" />
+                        #<Run Text="{Binding Name}" />
                     </TextBlock>
                     
                 </toolkit:DockPanel>
@@ -150,6 +149,23 @@
                                     IsEnabled="False"
                                 >
                                 <SymbolIcon Symbol="Emoji2" />
+                            </Button>
+                        </Border>
+
+                        <Border toolkit:DockPanel.Dock="Right"
+                                Margin="8 0"
+                                
+                                >
+                            <Button Background="Transparent"
+                                    Command="{Binding SendMessageCommand}"
+                                    Height="40"
+                                    MinWidth="80"
+                                >
+                                <Button.Content>
+                                    <Binding Source="SubmitMessage" 
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                                </Button.Content>
                             </Button>
                         </Border>
 

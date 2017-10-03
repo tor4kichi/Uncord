@@ -25,16 +25,27 @@
         <templateSelector:GeneralTemplateSelector x:Key="MicDetectionStatusTemplateSelector">
             <templateSelector:GeneralTemplateSelector.Empty>
                 <DataTemplate>
-                    <TextBlock Text="Ready" />
+                    <TextBlock >
+                        <TextBlock.Text>
+                            <Binding Source="MicrophoneReady"
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                        </TextBlock.Text>
+                    </TextBlock>
                 </DataTemplate>
             </templateSelector:GeneralTemplateSelector.Empty>
             <templateSelector:GeneralTemplateSelector.Items>
                 <templateSelector:ValueAndTemplate Value="MicrophoneNotDetected">
                     <templateSelector:ValueAndTemplate.Template>
                         <DataTemplate>
-                            <TextBlock Text="Mic Not Detected"
-                                       VerticalAlignment="Center"
-                                       />
+                            <TextBlock VerticalAlignment="Center"
+                                       >
+                                <TextBlock.Text>
+                                    <Binding Source="MicrophoneNotDetected"
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                                </TextBlock.Text>
+                            </TextBlock>
                         </DataTemplate>
                     </templateSelector:ValueAndTemplate.Template>
                 </templateSelector:ValueAndTemplate>
@@ -46,7 +57,13 @@
                                              Foreground="DarkRed"
                                                  >
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Mic AccessDenied" VerticalAlignment="Center" />
+                                    <TextBlock VerticalAlignment="Center">
+                                        <TextBlock.Text>
+                                            <Binding Source="MicrophoneAccessDenied"
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 
                                     <SymbolIcon Symbol="Help"
                                                 Height="32"
@@ -61,9 +78,14 @@
                 <templateSelector:ValueAndTemplate Value="UnknowunError">
                     <templateSelector:ValueAndTemplate.Template>
                         <DataTemplate>
-                            <TextBlock Text="UnknowunError"
-                                       VerticalAlignment="Center"
-                                       />
+                            <TextBlock VerticalAlignment="Center"
+                                       >
+                                <TextBlock.Text>
+                                    <Binding Source="UnknownError"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                                </TextBlock.Text>
+                            </TextBlock>
                         </DataTemplate>
                     </templateSelector:ValueAndTemplate.Template>
                 </templateSelector:ValueAndTemplate>
@@ -123,8 +145,8 @@
                     
                     <ContentControl Content="{Binding InputDeviceState.Value}"
                                     ContentTemplateSelector="{StaticResource MicDetectionStatusTemplateSelector}"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
                                     />
                 </StackPanel>
 

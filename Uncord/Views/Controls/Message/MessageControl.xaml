@@ -26,9 +26,14 @@
                                             HorizontalAlignment="Left"
                                             />
 
-                        <HyperlinkButton Content="オリジナル画像を表示"
-                                         NavigateUri="{Binding Url}"
-                                         />
+                        <HyperlinkButton NavigateUri="{Binding Url}"
+                                         >
+                            <HyperlinkButton.Content>
+                                <Binding Source="ShowOriginalImage" 
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                            </HyperlinkButton.Content>
+                        </HyperlinkButton>
 
                     </StackPanel>
                 </DataTemplate>
@@ -48,11 +53,16 @@
                                                          >
             <templateSelector:EmptyOrContentTemplateSelector.Empty>
                 <DataTemplate>
-                    <TextBlock Text="[deleted]" 
-                               Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                    <TextBlock Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
                                Height="32"
                                VerticalAlignment="Center"
-                               />
+                               >
+                        <TextBlock.Text>
+                            <Binding Source="ThisMessageDeleted" 
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                        </TextBlock.Text>
+                    </TextBlock>
                 </DataTemplate>
             </templateSelector:EmptyOrContentTemplateSelector.Empty>
         </templateSelector:EmptyOrContentTemplateSelector>
@@ -70,7 +80,13 @@
 
                         <Button.Flyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Text="削除" Command="{Binding RemoveMessageCommand}" />
+                                <MenuFlyoutItem Command="{Binding RemoveMessageCommand}" >
+                                    <MenuFlyoutItem.Text>
+                                        <Binding Source="DeleteMessage" 
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                                    </MenuFlyoutItem.Text>
+                                </MenuFlyoutItem>
                             </MenuFlyout>
                         </Button.Flyout>
                     </Button>

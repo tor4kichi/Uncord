@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplicationInfo" xml:space="preserve">
-    <value>アプリ情報</value>
+    <value>App Infomation</value>
   </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Uncord</value>
@@ -127,43 +127,43 @@
     <value>Discord client for windows10</value>
   </data>
   <data name="AudioInputVolume" xml:space="preserve">
-    <value>マイク音量</value>
+    <value>Input Volume</value>
   </data>
   <data name="AudioOutputVolume" xml:space="preserve">
-    <value>スピーカー音量</value>
+    <value>Output Volume</value>
   </data>
   <data name="AudioSettings" xml:space="preserve">
-    <value>オーディオ設定</value>
+    <value>Audio</value>
   </data>
   <data name="Dependencies" xml:space="preserve">
-    <value>依存ライブラリ</value>
+    <value>Dependencies</value>
   </data>
   <data name="ForgetPassword" xml:space="preserve">
-    <value>パスワードを忘れた方はこちらへ</value>
+    <value>If you have forgotten your password, click here</value>
   </data>
   <data name="Friends" xml:space="preserve">
-    <value>フレンド</value>
+    <value>Friends</value>
   </data>
   <data name="Guilds" xml:space="preserve">
-    <value>サーバー</value>
+    <value>Servers</value>
   </data>
   <data name="LoginAccount" xml:space="preserve">
-    <value>ログイン</value>
+    <value>Login</value>
   </data>
   <data name="LoginFailed" xml:space="preserve">
-    <value>ログインに失敗しました</value>
+    <value>Failed Login.</value>
   </data>
   <data name="LoginFailedUnknownReason" xml:space="preserve">
-    <value>入力内容に間違いがないか、またはネットワーク接続状況を確認して、再度お試しください</value>
+    <value>Please check the input contents correctly or check the network connection status and try again</value>
   </data>
   <data name="LogoutAccount" xml:space="preserve">
-    <value>ログアウト</value>
+    <value>Logout</value>
   </data>
   <data name="Mail" xml:space="preserve">
-    <value>メール</value>
+    <value>Mail</value>
   </data>
   <data name="MicrophoneAccessDenied" xml:space="preserve">
-    <value>Mic AccessDenied</value>
+    <value>Mic Access Denied</value>
   </data>
   <data name="MicrophoneNotDetected" xml:space="preserve">
     <value>Mic Not Detected</value>
@@ -172,19 +172,19 @@
     <value>Ready</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>パスワード</value>
+    <value>Password</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>プライバシーポリシー</value>
+    <value>Privacy Policy</value>
   </data>
   <data name="ProjectSite" xml:space="preserve">
-    <value>プロジェクトサイト</value>
+    <value>Project Site</value>
   </data>
   <data name="RegisterAccount" xml:space="preserve">
-    <value>アカウントを新しく登録する</value>
+    <value>Register a new account</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>設定</value>
+    <value>Settings</value>
   </data>
   <data name="TextChannel" xml:space="preserve">
     <value>Text Channel</value>
@@ -196,36 +196,36 @@
     <value>Voice Channel</value>
   </data>
   <data name="NoHasGuilds" xml:space="preserve">
-    <value>登録されたサーバーがありません（サーバーの追加は未対応、ブラウザからDiscordにアクセスしてください）</value>
+    <value>There is no registered server (Add server not supported, Please access Discord from browser)</value>
   </data>
   <data name="SubmitToTextChannel" xml:space="preserve">
-    <value>#{0} へメッセージを送信</value>
+    <value>Send a message to #{0}</value>
   </data>
   <data name="ConnectToVoiceChannel" xml:space="preserve">
-    <value>接続</value>
+    <value>Connect</value>
   </data>
   <data name="DeleteMessage" xml:space="preserve">
-    <value>このメッセージを削除</value>
+    <value>Delete message</value>
   </data>
   <data name="NowProcessLogin" xml:space="preserve">
-    <value>ログイン中</value>
+    <value>Trying to login</value>
   </data>
   <data name="RememberPassword" xml:space="preserve">
-    <value>パスワードを保存する</value>
+    <value>Save password</value>
   </data>
   <data name="ShowOriginalImage" xml:space="preserve">
-    <value>オリジナル画像を開く</value>
+    <value>Display original image</value>
   </data>
   <data name="SubmitMessage" xml:space="preserve">
-    <value>送信</value>
+    <value>Submit</value>
   </data>
   <data name="SuccessfulLogin" xml:space="preserve">
-    <value>ログイン成功</value>
+    <value>Login success</value>
   </data>
   <data name="ThisMessageDeleted" xml:space="preserve">
-    <value>[削除済み]</value>
+    <value>[deleted]</value>
   </data>
   <data name="UncordPrivacyPolicy" xml:space="preserve">
-    <value>Uncordのプライバシーポリシー</value>
+    <value>Uncord's Privacy Policy</value>
   </data>
 </root>
