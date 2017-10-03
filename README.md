@@ -11,11 +11,11 @@
 
 今後、サーバー管理やチャンネル追加など機能追加していきます。
 
-# インストール
+## インストール
 
 価格：無料
 
-## [Uncord - Microsoft Store](https://www.microsoft.com/ja-jp/store/p/uncord/9pk6s1zv593d)
+### [Uncord - Microsoft Store](https://www.microsoft.com/ja-jp/store/p/uncord/9pk6s1zv593d)
 
 
 
@@ -29,7 +29,7 @@
 
 XboxOneは今後対応を予定しています。
 
-# 機能
+## 機能
 
 * ユーザーアカウントログイン
 * サーバーの一覧表示
@@ -40,16 +40,15 @@ XboxOneは今後対応を予定しています。
 ## 今後の予定
 
 * v0.1 ボイスチャンネルとテキストチャンネル
-* v0.2 フレンドとプライベートメッセージ（and translate other languages）
+* v0.2 フレンドとプライベートメッセージ
 * v0.3 サーバーやチャンネルの管理
 * v0.x （未定だけど、アプリ上で動作するBotを組めたりしたら…どうだろ？）
 
 
-## 問題の報告・改善の提案
+## 連絡先
 
-[メール(tor4kichi@hotmail.com)](mailto:tor4kichi@hotmail.com)で、または[ツイッター(@tor4kichi)](https://twitter.com/tor4kichi)にリプライorDMで直接ご連絡いただけると返信対応します。
+[メール(tor4kichi@hotmail.com)](mailto:tor4kichi@hotmail.com) または[ツイッター(@tor4kichi)](https://twitter.com/tor4kichi)にリプライorDMで直接ご連絡いただけると返信対応します。
 
 またはツイッターで **#Uncord** とハッシュタグを付けてツイートして頂くと、意見を伝えるだけということもできます。
 
-[Uncordの課題一覧](https://github.com/tor4kichi/Uncord/issues)
 
