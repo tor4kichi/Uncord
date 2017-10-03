@@ -1,3 +1,6 @@
+
+## [English Readme is here](./README.en.md)
+
 # Uncord
 
 <img width="200" alt="Uncord Icon" src="https://raw.github.com/wiki/tor4kichi/uncord/images/uncord-icon.png">
