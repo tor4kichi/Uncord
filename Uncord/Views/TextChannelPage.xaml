@@ -152,6 +152,23 @@
                             </Button>
                         </Border>
 
+                        <Border toolkit:DockPanel.Dock="Right"
+                                Margin="8 0"
+                                
+                                >
+                            <Button Background="Transparent"
+                                    Command="{Binding SendMessageCommand}"
+                                    Height="40"
+                                    MinWidth="80"
+                                >
+                                <Button.Content>
+                                    <Binding Source="SubmitMessage" 
+                                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                                 />
+                                </Button.Content>
+                            </Button>
+                        </Border>
+
                         <TextBox Text="{Binding SendMessageText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  TextWrapping="Wrap"
                                  MaxWidth="400"

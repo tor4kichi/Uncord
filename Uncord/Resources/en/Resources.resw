@@ -216,6 +216,9 @@
   <data name="ShowOriginalImage" xml:space="preserve">
     <value>Display original image</value>
   </data>
+  <data name="SubmitMessage" xml:space="preserve">
+    <value>Submit</value>
+  </data>
   <data name="SuccessfulLogin" xml:space="preserve">
     <value>Login success</value>
   </data>

@@ -216,6 +216,9 @@
   <data name="ShowOriginalImage" xml:space="preserve">
     <value>オリジナル画像を開く</value>
   </data>
+  <data name="SubmitMessage" xml:space="preserve">
+    <value>送信</value>
+  </data>
   <data name="SuccessfulLogin" xml:space="preserve">
     <value>ログイン成功</value>
   </data>
