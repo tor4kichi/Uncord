@@ -1,10 +1,13 @@
 
 this translate make with [@bluethefoxyt](https://github.com/bluethefoxyt), thank you!
 
-## Uncord
+# Uncord
+
+<img width="200" alt="Uncord Icon" src="https://raw.github.com/wiki/tor4kichi/uncord/images/uncord-icon.png">
+
 It is an application to use Discord of chat service in UWP environment including Windows 10.
 
-On Uncord you can not add servers or invite yet. Therefore, it is limited to usage like reading only.
+**On Uncord you can not add servers or invite yet. Therefore, it is limited to usage like reading only.**
 
 In the future, we will add functions such as server management and channel addition.
 
@@ -34,7 +37,7 @@ XboxOne is planning to respond in the future.
 ## Future plans
 
 * v0.1 Voice channel and text channel
-* v0.2 Friends and private messages (and translate other languages)
+* v0.2 Friends and private messages
 * v0.3 Server and channel management
 * v0.x (If it is undecided, if you build a bot that runs on the application ... how is it?
 
