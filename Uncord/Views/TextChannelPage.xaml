@@ -109,13 +109,12 @@
                         </ProgressBar>
                         
                     </Border>
-                    
+
                     <TextBlock Style="{StaticResource SubheaderTextBlockStyle}"
                            Margin="0 0 0 0"
                                VerticalAlignment="Center"
                            >
-                        <Run Text="#" />
-                        <Run Text="{Binding Name}" />
+                        #<Run Text="{Binding Name}" />
                     </TextBlock>
                     
                 </toolkit:DockPanel>

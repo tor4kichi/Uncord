@@ -22,13 +22,13 @@ namespace Uncord.Views.Controls.Message
                 var embed = item as Discord.IEmbed;
                 switch (embed.Type)
                 {
-                    case "image":
+                    case Discord.EmbedType.Image:
                         return Image;
-                    case "video":
+                    case Discord.EmbedType.Video:
                         return Video;
-                    case "link":
+                    case Discord.EmbedType.Link:
                         return Link;
-                    case "tweet":
+                    case Discord.EmbedType.Tweet:
                         return Tweet;
                     default:
                         throw new NotSupportedException();

@@ -37,10 +37,16 @@
                     <SymbolIcon Symbol="Setting"
                                     Margin="8 0 16 0"
                                     />
-                    <TextBlock Text="設定"
+                    <TextBlock 
                                    VerticalAlignment="Center"
-                                   Style="{StaticResource SubtitleTextBlockStyle}"
-                                   />
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   >
+                        <TextBlock.Text>
+                            <Binding Source="Settings"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                        </TextBlock.Text>
+                    </TextBlock>
                 </StackPanel>
 
             </Button>
@@ -52,9 +58,14 @@
                     >
                 <Button.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="ログアウト" 
-                                        Command="{Binding LogoutCommand}"
-                                        />
+                        <MenuFlyoutItem Command="{Binding LogoutCommand}"
+                                        >
+                            <MenuFlyoutItem.Text>
+                                <Binding Source="LogoutAccount"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                            </MenuFlyoutItem.Text>
+                        </MenuFlyoutItem>
                     </MenuFlyout>
                 </Button.Flyout>
                 <StackPanel Orientation="Horizontal"
@@ -142,11 +153,17 @@
                                     Margin="0 16"
                                     HorizontalAlignment="Right"
                                     >
-                            <TextBlock Text="Text Channel"
+                            <TextBlock 
                                 Style="{StaticResource SubtitleTextBlockStyle}"
                                        VerticalAlignment="Center"
-                                       
-                                />
+                                        Opacity="0.7"
+                                >
+                                <TextBlock.Text>
+                                    <Binding Source="TextChannel"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                                </TextBlock.Text>
+                            </TextBlock>
                             <!-- 
                             <Border Width="16" />
                             <HyperlinkButton >
@@ -180,8 +197,7 @@
                                             Height="40"
                                             >
                                         <TextBlock VerticalAlignment="Center">
-                                            <Run Text="#" />
-                                            <Run Text="{Binding Name}" />
+                                            #<Run Text="{Binding Name}" />
                                         </TextBlock>
                                     </Border>
                                 </DataTemplate>
@@ -195,10 +211,17 @@
                                     Margin="0 16"
                                     HorizontalAlignment="Right"
                                     >
-                            <TextBlock Text="Voice Channel"
+                            <TextBlock 
                                    Style="{StaticResource SubtitleTextBlockStyle}"
                                        VerticalAlignment="Center"
-                                   />
+                                   Opacity="0.7"
+                                   >
+                                <TextBlock.Text>
+                                    <Binding Source="VoiceChannel"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                                </TextBlock.Text>
+                            </TextBlock>
                             <!--
                             <Border Width="16" />
                             <HyperlinkButton >
@@ -248,12 +271,38 @@
 
                 <Border Height="48"
                         toolkit:DockPanel.Dock="Top"
+                        Margin="24 0 0 0"
                         >
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                                       VerticalAlignment="Center"
+                               Opacity="0.7"
+                                >
+                        <TextBlock.Text>
+                            <Binding Source="Guilds"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                        </TextBlock.Text>
+                    </TextBlock>
                 </Border>
 
+                <Border toolkit:DockPanel.Dock="Top">
+                    <TextBlock VerticalAlignment="Center"
+                               Opacity="0.7"
+                               TextWrapping="Wrap"
+                               Margin="16 0"
+                               Visibility="{Binding Guilds, Converter={StaticResource EmptyCollectionVisibilityConverter}}"
+                                >
+                        <TextBlock.Text>
+                            <Binding Source="NoHasGuilds"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Border>
 
                 <ScrollViewer>
-                    <ItemsControl ItemsSource="{Binding Guilds}">
+                    <ItemsControl ItemsSource="{Binding Guilds}"
+                                  >
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
 
@@ -281,7 +330,6 @@
                                                 />
 
                                     </toolkit:DockPanel>
-
                                 </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

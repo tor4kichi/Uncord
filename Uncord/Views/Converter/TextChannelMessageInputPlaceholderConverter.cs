@@ -13,7 +13,10 @@ namespace Uncord.Views.Converter
         {
             if (value is string)
             {
-                return $"#{value as string} へメッセージを送信";
+                var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                var str = loader.GetString("SubmitToTextChannel");
+
+                return str.Replace("{0}", value as string);
             }
             else
             {

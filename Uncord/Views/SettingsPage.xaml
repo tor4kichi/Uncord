@@ -70,9 +70,15 @@
                                x:Name="TopBarLayout"
                                Margin="64 8 0 8"
                                >
-                <TextBlock Text="設定"
+                <TextBlock 
                            Style="{StaticResource SubheaderTextBlockStyle}"
-                           />
+                           >
+                    <TextBlock.Text>
+                        <Binding Source="Settings"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                    </TextBlock.Text>
+                </TextBlock>
             </toolkit:DockPanel>
 
             <ScrollViewer>
@@ -83,14 +89,26 @@
 
                     <StackPanel Margin="0 0 0 48">
 
-                        <TextBlock Text="オーディオ設定"
+                        <TextBlock 
                                Style="{StaticResource SubtitleTextBlockStyle}"
                                Margin="0 0"
-                               />
+                               >
+                            <TextBlock.Text>
+                                <Binding Source="AudioSettings"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                            </TextBlock.Text>
+                        </TextBlock>
 
                         <StackPanel Margin="0 16 0 0">
 
-                            <TextBlock Text="スピーカー音量" Margin="0 8" />
+                            <TextBlock Margin="0 8">
+                                <TextBlock.Text>
+                                    <Binding Source="AudioOutputVolume"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                                </TextBlock.Text>
+                            </TextBlock>
 
                             <Slider Minimum="{Binding SpeakerMinVolume, Mode=OneWay}"
                                 Maximum="{Binding SpeakerMaxVolume, Mode=OneWay}" 
@@ -104,7 +122,14 @@
                         </StackPanel>
 
                         <StackPanel Margin="0 16 0 0">
-                            <TextBlock Text="マイク音量" Margin="0 8" />
+                            <TextBlock Margin="0 8">
+                                <TextBlock.Text>
+                                    <Binding Source="AudioInputVolume"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                                    
+                                </TextBlock.Text>
+                            </TextBlock>
 
                             <Slider Minimum="{Binding MicMinVolume, Mode=OneWay}" 
                                 Maximum="{Binding MicMaxVolume, Mode=OneWay}"
@@ -122,24 +147,52 @@
 
                     <StackPanel Margin="0 0 0 48">
 
-                        <TextBlock Text="アプリ情報"
+                        <TextBlock 
                                Style="{StaticResource SubtitleTextBlockStyle}"
                                Margin="0 0"
-                               />
+                               >
+                            <TextBlock.Text>
+                                <Binding Source="ApplicationInfo"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+
+                            </TextBlock.Text>
+                        </TextBlock>
 
                         <StackPanel Margin="0 16 0 0">
 
-                            <TextBlock Text="Uncord プロジェクトサイト" Margin="0 8" />
-
-                            <HyperlinkButton Content="Github repository"
+                            <HyperlinkButton 
                                          NavigateUri="{Binding UncordAppDescription.Url}"
+                                         >
+                                <HyperlinkButton.Content>
+                                    <Binding Source="ProjectSite"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
                                          />
 
+                                </HyperlinkButton.Content>
+                            </HyperlinkButton>
+
+                            <HyperlinkButton NavigateUri="https://github.com/tor4kichi/Uncord/wiki/Privacy-Policy"
+                                         Margin=" 0 32 0 0"
+                                         >
+                                <HyperlinkButton.Content>
+                                    <Binding Source="PrivacyPolicy"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                                </HyperlinkButton.Content>
+                            </HyperlinkButton>
+                            
                         </StackPanel>
 
                         <StackPanel Margin="0 16 0 0">
 
-                            <TextBlock Text="依存ライブラリ" Margin="0 8" />
+                            <TextBlock Margin="0 8">
+                                <TextBlock.Text>
+                                    <Binding Source="Dependencies"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                                </TextBlock.Text>
+                            </TextBlock>
 
                             <ItemsControl ItemsSource="{Binding DependencyLibraries}">
                                 <ItemsControl.ItemTemplate>
@@ -151,14 +204,6 @@
                             </ItemsControl>
                         </StackPanel>
 
-                        <StackPanel Margin="0 16 0 0">
-
-                            <HyperlinkButton Content="プライバシーポリシー"
-                                             NavigateUri="https://github.com/tor4kichi/Uncord/wiki/Privacy-Policy"
-                                         Margin=" 0 32 0 0"
-                                         />
-
-                        </StackPanel>
                     </StackPanel>
 
 

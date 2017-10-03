@@ -72,13 +72,17 @@
                 <StackPanel Orientation="Horizontal"
                             toolkit:DockPanel.Dock="Right"
                             >
-                    <Button Content="接続" 
+                    <Button 
                             Command="{Binding ConnectVoiceChannelCommand}"
                             CommandParameter="{Binding VoiceChannelId}"
                             VerticalAlignment="Stretch"
                             IsEnabled="{Binding IsConnectedVoiceChannel.Value, Converter={StaticResource InvertBooleanConverter}}"
                             >
-                        
+                        <Button.Content>
+                            <Binding Source="ConnectToVoiceChannel" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </Button.Content>
                     </Button>
                 </StackPanel>
                 

@@ -74,6 +74,12 @@ namespace Uncord.ViewModels
             SelectedGuild = new ReactiveProperty<SocketGuild>();
             GuildName = new ReactiveProperty<string>("");
 
+            DiscordContext.Guilds.CollectionChangedAsObservable()
+                .Subscribe(_ => 
+                {
+                    RaisePropertyChanged(nameof(Guilds));
+                });
+
             LoginUserName = DiscordContext.ObserveProperty(x => x.CurrentUser)
                 .Select(x => x?.Username ?? "")
                 .ToReadOnlyReactiveProperty();

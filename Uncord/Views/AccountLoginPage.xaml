@@ -162,15 +162,25 @@
                            x:Name="AppTitleLogoImage"
                            />
 
-                    <TextBlock Text="Uncord"
+                    <TextBlock 
                        Style="{StaticResource HeaderTextBlockStyle}"
                                HorizontalAlignment="Center"
                                x:Name="AppTitleText"
-                       />
-                    <TextBlock Text="Discord client for windows10"
-                               HorizontalAlignment="Center"
-                               x:Name="AppTitleDescription"
-                               />
+                       >
+                        <TextBlock.Text>
+                            <Binding Source="AppTitle"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock HorizontalAlignment="Center"
+                               >
+                        <TextBlock.Text>
+                            <Binding Source="AppTitleDescription"
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </TextBlock.Text>
+                    </TextBlock>
                 </StackPanel>
 
             </Border>
@@ -193,9 +203,21 @@
                                TextWrapping="Wrap"
                                MaxWidth="300"
                          >
-                        <Run Text="ログインに失敗しました" />
+                        <Run>
+                            <Run.Text>
+                                <Binding Source="LoginFailed"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                            </Run.Text>
+                        </Run>
                         <LineBreak />
-                        <Run Text="入力内容に間違いがないか、またはネットワーク接続状況を確認して、再度お試しください" />
+                        <Run>
+                            <Run.Text>
+                                <Binding Source="LoginFailedUnknownReason"
+                                         Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                         />
+                            </Run.Text>
+                        </Run>
                     </TextBlock>
 
 
@@ -228,7 +250,13 @@
                     <Border Height="24" />
 
                     <ToggleButton IsChecked="{Binding IsRememberPassword.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <TextBlock Text="パスワードを保存する" />
+                        <TextBlock >
+                            <TextBlock.Text>
+                                <Binding Source="RememberPassword"
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                            </TextBlock.Text>
+                        </TextBlock>
                     </ToggleButton>
 
                     <Button MinWidth="120"
@@ -268,11 +296,17 @@
                         </HyperlinkButton.Content>
                     </HyperlinkButton>
 
-                    <HyperlinkButton Content="Uncordのプライバシーポリシー"
+                    <HyperlinkButton 
                                      NavigateUri="https://github.com/tor4kichi/Uncord/wiki/Privacy-Policy"
                                     Margin="0 16 0 0"
                                      HorizontalAlignment="Right"
-                                    />
+                                    >
+                        <HyperlinkButton.Content>
+                            <Binding Source="UncordPrivacyPolicy" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </HyperlinkButton.Content>
+                    </HyperlinkButton>
 
 
                 </StackPanel>
@@ -309,28 +343,53 @@
                               Width="64"
                               />
 
-                    <TextBlock Text="ログイン中"
+                    <TextBlock 
                            Margin="16 0 0 0"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center"
                                x:Name="NowLoginDisplayLayout"
-                           />
+                           >
+                        <TextBlock.Text>
+                            <Binding Source="NowProcessLogin" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                        </TextBlock.Text>
+                    </TextBlock>
 
-                    <TextBlock Text="✔ログイン成功"
+                    <TextBlock 
                            Margin="16 0 0 0"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center"
                                Visibility="Collapsed"
                                x:Name="SuccessLoginDisplayLayout"
-                           />
+                           >
+                        ✔ 
+                        <Run>
+                            <Run.Text>
+                                <Binding Source="SuccessfulLogin" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                            </Run.Text>    
+                        </Run>
+                        
+                    </TextBlock>
 
-                    <TextBlock Text="❌ログイン失敗"
+                    <TextBlock
                            Margin="16 0 0 0"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center"
                                Visibility="Collapsed"
                                x:Name="FailedLoginDisplayLayout"
-                           />
+                           >
+                        ❌
+                        <Run>
+                            <Run.Text>
+                                <Binding Source="LoginFailed" 
+                                 Converter="{StaticResource ResourceNameToResourceStringConverter}"
+                                 />
+                            </Run.Text>    
+                        </Run>
+                    </TextBlock>
                 </StackPanel>
                 
             </Grid>

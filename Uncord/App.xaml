@@ -35,6 +35,14 @@
             </converter:EmptyObjectToObjectConverter>
 
             <converter:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
+            <converter:EmptyCollectionToObjectConverter x:Key="EmptyCollectionVisibilityConverter">
+                <converter:EmptyCollectionToObjectConverter.EmptyValue>
+                    <Visibility>Visible</Visibility>
+                </converter:EmptyCollectionToObjectConverter.EmptyValue>
+                <converter:EmptyCollectionToObjectConverter.NotEmptyValue>
+                    <Visibility>Collapsed</Visibility>
+                </converter:EmptyCollectionToObjectConverter.NotEmptyValue>
+            </converter:EmptyCollectionToObjectConverter>
 
             <converter:StringVisibilityConverter x:Key="StringVisibilityConverter" />
             <converter:BoolToObjectConverter x:Key="InvertBooleanConverter"
@@ -55,6 +63,10 @@
             <myconverter:YoutubeUrlToEmbedHtmlStringConverter x:Key="youtubeUrlToEmbedHtmlStringConverter" />
             <myconverter:ParcentageValueConverter x:Key="ParcentageValueConverter" />
             <myconverter:TextChannelMessageInputPlaceholderConverter x:Key="TextChannelMessageInputPlaceholderConverter" />
+
+            
+            <!-- localize -->
+            <myconverter:EnumToLocalStringConverter x:Key="EnumToLocalString" />
 
         </ResourceDictionary>
     </prism:PrismUnityApplication.Resources>
